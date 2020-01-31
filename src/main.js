@@ -10,6 +10,7 @@ const gameConfig = Object.assign(config, {
 
 class Game extends Phaser.Game {
   constructor() {
+    seedrandom("Repairevil", {global:true});
     super(gameConfig);
   }
 }
