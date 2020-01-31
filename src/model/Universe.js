@@ -30,7 +30,7 @@ export class Universe {
             let cellIndex = freeCells.indexOf(cellPosition);
             freeCells.splice(cellIndex, 1);
 
-            this.planetlist.push(new Planet(cellPosition));
+            this.planets.push(new Planet(cellPosition));
         }
 
         // Create connections
