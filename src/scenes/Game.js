@@ -1,8 +1,9 @@
 import Phaser from "phaser";
 import PlanetObject from "../ui/PlanetObject";
-// import Planet from "../model/Planet";
-// import { Player } from "../model/Player";
-// import { GameState } from "../model/GameState";
+import Planet from "../model/Planet";
+import { Player } from "../model/Player";
+import { GameState } from "../model/GameState";
+import { Universe } from "../model/Universe";
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -19,9 +20,9 @@ export default class extends Phaser.Scene {
   }
 
   create() {
-    // let universe = Universe.generate(this.seed);
-    // let player = new Player();
-    // this.gameState = new GameState(universe, player);
+    let universe = Universe.generate(this.seed);
+    let player = new Player();
+    this.gameState = new GameState(universe, player);
 
     // this.planetObjects = this.gameState.universe.planets.map(p =>
     //   this.createPlanetObject(p)
