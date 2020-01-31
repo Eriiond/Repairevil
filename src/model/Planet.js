@@ -1,11 +1,11 @@
-base_minPopulation = 100;
-base_maxPopulation = 1000;
-base_minIncome = 1000000;
-base_maxIncome = 2500000;
-base_minGrowthRate = 1;
-base_maxGrowthRate = 10;
-base_minSpreadRate = 1;
-base_maxSpreadRate = 20;
+const base_minPopulation = 100;
+const base_maxPopulation = 1000;
+const base_minIncome = 1000000;
+const base_maxIncome = 2500000;
+const base_minGrowthRate = 1;
+const base_maxGrowthRate = 10;
+const base_minSpreadRate = 1;
+const base_maxSpreadRate = 20;
 
 export class Planet {
   // position: Number;
@@ -50,8 +50,4 @@ export class Planet {
   generateSpreadRate() {
     return getRandomArbitrary(this.minSpreadRate, this.maxSpreadRate);
   }
-}
-
-function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
 }
