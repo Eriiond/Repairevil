@@ -1,0 +1,22 @@
+{
+  "name": "repairevil",
+  "version": "1.0.0",
+  "description": "",
+  "main": "index.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1"
+  },
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Wolf-Rost/Repairevil.git"
+  },
+  "author": "",
+  "license": "ISC",
+  "bugs": {
+    "url": "https://github.com/Wolf-Rost/Repairevil/issues"
+  },
+  "homepage": "https://github.com/Wolf-Rost/Repairevil#readme",
+  "dependencies": {
+    "seedrandom": "^3.0.5"
+  }
+}
