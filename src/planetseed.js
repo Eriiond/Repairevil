@@ -27,14 +27,12 @@ class System {
             freeCells.push(i);
         }
 
-
         for(var i = 0; i < planetAmount; i++) {
-            console.log("freeCells", freeCells);
             let cellPosition = this.getRandomInt(freeCells.length);
             let cellIndex = freeCells.indexOf(cellPosition);
             freeCells.splice(cellIndex, 1);
 
-            this.planetlist.push(new Planet(cellPosition))
+            this.planetlist.push(new Planet(cellPosition));
         }
     }
     getRandomInt(max) {
