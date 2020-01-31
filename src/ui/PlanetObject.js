@@ -1,10 +1,10 @@
 export default class PlanetObject {
-  constructor(model, sprite) {
+  constructor(model) {
     this.model = model;
-    this.sprite = sprite;
 
+    this.sprite = this.add.sprite(0, 0, "planet");
     this.sprite.setInteractive();
-    this.sprite.on("pointerup", this.onClick, this.planet);
+    this.sprite.on("pointerup", this.onClick);
   }
 
   onClick() {

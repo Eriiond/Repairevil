@@ -1,6 +1,8 @@
 import Phaser from "phaser";
 import PlanetObject from "../ui/PlanetObject";
-import Planet from "../model/Planet";
+// import Planet from "../model/Planet";
+// import { Player } from "../model/Player";
+// import { GameState } from "../model/GameState";
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -18,10 +20,8 @@ export default class extends Phaser.Scene {
 
   create() {
     // let universe = Universe.generate(this.seed);
-    // this.gameState = new GameState(universe);
-
-    //  A simple background for our game
-    this.add.image(800, 450, "galaxy");
+    // let player = new Player();
+    // this.gameState = new GameState(universe, player);
 
     // this.planetObjects = this.gameState.universe.planets.map(p =>
     //   this.createPlanetObject(p)
@@ -29,6 +29,13 @@ export default class extends Phaser.Scene {
     // this.connectionObjects = this.gameState.universe.connections.map(c =>
     //   this.createConnectionObject(c)
     // );
+
+    this.setupUI();
+  }
+
+  setupUI() {
+    //  A simple background for our game
+    this.add.image(800, 450, "galaxy");
   }
 
   update() {
@@ -36,14 +43,12 @@ export default class extends Phaser.Scene {
   }
 
   createPlanetObject(model) {
-    let planetSprite = this.add.sprite(0, 0, "planet");
     let planet = new PlanetObject(model, planetSprite);
     return planet;
   }
 
   createConnectionObject(model) {
-    let connectionSprite = this.add.sprite(0, 0, "planet");
-    let connection = new PlanetObject(model, connectionSprite);
+    let connection = new ConnectionObject(model, connectionSprite);
     return connection;
   }
 }
