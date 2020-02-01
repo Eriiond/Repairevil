@@ -26,7 +26,7 @@ export function setupInfoArea(scene, callbacks) {
   money = scene.add.text(
     InfoArea.x + InfoArea.margin,
     InfoArea.y + InfoArea.margin,
-    "Hello World",
+    "",
     {
       fontFamily: '"Roboto Condensed"',
       fontSize: 40
@@ -124,8 +124,7 @@ export function updateInfoArea(selectedObject, gameState) {
   money.setText("Money: " + gameState.player.money);
 
   if (selectedObject) {
-    console.log("pop: ", selectedObject.model.population);
-    selectedObjectTitle.setText("Planet #" + selectedObject.model.position);
+    selectedObjectTitle.setText(selectedObject.model.name);
 
     let owner =
       selectedObject.model.population.default > 0
@@ -154,13 +153,17 @@ export function updateInfoArea(selectedObject, gameState) {
       "Update Spread  - $" + selectedObject.model.upgrades.spreadRate
     );
   } else {
-    selectedObjectTitle.setText("");
-    selectedPopulation.setText("");
-    selectedGrowthRate.setText("");
-    selectedIncomeRate.setText("");
-    selectedSpreadRate.setText("");
-    selectedUpdateGrowth.setText("");
-    selectedUpdateIncome.setText("");
-    selectedUpdateSpread.setText("");
+    resetSelectedArea();
   }
+}
+
+function resetSelectedArea() {
+  selectedObjectTitle.setText("");
+  selectedPopulation.setText("");
+  selectedGrowthRate.setText("");
+  selectedIncomeRate.setText("");
+  selectedSpreadRate.setText("");
+  selectedUpdateGrowth.setText("");
+  selectedUpdateIncome.setText("");
+  selectedUpdateSpread.setText("");
 }

@@ -14,6 +14,7 @@ export default class extends Phaser.Scene {
     this.level = 0;
 
     this.planetObjects = this.planets = Array();
+    this.frameCounter = 0;
   }
 
   preload() {
@@ -72,6 +73,16 @@ export default class extends Phaser.Scene {
 
   update() {
     GameLogic.update(this.gameState);
+    if (this.gameState.player) {
+      this.updateUI();
+    }
+  }
+
+  updateUI() {
+    if (this.frameCounter % 30 == 0) {
+      this.frameCounter = this.frameCounter + 1;
+      updateInfoArea(this.selectedObject, this.gameState);
+    }
   }
 
   createPlanetObject(model) {
