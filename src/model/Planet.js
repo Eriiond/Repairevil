@@ -1,4 +1,5 @@
 import { getRandomArbitrary } from "./Utils";
+import { Utils } from "phaser";
 
 const base_minPopulation = 100;
 const base_maxPopulation = 1000;
@@ -8,8 +9,35 @@ const base_minGrowthRate = 1;
 const base_maxGrowthRate = 10;
 const base_minSpreadRate = 1;
 const base_maxSpreadRate = 20;
+const greekLetterList = [
+  "Alpha",
+  "Beta",
+  "Gamma",
+  "Delta",
+  "Epsilon",
+  "Zeta",
+  "Eta",
+  "Theta",
+  "Iota",
+  "Kappa",
+  "Lambda",
+  "Mu",
+  "Nu",
+  "Xi",
+  "Omicron",
+  "Pi",
+  "Rho",
+  "Sigma",
+  "Tau",
+  "Upsilon",
+  "Phi",
+  "Chi",
+  "Psi",
+  "Omega"
+];
 
 export class Planet {
+  // name: String
   // position: Number;
   // population: {virus: Number, player: Number, default: Number}
   // income: Number
@@ -18,6 +46,9 @@ export class Planet {
   // upgrades: {income: Number, growthRate: Number, spreadRate: Number }
 
   constructor(position, level) {
+    this.name = `${
+      greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
+    } ${position}`;
     this.minPopulation = base_minPopulation * ((level % 5) + 1);
     this.maxPopulation = base_maxPopulation * ((level % 5) + 1);
     this.minIncome = base_minIncome * ((level % 5) + 1);
