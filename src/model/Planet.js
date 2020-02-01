@@ -48,15 +48,15 @@ export class Planet {
   constructor(position, level) {
     this.name = `${
       greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-    } ${position}`;
-    this.minPopulation = base_minPopulation * ((level % 5) + 1);
-    this.maxPopulation = base_maxPopulation * ((level % 5) + 1);
-    this.minIncome = base_minIncome * ((level % 5) + 1);
-    this.maxIncome = base_maxIncome * ((level % 5) + 1);
-    this.minGrowthRate = base_minGrowthRate * ((level % 5) + 1);
-    this.maxGrowthRate = base_maxGrowthRate * ((level % 5) + 1);
-    this.minSpreadRate = base_minSpreadRate * ((level % 5) + 1);
-    this.maxSpreadRate = base_maxSpreadRate * ((level % 5) + 1);
+      } ${position}`;
+    this.minPopulation = base_minPopulation * (Math.floor(level / 5) + 1);
+    this.maxPopulation = base_maxPopulation * (Math.floor(level / 5) + 1);
+    this.minIncome = base_minIncome * (Math.floor(level / 5) + 1);
+    this.maxIncome = base_maxIncome * (Math.floor(level / 5) + 1);
+    this.minGrowthRate = base_minGrowthRate * (Math.floor(level / 5) + 1);
+    this.maxGrowthRate = base_maxGrowthRate * (Math.floor(level / 5) + 1);
+    this.minSpreadRate = base_minSpreadRate * (Math.floor(level / 5) + 1);
+    this.maxSpreadRate = base_maxSpreadRate * (Math.floor(level / 5) + 1);
 
     if (this.minSpreadRate > 100) {
       this.minSpreadRate = 100;
@@ -91,5 +91,48 @@ export class Planet {
 
   generateSpreadRate() {
     return getRandomArbitrary(this.minSpreadRate, this.maxSpreadRate);
+  }
+
+  upgradeIncome(gameState) {
+    var price = this.getIncomePrice();
+    if (gameState.player.money >= price) {
+      gameState.player.money -= price;
+      this.upgrades.income++;
+      this.income = Math.floor(this.income * 110 / 100);
+    }
+  }
+
+  upgradeGrowth(gameState) {
+    var price = this.getGrowthPrice();
+    if (gameState.player.money >= price) {
+      gameState.player.money -= price;
+      this.upgrades.growthRate++;
+      this.growthRate = Math.round((this.growthRate * 110 / 100) * 100) / 100;
+    }
+  }
+
+  upgradeSpread(gameState) {
+    var price = this.getSpreadPrice();
+    if (gameState.player.money >= price) {
+      gameState.player.money -= price;
+      this.upgrades.spreadRate++;
+      this.spreadRate = Math.round((this.spreadRate * 110 / 100) * 100) / 100;
+    }
+  }
+
+  getIncomePrice() {
+    getPrice(this.upgrades.income);
+  }
+
+  getGrowthPrice() {
+    getPrice(this.upgrades.growthRate);
+  }
+
+  getSpreadPrice() {
+    getPrice(this.upgrades.spreadRate);
+  }
+
+  getPrice(lvl) {
+    return 1000000 * 2 ** lvl;
   }
 }
