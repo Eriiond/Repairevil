@@ -50,11 +50,6 @@ export default class extends Phaser.Scene {
         let player = new Player()
         this.gameState = new GameState(universe, player, this.level)
 
-        this.connectionObjects = this.gameState.universe.spaceConnections.map(
-            c => this.createConnectionObject(c)
-        )
-        this.connectionObjects.forEach(c => c.draw(this))
-
         this.setupSelectBase()
 
         this.planetObjects = this.gameState.universe.planets.map(p =>
@@ -72,6 +67,8 @@ export default class extends Phaser.Scene {
             }
         )
         this.endGameText.setOrigin(0.5, 0)
+        this.eventEmitter.on("planetSelected", this.onPlanetSelected)
+        this.drawedSpaceConnections = []
     }
 
     setupSelectBase() {
@@ -190,13 +187,33 @@ export default class extends Phaser.Scene {
 
     onUnselect() {
         this.selectedObject = null
+
+        this.drawedSpaceConnections.forEach(spaceConnection => {
+            spaceConnection.destroy()
+        })
     }
 
     updateUI() {
         updateInfoArea(this.selectedObject, this.gameState)
     }
 
-    onPlanetSelected(planetObject) {}
+    onPlanetSelected(planetObject) {
+        this.drawedSpaceConnections.forEach(spaceConnection => {
+            spaceConnection.destroy()
+        })
+        let planet = planetObject.model
+        this.connectionObjects = this.gameState.universe.spaceConnections
+            .filter(spaceConnection => {
+                return (
+                    spaceConnection.startPlanet == planet ||
+                    spaceConnection.endPlanet == planet
+                )
+            })
+            .map(c => this.createConnectionObject(c))
+        this.connectionObjects.forEach(c =>
+            this.drawedSpaceConnections.push(c.draw(this))
+        )
+    }
 
     createPlanetObject(model) {
         let sprite = this.add.sprite(0, 0, "planet")
