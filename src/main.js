@@ -1,20 +1,15 @@
-var seedrandom = require("seedrandom");
-seedrandom("Repairevil", { global: true });
+import Phaser from "phaser"
+import GameScene from "./scenes/Game"
+import config from "./config"
 
-import Phaser from "phaser";
-import GameScene from "./scenes/Game";
-import config from "./config";
+const gameConfig = Object.assign(config, {
+    scene: [GameScene],
+})
 
-setTimeout(() => {
-  const gameConfig = Object.assign(config, {
-    scene: [GameScene]
-  });
-
-  class Game extends Phaser.Game {
+class Game extends Phaser.Game {
     constructor() {
-      super(gameConfig);
+        super(gameConfig)
     }
-  }
+}
 
-  window.game = new Game();
-}, 500);
+window.game = new Game()

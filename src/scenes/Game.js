@@ -49,7 +49,6 @@ export default class extends Phaser.Scene {
 
     create() {
         this.setupUI()
-
         this.endGameText = this.add.text(
             (Viewport.width * 3) / 4 / 2,
             Viewport.height / 3,
@@ -121,10 +120,10 @@ export default class extends Phaser.Scene {
 
                 path.lineTo(toPlanetPosition[0], toPlanetPosition[1])
 
-                let delay = 100
+                let delay = 50
                 let duration = 1000
 
-                for (var i = 0; i < shipFleet / 1000; i++) {
+                for (var i = 0; i < shipFleet / 200; i++) {
                     var follower = this.add.follower(path, 0, 0, sprite)
 
                     follower.startFollow({
@@ -172,16 +171,24 @@ export default class extends Phaser.Scene {
     }
 
     onEndGame(won) {
+        if (this.gameState.gamePhase !== GamePhaseIngame) {
+            return
+        }
+
         console.error("Game.onEndGame:", won)
         this.gameState.gamePhase = GamePhaseEnd
-        this.endGameText.setText(won ? "You won!" : "GameOver")
+        if (won) {
+            this.endGameText.setText("You won!")
+            this.level = this.level + 1
+        } else {
+            this.endGameText.setText("Try again")
+        }
         this.endGameText.visible = true
         setTimeout(this.restartGame, 3000)
     }
 
     restartGame() {
         this.destroy()
-        this.level = this.level + 1
         this.startLevel(this.level)
     }
 
