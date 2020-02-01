@@ -70,7 +70,9 @@ export class Planet {
 
     this.position = position;
     this.population = {};
+    this.population.virus = 0;
     this.population.default = this.generatePopulation();
+    this.population.player = 0;
     this.income = this.generateIncome();
     this.growthRate = this.generateGrowthRate();
     this.spreadRate = this.generateSpreadRate();
