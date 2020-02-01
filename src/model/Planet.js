@@ -158,13 +158,11 @@ export class Planet {
   }
 
   getOwner() {
-    return this.population.default > 0
-      ? OwnerDefault
+    return this.population.virus > 0
+      ? OwnerVirus
       : this.population.player > 0
       ? OwnerPlayer
-      : this.population.virus > 0
-      ? OwnerVirus
-      : null;
+      : OwnerDefault;
   }
 
   getPopulation() {

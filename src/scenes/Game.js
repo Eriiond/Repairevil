@@ -11,7 +11,7 @@ export default class extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
 
-    this.level = 1;
+    this.level = 100;
 
     this.selectedObject = null;
     this.planetObjects = Array();
@@ -104,6 +104,8 @@ export default class extends Phaser.Scene {
     this.eventEmitter.removeAllListeners();
     this.eventEmitter.on("planetClicked", this.onPlanetClicked);
     this.eventEmitter.on("planetSelected", this.onPlanetSelected);
+    this.eventEmitter.on("gameStep", this.updateUI);
+
     updateInfoArea(this.selectedObject, this.gameState);
     this.eventEmitter.emit("planetSelected", this.selectedObject);
   }
@@ -150,13 +152,15 @@ export default class extends Phaser.Scene {
   }
 
   update() {
-    if (this.gameState.gamePhase == GamePhaseIngame)
+    if (this.gameState.gamePhase == GamePhaseIngame) {
       GameLogic.update(this.gameState, this.eventEmitter);
+    }
+    this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
     updateInfoArea(this.selectedObject, this.gameState);
   }
 
   onUnselect() {
-    this.selectedObject && this.selectedObject.reset();
+    // this.selectedObject && this.selectedObject.reset();
     this.selectedObject = null;
   }
 
@@ -165,10 +169,10 @@ export default class extends Phaser.Scene {
   }
 
   onPlanetSelected(planetObject) {
-    this.planetObjects
-      .filter(p => p !== this.selectedObject)
-      .forEach(p => p.reset());
-    this.selectedObject.onSelected();
+    // this.planetObjects
+    //   .filter(p => p !== this.selectedObject)
+    //   .forEach(p => p.reset());
+    // this.selectedObject.onSelected();
   }
 
   createPlanetObject(model) {
