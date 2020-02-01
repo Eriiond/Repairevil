@@ -32,7 +32,7 @@ export class Universe {
       let cellIndex = freeCells.indexOf(cellPosition);
       freeCells.splice(cellIndex, 1);
 
-      this.planets.push(new Planet(cellPosition));
+      this.planets.push(new Planet(cellPosition, level));
     }
 
     // Create connections
@@ -64,7 +64,10 @@ export class Universe {
 
     // Create remaining connections
     for (var i = 0; i < planetAmount; i++) {
-      let connectionAmount = Utils.getRandomArbitrary(0, maxConnections - 1);
+      let connectionAmount = Utils.getRandomArbitrary(
+        0,
+        maxConnectionAmount - 1
+      );
 
       while (connectionAmount > 0) {
         var freePlanetsToConnectTo = [];
@@ -110,7 +113,7 @@ export class Universe {
 
   getFreePLanetNumber(freePlanets) {
     let planetNumber = Utils.getRandomArbitrary(0, freePlanets.length - 1);
-    freePlanets.splice(freeCells.indexOf(cellPosition), 1);
+    freePlanets.splice(freePlanets.indexOf(planetNumber), 1);
     return planetNumber;
   }
 
