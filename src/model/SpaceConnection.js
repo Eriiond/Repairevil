@@ -1,5 +1,5 @@
-base_minSendPropability = 1;
-base_maxSendPropability = 100;
+const base_minSendPropability = 1;
+const base_maxSendPropability = 100;
 
 export class SpaceConnection {
   // startPlanet: Planet;
