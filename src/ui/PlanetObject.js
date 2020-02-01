@@ -17,7 +17,7 @@ export class PlanetObject {
 
   init(scene) {
     const [x, y] = this.model.getPosition();
-    this.levelText = scene.add.text(x, y, "", {
+    this.levelText = scene.add.text(x, y + 20, "", {
       fontFamily: '"Roboto Condensed"',
       fontSize: 18
     });
