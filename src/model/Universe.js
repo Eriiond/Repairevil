@@ -123,13 +123,15 @@ export class Universe {
   }
 
   getFreePLanetNumber(freePlanets) {
-    let planetNumber = Utils.getRandomArbitrary(0, freePlanets.length - 1);
-    freePlanets.splice(freePlanets.indexOf(planetNumber), 1);
+    let planetIndex = Utils.getRandomArbitrary(0, freePlanets.length - 1);
+    let planetNumber = freePlanets[planetIndex];
+    freePlanets.splice(planetIndex, 1);
     return planetNumber;
   }
 
   getOccupiedPlanetNumber(occupiedPlanets) {
-    let planetNumber = Utils.getRandomArbitrary(0, occupiedPlanets.length - 1);
+    let planetIndex = Utils.getRandomArbitrary(0, occupiedPlanets.length - 1);
+    let planetNumber = occupiedPlanets[planetIndex];
     return planetNumber;
   }
 }
