@@ -6,7 +6,6 @@ import { GameState, GamePhaseIngame } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
-import { colors } from "../ui/consts";
 
 export default class extends Phaser.Scene {
   constructor() {
