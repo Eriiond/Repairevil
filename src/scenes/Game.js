@@ -16,7 +16,7 @@ export default class extends Phaser.Scene {
     this.planetObjects = this.planets = Array();
     this.frameCounter = 0;
 
-    this.eventEmitter = this.events;
+    this.eventEmitter = new Phaser.Events.EventEmitter();
     GameLogic.setEventEmitter(this.eventEmitter);
 
     this.onUpgradeGrowth = this.onUpgradeGrowth.bind(this);
@@ -45,10 +45,41 @@ export default class extends Phaser.Scene {
     );
     this.connectionObjects.forEach(c => c.draw(this));
 
-    this.eventEmitter.on(
-      "spreadPlayer",
-      (fromPlanet, toPlanet, shipFleet) => {}
-    );
+    this.eventEmitter.on("spreadPlayer", (fromPlanet, toPlanet, shipFleet) => {
+      let graphics = this.add.graphics();
+      let follower = { t: 0, vec: new Phaser.Math.Vector2() };
+
+      let fromPlanetPosition = fromPlanet.getPosition();
+      let toPlanetPosition = toPlanet.getPosition();
+
+      //  Path starts at 100x100
+      path = new Phaser.Curves.Path(
+        fromPlanetPosition[0],
+        fromPlanetPosition[1]
+      );
+
+      path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
+
+      this.tweens.add({
+        targets: follower,
+        t: 1,
+        ease: "Sine.easeInOut",
+        duration: 1000,
+        yoyo: false,
+        repeat: 0
+      });
+
+      //graphics.clear();
+
+      graphics.lineStyle(2, 0xffffff, 1);
+
+      path.draw(graphics);
+
+      path.getPoint(follower.t, follower.vec);
+
+      graphics.fillStyle(0xff0000, 1);
+      graphics.fillCircle(follower.vec.x, follower.vec.y, 12);
+    });
 
     this.planetObjects = this.gameState.universe.planets.map(p =>
       this.createPlanetObject(p)
