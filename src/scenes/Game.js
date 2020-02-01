@@ -13,6 +13,7 @@ import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
 import { Viewport } from "../ui/consts";
 import { InputManager } from "../ui/InputManager";
+import { getPopulationPercentiles } from "../ui/util";
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -96,6 +97,14 @@ export default class extends Phaser.Scene {
 
         this.planetObjects = this.gameState.universe.planets.map(p =>
             this.createPlanetObject(p)
+        );
+
+        const percentiles = getPopulationPercentiles(this.planetObjects);
+        console.log("percentiles:", percentiles);
+        percentiles.forEach((percentile, i) =>
+            percentile.forEach(planetObject =>
+                planetObject.init(this, 1 - 0.1 * i)
+            )
         );
 
         this.setupSelectBase();
@@ -276,7 +285,6 @@ export default class extends Phaser.Scene {
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
         );
-        planet.init(this);
         return planet;
     }
 

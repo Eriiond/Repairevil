@@ -13,9 +13,12 @@ export class PlanetObject {
         let [x, y] = this.model.getPosition();
         this.sprite.x = x;
         this.sprite.y = y;
+
+        // this.model.getPopulation()
+        // this.sprite.scale = scaleFactor;
     }
 
-    init(scene) {
+    init(scene, scale) {
         const [x, y] = this.model.getPosition();
         this.populationText = scene.add.text(x, y + 20, "", {
             fontFamily: '"Roboto Condensed"',
@@ -30,7 +33,8 @@ export class PlanetObject {
                 alpha: 1,
             },
         });
-        this.circle = graphics.strokeCircle(x, y, 32);
+        this.circle = graphics.strokeCircle(x, y, scale * 65);
+        this.sprite.scale = scale;
     }
 
     onClick() {}
