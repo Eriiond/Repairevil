@@ -17,7 +17,7 @@ export class Universe {
     let cellX = (maxX / 100) * 2; // 24
     let cellY = (maxY / 100) * 2; // 18
     let maxCell = cellX * cellY;
-    let planetAmount = (level % 5) + 5;
+    let planetAmount = Math.floor(level / 5) + 5;
 
     // Fil array with possible cells
     let freeCells = [];
@@ -36,7 +36,7 @@ export class Universe {
     }
 
     // Create connections
-    let maxConnectionAmount = (level % 5) + 1;
+    let maxConnectionAmount = Math.floor(level / 5) + 1;
 
     let freePlanets = [];
     let occupiedPlanets = [];
@@ -100,7 +100,9 @@ export class Universe {
           // If no free planet is available cancel the operation.
           connectionAmount = 0;
         } else {
-          let freePlanetNumber = getFreePLanetNumber(freePlanetsToConnectTo);
+          let freePlanetNumber = this.getFreePLanetNumber(
+            freePlanetsToConnectTo
+          );
 
           this.spaceConnections.push(
             new SpaceConnection(this.planets[i], this.planets[freePlanetNumber])
