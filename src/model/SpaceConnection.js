@@ -1,4 +1,4 @@
-const base_minSendPropability = 2
+const base_minSendPropability = 5
 const base_maxSendPropability = 25
 
 export class SpaceConnection {

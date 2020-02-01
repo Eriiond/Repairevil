@@ -23,7 +23,7 @@ export class Universe {
     }
 
     generate(level) {
-        seedrandom("Repairevil" + level, { global: true });
+        seedrandom("Repair" + level, { global: true });
         let maxX = 1200;
         let maxY = 900;
         let cellX = (maxX / 100) * 2; // 24
