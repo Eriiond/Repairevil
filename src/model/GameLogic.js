@@ -86,7 +86,7 @@ export class GameLogic {
         var shipFleet = Math.floor(
             (fromPlanet.population.player * fromPlanet.spreadRate) / 100
         );
-        fromPlanet.population.virus -= shipFleet;
+        fromPlanet.population.player -= shipFleet;
         this.fightPlanetWithPlayer(toPlanet, shipFleet);
     }
 
