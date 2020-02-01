@@ -7,7 +7,5 @@ export class ConnectionObject {
     // this.sprite.on("pointerup", this.onClick);
   }
 
-  onClick() {
-    console.log("!!!");
-  }
+  onClick() {}
 }

@@ -13,9 +13,7 @@ export class PlanetObject {
     this.sprite.y = yPos * 50 + 25;
   }
 
-  onClick() {
-    console.log("!!!");
-  }
+  onClick() {}
 
   update() {}
 }
