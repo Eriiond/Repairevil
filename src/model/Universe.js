@@ -93,12 +93,17 @@ export class Universe {
           }
         });
 
-        let freePlanetNumber = getFreePLanetNumber(freePlanetsToConnectTo);
+        if (freePlanetsToConnectTo.length === 0) {
+          // If no free planet is available cancel the operation.
+          connectionAmount = 0;
+        } else {
+          let freePlanetNumber = getFreePLanetNumber(freePlanetsToConnectTo);
 
-        this.spaceConnections.push(
-          new SpaceConnection(this.planets[i], this.planets[freePlanetNumber])
-        );
-        connectionAmount--;
+          this.spaceConnections.push(
+            new SpaceConnection(this.planets[i], this.planets[freePlanetNumber])
+          );
+          connectionAmount--;
+        }
       }
     }
   }
