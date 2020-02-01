@@ -85,10 +85,10 @@ export default class extends Phaser.Scene {
 
         path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
 
-        let delay = 100;
+        let delay = 50;
         let duration = 1000;
 
-        for (var i = 0; i < shipFleet / 1000; i++) {
+        for (var i = 0; i < shipFleet / 200; i++) {
           var follower = this.add.follower(path, 0, 0, sprite);
 
           follower.startFollow({
