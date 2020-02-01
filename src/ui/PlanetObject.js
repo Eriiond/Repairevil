@@ -17,11 +17,11 @@ export class PlanetObject {
 
     init(scene) {
         const [x, y] = this.model.getPosition()
-        this.levelText = scene.add.text(x, y + 20, "", {
+        this.populationText = scene.add.text(x, y + 20, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
         })
-        this.levelText.setOrigin(0.5, 0.5)
+        this.populationText.setOrigin(0.5, 0.5)
     }
 
     onClick() {}
@@ -29,8 +29,8 @@ export class PlanetObject {
     update() {}
 
     draw(selected) {
-        this.levelText &&
-            this.levelText.setText(
+        this.populationText &&
+            this.populationText.setText(
                 "" + shortenNumberText(this.model.getPopulation())
             )
 
@@ -59,6 +59,10 @@ export class PlanetObject {
         }
     }
 
+    destroy() {
+        this.sprite.destroy()
+        this.populationText.destroy()
+    }
     // reset() {
     //   let owner = this.model.getOwner();
     //   switch (owner) {

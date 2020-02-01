@@ -2,12 +2,16 @@ import Phaser from "phaser"
 import { PlanetObject } from "../ui/PlanetObject"
 import { ConnectionObject } from "../ui/ConnectionObject"
 import { Player } from "../model/Player"
-import { GameState, GamePhaseIngame, GamePhaseEnd } from "../model/GameState"
+import {
+    GameState,
+    GamePhaseIngame,
+    GamePhaseEnd,
+    GamePhaseChooseBase,
+} from "../model/GameState"
 import { Universe } from "../model/Universe"
 import { GameLogic } from "../model/GameLogic"
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea"
 import { Viewport } from "../ui/consts"
-var seedrandom = require("seedrandom")
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -32,6 +36,8 @@ export default class extends Phaser.Scene {
         this.onBaseChosen = this.onBaseChosen.bind(this)
         this.onPlanetSelected = this.onPlanetSelected.bind(this)
         this.onEndGame = this.onEndGame.bind(this)
+        this.restartGame = this.restartGame.bind(this)
+        this.startLevel = this.startLevel.bind(this)
     }
 
     preload() {
@@ -43,12 +49,33 @@ export default class extends Phaser.Scene {
 
     create() {
         this.setupUI()
+        this.endGameText = this.add.text(
+            (Viewport.width * 3) / 4 / 2,
+            Viewport.height / 3,
+            "",
+            {
+                fontFamily: '"Roboto Condensed"',
+                fontSize: 50,
+                color: "#b0b0b0",
+            }
+        )
+        this.endGameText.setOrigin(0.5, 0)
 
-        seedrandom("Repairevil", { global: true })
+        this.startLevel(this.level)
+    }
+
+    destroy() {
+        this.selectedObject = null
+        this.planetObjects && this.planetObjects.forEach(p => p.destroy())
+        this.connectionObjects &&
+            this.connectionObjects.forEach(c => c.destroy())
+    }
+
+    startLevel(level) {
         let universe = new Universe()
-        universe.generate(this.level)
+        universe.generate(level)
         let player = new Player()
-        this.gameState = new GameState(universe, player, this.level)
+        this.gameState = new GameState(universe, player, level)
 
         this.setupSelectBase()
 
@@ -69,6 +96,10 @@ export default class extends Phaser.Scene {
         this.endGameText.setOrigin(0.5, 0)
         this.eventEmitter.on("planetSelected", this.onPlanetSelected)
         this.drawedSpaceConnections = []
+        this.setupSelectBase()
+
+        this.gameState.gamePhase = GamePhaseChooseBase
+        this.endGameText.visible = false
     }
 
     setupSelectBase() {
@@ -85,7 +116,6 @@ export default class extends Phaser.Scene {
         this.eventEmitter.on("planetSelected", this.onPlanetSelected)
         this.eventEmitter.on("gameStep", this.updateUI)
         this.eventEmitter.on("endGame", this.onEndGame)
-        this.eventEmitter.on("spreadVirus", this.onEndGame)
 
         this.eventEmitter.on(
             "spread",
@@ -151,10 +181,25 @@ export default class extends Phaser.Scene {
     }
 
     onEndGame(won) {
-        console.log("onEndGame:", won)
+        if (this.gameState.gamePhase !== GamePhaseIngame) {
+            return
+        }
+
+        console.error("Game.onEndGame:", won)
         this.gameState.gamePhase = GamePhaseEnd
-        this.endGameText.setText(won ? "You won!" : "GameOver")
+        if (won) {
+            this.endGameText.setText("You won!")
+            this.level = this.level + 1
+        } else {
+            this.endGameText.setText("Try again")
+        }
         this.endGameText.visible = true
+        setTimeout(this.restartGame, 3000)
+    }
+
+    restartGame() {
+        this.destroy()
+        this.startLevel(this.level)
     }
 
     onUpgradeGrowth() {
