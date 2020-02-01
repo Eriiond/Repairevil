@@ -190,11 +190,13 @@ export default class extends Phaser.Scene {
     sprite.on("pointerup", () =>
       this.eventEmitter.emit("planetClicked", planet)
     );
+    planet.init(this);
     return planet;
   }
 
   createConnectionObject(model) {
     let connection = new ConnectionObject(model);
+    connection.init(this);
     return connection;
   }
 
