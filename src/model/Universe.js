@@ -2,6 +2,13 @@ import { Planet } from "./Planet";
 import { SpaceConnection } from "./SpaceConnection";
 import * as Utils from "./Utils";
 
+const base_minVirusPopulation = 1000;
+const base_maxVirusPopulation = 10000;
+const base_minVirusGrowthRate = 1;
+const base_maxVirusGrowthRate = 10;
+const base_minVirusSpreadRate = 1;
+const base_maxVirusSpreadRate = 100;
+
 export class Universe {
   // planets : Array<Planet>
   // spaceConnections: Array<SpaceConnection>
@@ -120,6 +127,9 @@ export class Universe {
         }
       }
     }
+
+    this.generateVirus(level);
+    this.spawnVirus();
   }
 
   getFreePLanetNumber(freePlanets) {
@@ -133,5 +143,44 @@ export class Universe {
     let planetIndex = Utils.getRandomArbitrary(0, occupiedPlanets.length - 1);
     let planetNumber = occupiedPlanets[planetIndex];
     return planetNumber;
+  }
+
+  getRandomPlanet() {
+    var occupiedPlanets = [];
+    for (var i = 0; i < this.planets.length; i++) {
+      occupiedPlanets.push(i);
+    }
+    return this.planets[this.getOccupiedPlanetNumber(occupiedPlanets)];
+  }
+
+  spawnVirus() {
+    var planet = this.getRandomPlanet();
+    console.log("planet:", planet.name);
+    planet.population.default = 0;
+    planet.population.virus = this.virusPopulation;
+    planet.growthRate = this.virusGrowthRate;
+    planet.spreadRate = this.virusSpreadRate;
+  }
+
+  generateVirus(level) {
+    this.virusPopulation = this.generateVirusPopulation(level);
+    this.virusGrowthRate = this.generateVirusGrowthRate(level);
+    this.virusSpreadRate = this.generateVirusSpreadRate(level);
+  }
+
+  generateVirusPopulation(level) {
+    return Utils.getRandomArbitrary(base_minVirusPopulation * level, base_maxVirusPopulation * level);
+  }
+
+  generateVirusGrowthRate(level) {
+    return Utils.getRandomArbitrary(base_minVirusGrowthRate * level, base_maxVirusGrowthRate * level);
+  }
+
+  generateVirusSpreadRate(level) {
+    let rate = Utils.getRandomArbitrary(base_minVirusSpreadRate * level, base_maxVirusSpreadRate * level);
+    if (rate > 100) {
+      rate = 100;
+    }
+    return rate;
   }
 }
