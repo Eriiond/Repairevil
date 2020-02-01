@@ -61,11 +61,11 @@ export class Planet {
     this.minSpreadRate = base_minSpreadRate * (Math.floor(level / 5) + 1);
     this.maxSpreadRate = base_maxSpreadRate * (Math.floor(level / 5) + 1);
 
-    if (this.minSpreadRate > 100) {
-      this.minSpreadRate = 100;
+    if (this.minSpreadRate > 99) {
+      this.minSpreadRate = 99;
     }
-    if (this.maxSpreadRate > 100) {
-      this.maxSpreadRate = 100;
+    if (this.maxSpreadRate > 99) {
+      this.maxSpreadRate = 99;
     }
 
     this.position = position;
