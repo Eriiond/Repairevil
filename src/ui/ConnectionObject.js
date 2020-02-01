@@ -50,7 +50,7 @@ export class ConnectionObject {
                 if (this.cureLine) {
                     let strokeAlpha = Math.min(
                         1,
-                        this.cureLine.strokeAlpha + 0.025
+                        this.cureLine.strokeAlpha + 0.0125
                     );
                     let strokeColor = this.cureLine.strokeColor;
                     let lineWith = this.cureLine.lineWidth;
@@ -81,7 +81,7 @@ export class ConnectionObject {
                 if (this.virusLine) {
                     let strokeAlpha = Math.min(
                         1,
-                        this.virusLine.strokeAlpha + 0.025
+                        this.virusLine.strokeAlpha + 0.0125
                     );
                     let strokeColor = this.virusLine.strokeColor;
                     let lineWith = this.virusLine.lineWidth;
