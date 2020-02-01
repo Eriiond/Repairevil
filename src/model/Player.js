@@ -1,6 +1,5 @@
 export class Player {
-
-    constructor() {
-        this.money = 0;
-    }
+  constructor() {
+    this.money = 1000000000;
+  }
 }

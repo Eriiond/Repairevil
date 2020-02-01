@@ -121,7 +121,7 @@ export function setupInfoArea(scene, callbacks) {
 }
 
 export function updateInfoArea(selectedObject, gameState) {
-  money.setText("Money: " + gameState.player.money);
+  money.setText("$" + gameState.player.money);
 
   if (selectedObject) {
     selectedObjectTitle.setText(selectedObject.model.name);
@@ -144,13 +144,13 @@ export function updateInfoArea(selectedObject, gameState) {
       "Spread Rate: " + selectedObject.model.spreadRate
     );
     selectedUpdateGrowth.setText(
-      "Update Growth - $" + selectedObject.model.upgrades.growthRate
+      "Update Growth - $" + selectedObject.model.getGrowthPrice()
     );
     selectedUpdateIncome.setText(
-      "Update Income - $" + selectedObject.model.upgrades.income
+      "Update Income - $" + selectedObject.model.getIncomePrice()
     );
     selectedUpdateSpread.setText(
-      "Update Spread  - $" + selectedObject.model.upgrades.spreadRate
+      "Update Spread  - $" + selectedObject.model.getSpreadPrice()
     );
   } else {
     resetSelectedArea();

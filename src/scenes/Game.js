@@ -15,6 +15,10 @@ export default class extends Phaser.Scene {
 
     this.planetObjects = this.planets = Array();
     this.frameCounter = 0;
+
+    this.onUpgradeGrowth = this.onUpgradeGrowth.bind(this);
+    this.onUpgradeIncome = this.onUpgradeIncome.bind(this);
+    this.onUpgradeSpread = this.onUpgradeSpread.bind(this);
   }
 
   preload() {
@@ -42,6 +46,7 @@ export default class extends Phaser.Scene {
     let background = this.add.sprite(800, 450, "galaxy");
     background.on("pointerup", () => {
       this.selectedObject = null;
+      console.log("set selectedObject to null");
       updateInfoArea(this.selectedObject, this.gameState);
     });
     background.setInteractive();
@@ -56,18 +61,25 @@ export default class extends Phaser.Scene {
 
   onUpgradeGrowth() {
     console.log("onUpgradeGrowth");
+    this.selectedObject.model.upgradeGrowth(this.gameState);
+    updateInfoArea(this.selectedObject, this.gameState);
   }
 
   onUpgradeIncome() {
     console.log("onUpgradeIncome");
+    this.selectedObject.model.upgradeIncome(this.gameState);
+    updateInfoArea(this.selectedObject, this.gameState);
   }
 
   onUpgradeSpread() {
     console.log("onUpgradeSpread");
+    this.selectedObject.model.upgradeSpread(this.gameState);
+    updateInfoArea(this.selectedObject, this.gameState);
   }
 
   onPlanetClicked(planetObject) {
     this.selectedObject = planetObject;
+    console.log("set selectedObject to ", planetObject);
     updateInfoArea(this.selectedObject, this.gameState);
   }
 

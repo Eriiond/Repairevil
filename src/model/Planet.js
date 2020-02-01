@@ -48,7 +48,7 @@ export class Planet {
   constructor(position, level) {
     this.name = `${
       greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-      } ${position}`;
+    } ${position}`;
     this.minPopulation = base_minPopulation * (Math.floor(level / 5) + 1);
     this.maxPopulation = base_maxPopulation * (Math.floor(level / 5) + 1);
     this.minIncome = base_minIncome * (Math.floor(level / 5) + 1);
@@ -98,7 +98,7 @@ export class Planet {
     if (gameState.player.money >= price) {
       gameState.player.money -= price;
       this.upgrades.income++;
-      this.income = Math.floor(this.income * 110 / 100);
+      this.income = Math.floor((this.income * 110) / 100);
     }
   }
 
@@ -107,7 +107,7 @@ export class Planet {
     if (gameState.player.money >= price) {
       gameState.player.money -= price;
       this.upgrades.growthRate++;
-      this.growthRate = Math.round((this.growthRate * 110 / 100) * 100) / 100;
+      this.growthRate = Math.round(((this.growthRate * 110) / 100) * 100) / 100;
     }
   }
 
@@ -116,23 +116,24 @@ export class Planet {
     if (gameState.player.money >= price) {
       gameState.player.money -= price;
       this.upgrades.spreadRate++;
-      this.spreadRate = Math.round((this.spreadRate * 110 / 100) * 100) / 100;
+      this.spreadRate = Math.round(((this.spreadRate * 110) / 100) * 100) / 100;
     }
   }
 
   getIncomePrice() {
-    getPrice(this.upgrades.income);
+    return this.getPrice(this.upgrades.income);
   }
 
   getGrowthPrice() {
-    getPrice(this.upgrades.growthRate);
+    return this.getPrice(this.upgrades.growthRate);
   }
 
   getSpreadPrice() {
-    getPrice(this.upgrades.spreadRate);
+    return this.getPrice(this.upgrades.spreadRate);
   }
 
   getPrice(lvl) {
+    console.log("lvl:", lvl);
     return 1000000 * 2 ** lvl;
   }
 }
