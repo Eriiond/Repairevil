@@ -2,10 +2,11 @@ import Phaser from "phaser";
 import { PlanetObject } from "../ui/PlanetObject";
 import { ConnectionObject } from "../ui/ConnectionObject";
 import { Player } from "../model/Player";
-import { GameState, GamePhaseIngame } from "../model/GameState";
+import { GameState, GamePhaseIngame, GamePhaseEnd } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
+import { Viewport } from "../ui/consts";
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -29,6 +30,7 @@ export default class extends Phaser.Scene {
     this.onPlanetClicked = this.onPlanetClicked.bind(this);
     this.onBaseChosen = this.onBaseChosen.bind(this);
     this.onPlanetSelected = this.onPlanetSelected.bind(this);
+    this.onEndGame = this.onEndGame.bind(this);
   }
 
   preload() {
@@ -56,6 +58,18 @@ export default class extends Phaser.Scene {
     this.planetObjects = this.gameState.universe.planets.map(p =>
       this.createPlanetObject(p)
     );
+
+    this.endGameText = this.add.text(
+      (Viewport.width * 3) / 4 / 2,
+      Viewport.height / 3,
+      "",
+      {
+        fontFamily: '"Roboto Condensed"',
+        fontSize: 50,
+        color: "#b0b0b0"
+      }
+    );
+    this.endGameText.setOrigin(0.5, 0);
   }
 
   setupSelectBase() {
@@ -71,6 +85,8 @@ export default class extends Phaser.Scene {
     this.eventEmitter.on("planetClicked", this.onPlanetClicked);
     this.eventEmitter.on("planetSelected", this.onPlanetSelected);
     this.eventEmitter.on("gameStep", this.updateUI);
+    this.eventEmitter.on("endGame", this.onEndGame);
+    this.eventEmitter.on("spreadVirus", this.onEndGame);
 
     this.eventEmitter.on(
       "spread",
@@ -135,6 +151,13 @@ export default class extends Phaser.Scene {
     setupInfoArea(this, infoAreaCallbacks, graphics);
   }
 
+  onEndGame(won) {
+    console.log("onEndGame:", won);
+    this.gameState.gamePhase = GamePhaseEnd;
+    this.endGameText.setText(won ? "You won!" : "GameOver");
+    this.endGameText.visible = true;
+  }
+
   onUpgradeGrowth() {
     this.selectedObject.model.upgradeGrowth(this.gameState);
     this.updateUI();
@@ -164,7 +187,6 @@ export default class extends Phaser.Scene {
   }
 
   onUnselect() {
-    // this.selectedObject && this.selectedObject.reset();
     this.selectedObject = null;
   }
 
@@ -172,12 +194,7 @@ export default class extends Phaser.Scene {
     updateInfoArea(this.selectedObject, this.gameState);
   }
 
-  onPlanetSelected(planetObject) {
-    // this.planetObjects
-    //   .filter(p => p !== this.selectedObject)
-    //   .forEach(p => p.reset());
-    // this.selectedObject.onSelected();
-  }
+  onPlanetSelected(planetObject) {}
 
   createPlanetObject(model) {
     let sprite = this.add.sprite(0, 0, "planet");
@@ -194,11 +211,4 @@ export default class extends Phaser.Scene {
     connection.init(this);
     return connection;
   }
-
-  // handleGameEvent(eventType, args) {
-  //   switch (eventType) {
-  //     case "spread": {
-  //     }
-  //   }
-  // }
 }
