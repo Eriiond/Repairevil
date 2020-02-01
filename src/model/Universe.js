@@ -3,12 +3,15 @@ import { SpaceConnection } from "./SpaceConnection";
 import * as Utils from "./Utils";
 var seedrandom = require("seedrandom");
 
+const virusDivider = 4; // Level / Divider for each penalty
+const virusMultiplier = 1.25; // Level * Multiplier for each buff
+
 const base_minVirusPopulation = 1000;
-const base_maxVirusPopulation = 10000;
-const base_minVirusGrowthRate = 1;
-const base_maxVirusGrowthRate = 10;
-const base_minVirusSpreadRate = 1;
-const base_maxVirusSpreadRate = 100;
+const base_maxVirusPopulation = 2500;
+const base_minVirusGrowthRate = 10;
+const base_maxVirusGrowthRate = 20;
+const base_minVirusSpreadRate = 2;
+const base_maxVirusSpreadRate = 8;
 
 export class Universe {
     // planets : Array<Planet>
@@ -20,7 +23,7 @@ export class Universe {
     }
 
     generate(level) {
-        seedrandom("Repairevil" + level, { global: true });
+        seedrandom("Repair" + level, { global: true });
         let maxX = 1200;
         let maxY = 900;
         let cellX = (maxX / 100) * 2; // 24
@@ -28,8 +31,8 @@ export class Universe {
         let maxCell = cellX * cellY;
         let planetAmount = Math.min(
             Utils.getRandomArbitrary(
-                Math.floor(level / 5),
-                (Math.floor(level / 5) + 1) * 2
+                Math.floor(level / 2),
+                (Math.floor(level / 2) + 1) * 3
             ) + 5,
             Math.floor(maxCell / 2)
         );
@@ -53,7 +56,7 @@ export class Universe {
         // Create connections
         let maxConnectionAmount = Math.min(
             Math.floor(level / 5) + 1,
-            Math.floor(planetAmount / 2)
+            Math.floor(planetAmount / 5)
         );
 
         let freePlanets = [];
@@ -181,25 +184,25 @@ export class Universe {
 
     generateVirusPopulation(level) {
         return Utils.getRandomArbitrary(
-            base_minVirusPopulation * level,
-            base_maxVirusPopulation * level
+            Math.floor(base_minVirusPopulation * level * virusMultiplier),
+            Math.floor(base_maxVirusPopulation * level * virusMultiplier)
         );
     }
 
     generateVirusGrowthRate(level) {
         return Utils.getRandomArbitrary(
-            base_minVirusGrowthRate * level,
-            base_maxVirusGrowthRate * level
+            Math.floor(base_minVirusGrowthRate * level * virusMultiplier),
+            Math.floor(base_maxVirusGrowthRate * level * virusMultiplier)
         );
     }
 
     generateVirusSpreadRate(level) {
         let rate = Utils.getRandomArbitrary(
-            base_minVirusSpreadRate * level,
-            base_maxVirusSpreadRate * level
+            Math.floor(base_minVirusSpreadRate + level * virusMultiplier * 2),
+            Math.floor(base_maxVirusSpreadRate + level * virusMultiplier * 2)
         );
-        if (rate > 100) {
-            rate = 100;
+        if (rate > 99) {
+            rate = 99;
         }
         return rate;
     }
