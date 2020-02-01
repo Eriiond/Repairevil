@@ -12,6 +12,7 @@ import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
 import { Viewport } from "../ui/consts";
+import { InputManager } from "../ui/InputManager";
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -48,6 +49,15 @@ export default class extends Phaser.Scene {
     }
 
     create() {
+        const callbacks = {
+            onA: () => this.onUpgradeGrowth(),
+            onS: () => this.onUpgradeIncome(),
+            onD: () => this.onUpgradeSpread(),
+            onSpaceDown: () => this.showSpaceConnections(),
+            onSpaceUp: () => this.hideSpaceConnections(),
+        };
+        this.inputManager = new InputManager(this, callbacks);
+
         this.setupUI();
         this.endGameText = this.add.text(
             (Viewport.width * 3) / 4 / 2,
@@ -192,16 +202,25 @@ export default class extends Phaser.Scene {
     }
 
     onUpgradeGrowth() {
+        if (!this.selectedObject) {
+            return;
+        }
         this.selectedObject.model.upgradeGrowth(this.gameState);
         this.updateUI();
     }
 
     onUpgradeIncome() {
+        if (!this.selectedObject) {
+            return;
+        }
         this.selectedObject.model.upgradeIncome(this.gameState);
         this.updateUI();
     }
 
     onUpgradeSpread() {
+        if (!this.selectedObject) {
+            return;
+        }
         this.selectedObject.model.upgradeSpread(this.gameState);
         this.updateUI();
     }
