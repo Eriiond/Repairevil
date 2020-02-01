@@ -1,4 +1,5 @@
 export function planetText(number) {
+  if (number < 1000) return "" + number;
   const str = "" + number / 1000;
   const segments = str.split(".");
   if (segments.length < 2) {
