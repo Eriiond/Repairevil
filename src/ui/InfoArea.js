@@ -189,7 +189,7 @@ export function updateInfoArea(selectedObject, gameState) {
 
         selectedPopulation.setText(
             "Population: " +
-                shortenNumberText(selectedObject.model.getPopulation())
+            shortenNumberText(selectedObject.model.getPopulation())
         );
         selectedGrowthRate.setText(
             "Growth Rate: " + shortenNumberText(selectedObject.model.growthRate)
@@ -198,19 +198,19 @@ export function updateInfoArea(selectedObject, gameState) {
             "Income Rate: " + shortenNumberText(selectedObject.model.income)
         );
         selectedSpreadRate.setText(
-            "Spread Rate: " + shortenNumberText(selectedObject.model.spreadRate)
+            "Spread Rate: " + shortenNumberText(selectedObject.model.spreadChance)
         );
         selectedUpdateGrowth.setText(
             "Upgrade Growth - $" +
-                shortenNumberText(selectedObject.model.getGrowthPrice())
+            shortenNumberText(selectedObject.model.getGrowthPrice())
         );
         selectedUpdateIncome.setText(
             "Upgrade Income - $" +
-                shortenNumberText(selectedObject.model.getIncomePrice())
+            shortenNumberText(selectedObject.model.getIncomePrice())
         );
         selectedUpdateSpread.setText(
             "Upgrade Spread  - $" +
-                shortenNumberText(selectedObject.model.getSpreadPrice())
+            shortenNumberText(selectedObject.model.getSpreadPrice())
         );
     } else {
         resetSelectedArea();

@@ -81,7 +81,7 @@ export class GameLogic {
 
     static spreadVirus(fromPlanet, toPlanet, gameState) {
         var shipFleet = Math.floor(
-            (fromPlanet.population.virus * fromPlanet.spreadRate) / 100
+            (fromPlanet.population.virus * fromPlanet.spreadChance) / 100
         );
 
         eventEmitter.emit(
@@ -98,7 +98,7 @@ export class GameLogic {
 
     static spreadPlayer(fromPlanet, toPlanet, gameState) {
         var shipFleet = Math.floor(
-            (fromPlanet.population.player * fromPlanet.spreadRate) / 100
+            (fromPlanet.population.player * fromPlanet.spreadChance) / 100
         );
 
         eventEmitter.emit(
@@ -121,6 +121,7 @@ export class GameLogic {
             attackedPlanet.population.default == 0
         ) {
             attackedPlanet.population.virus += shipFleet;
+            attackedPlanet.updateNeighbours();
         }
         // planet is owned by virus itself
         if (attackedPlanet.population.virus > 0) {
@@ -133,6 +134,7 @@ export class GameLogic {
                 attackedPlanet.population.virus +=
                     attackedPlanet.population.player * -1;
                 attackedPlanet.population.player = 0;
+                attackedPlanet.updateNeighbours();
             }
         }
         // planet is owned by default
@@ -142,6 +144,7 @@ export class GameLogic {
                 attackedPlanet.population.virus +=
                     attackedPlanet.population.default * -1;
                 attackedPlanet.population.default = 0;
+                attackedPlanet.updateNeighbours();
             }
         }
     }
@@ -162,6 +165,7 @@ export class GameLogic {
             attackedPlanet.population.default == 0
         ) {
             attackedPlanet.population.player += shipFleet;
+            attackedPlanet.updateNeighbours();
         }
         // planet is owned by player itself
         if (attackedPlanet.population.player > 0) {
@@ -174,6 +178,7 @@ export class GameLogic {
                 attackedPlanet.population.player +=
                     attackedPlanet.population.virus * -1;
                 attackedPlanet.population.virus = 0;
+                attackedPlanet.updateNeighbours();
             }
         }
         // planet is owned by default
@@ -183,6 +188,7 @@ export class GameLogic {
                 attackedPlanet.population.player +=
                     attackedPlanet.population.default * -1;
                 attackedPlanet.population.default = 0;
+                attackedPlanet.updateNeighbours();
             }
         }
     }

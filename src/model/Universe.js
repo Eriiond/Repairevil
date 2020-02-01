@@ -140,8 +140,15 @@ export class Universe {
             }
         }
 
+        // generate Virus
         this.generateVirus(level);
         this.spawnVirus();
+
+        // save all neighbours
+        this.planets.forEach((e) => {
+            e.saveNeighbours(this);
+            e.resetWeight();
+        });
     }
 
     getFreePLanetNumber(freePlanets) {
@@ -173,7 +180,7 @@ export class Universe {
         planet.population.default = 0;
         planet.population.virus = this.virusPopulation;
         planet.growthRate = this.virusGrowthRate;
-        planet.spreadRate = this.virusSpreadRate;
+        planet.spreadChance = this.virusSpreadRate;
     }
 
     generateVirus(level) {
