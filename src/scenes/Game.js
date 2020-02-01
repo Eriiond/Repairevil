@@ -71,40 +71,44 @@ export default class extends Phaser.Scene {
     this.eventEmitter.on("planetClicked", this.onPlanetClicked);
     this.eventEmitter.on("planetSelected", this.onPlanetSelected);
     this.eventEmitter.on("gameStep", this.updateUI);
-    this.eventEmitter.on("spreadVirus", (fromPlanet, toPlanet, shipFleet) => {
-      let fromPlanetPosition = fromPlanet.getPosition();
-      let toPlanetPosition = toPlanet.getPosition();
 
-      let path = new Phaser.Curves.Path(
-        fromPlanetPosition[0],
-        fromPlanetPosition[1]
-      );
+    this.eventEmitter.on(
+      "spread",
+      (fromPlanet, toPlanet, shipFleet, sprite) => {
+        let fromPlanetPosition = fromPlanet.getPosition();
+        let toPlanetPosition = toPlanet.getPosition();
 
-      path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
-
-      let delay = 100;
-      let duration = 1000;
-
-      for (var i = 0; i < shipFleet / 1000; i++) {
-        var follower = this.add.follower(path, 0, 0, "virus");
-
-        follower.startFollow({
-          duration: duration,
-          positionOnPath: true,
-          repeat: 0,
-          ease: "Sine.easeInOut",
-          delay: i * delay
-        });
-
-        setTimeout(
-          f => {
-            f.destroy();
-          },
-          duration + i * delay,
-          follower
+        let path = new Phaser.Curves.Path(
+          fromPlanetPosition[0],
+          fromPlanetPosition[1]
         );
+
+        path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
+
+        let delay = 100;
+        let duration = 1000;
+
+        for (var i = 0; i < shipFleet / 1000; i++) {
+          var follower = this.add.follower(path, 0, 0, sprite);
+
+          follower.startFollow({
+            duration: duration,
+            positionOnPath: true,
+            repeat: 0,
+            ease: "Sine.easeInOut",
+            delay: i * delay
+          });
+
+          setTimeout(
+            f => {
+              f.destroy();
+            },
+            duration + i * delay,
+            follower
+          );
+        }
       }
-    });
+    );
 
     updateInfoArea(this.selectedObject, this.gameState);
     this.eventEmitter.emit("planetSelected", this.selectedObject);
