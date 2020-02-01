@@ -6,12 +6,13 @@ import { GameState } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
+import { colors } from "../ui/consts";
 
 export default class extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
 
-    this.level = 1;
+    this.level = 10;
 
     this.planetObjects = this.planets = Array();
     this.frameCounter = 0;
@@ -45,40 +46,48 @@ export default class extends Phaser.Scene {
     );
     this.connectionObjects.forEach(c => c.draw(this));
 
-    this.eventEmitter.on("spreadPlayer", (fromPlanet, toPlanet, shipFleet) => {
+    this.eventEmitter.on("spreadVirus", (fromPlanet, toPlanet, shipFleet) => {
       let graphics = this.add.graphics();
       let follower = { t: 0, vec: new Phaser.Math.Vector2() };
 
       let fromPlanetPosition = fromPlanet.getPosition();
       let toPlanetPosition = toPlanet.getPosition();
 
-      //  Path starts at 100x100
-      path = new Phaser.Curves.Path(
+      let path = new Phaser.Curves.Path(
         fromPlanetPosition[0],
         fromPlanetPosition[1]
       );
 
       path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
 
+      let refreshRate = 50;
+      let duration = 1000;
+
       this.tweens.add({
         targets: follower,
         t: 1,
         ease: "Sine.easeInOut",
-        duration: 1000,
+        duration: duration,
         yoyo: false,
         repeat: 0
       });
 
-      //graphics.clear();
+      let timerId = setInterval(() => {
+        graphics.clear();
+        //graphics.lineStyle(1, colors.connectionVirusColor, 1);
 
-      graphics.lineStyle(2, 0xffffff, 1);
+        path.draw(graphics);
 
-      path.draw(graphics);
+        path.getPoint(follower.t, follower.vec);
 
-      path.getPoint(follower.t, follower.vec);
+        graphics.fillStyle(colors.connectionVirusColor, 1);
+        graphics.fillCircle(follower.vec.x, follower.vec.y, shipFleet / 1000);
+      }, refreshRate);
 
-      graphics.fillStyle(0xff0000, 1);
-      graphics.fillCircle(follower.vec.x, follower.vec.y, 12);
+      setTimeout(() => {
+        clearInterval(timerId);
+        graphics.destroy();
+      }, duration);
     });
 
     this.planetObjects = this.gameState.universe.planets.map(p =>
