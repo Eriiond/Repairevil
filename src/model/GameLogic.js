@@ -80,7 +80,7 @@ export class GameLogic {
             (fromPlanet.population.virus * fromPlanet.spreadRate) / 100
         );
 
-        eventEmitter.emit("spreadVirus", fromPlanet, toPlanet, shipFleet);
+        eventEmitter.emit("spread", fromPlanet, toPlanet, shipFleet, "virus");
 
         fromPlanet.population.virus -= shipFleet;
         this.fightPlanetWithVirus(toPlanet, shipFleet);
@@ -91,7 +91,7 @@ export class GameLogic {
             (fromPlanet.population.player * fromPlanet.spreadRate) / 100
         );
 
-        eventEmitter.emit("spreadPlayer", fromPlanet, toPlanet, shipFleet);
+        eventEmitter.emit("spread", fromPlanet, toPlanet, shipFleet, "cure");
 
         fromPlanet.population.player -= shipFleet;
         this.fightPlanetWithPlayer(toPlanet, shipFleet);
