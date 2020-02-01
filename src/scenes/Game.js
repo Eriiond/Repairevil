@@ -228,7 +228,23 @@ export default class extends Phaser.Scene {
         updateInfoArea(this.selectedObject, this.gameState);
     }
 
-    onPlanetSelected(planetObject) {}
+    onPlanetSelected(planetObject) {
+        this.drawedSpaceConnections.forEach(spaceConnection => {
+            spaceConnection.destroy();
+        });
+        let planet = planetObject.model;
+        this.connectionObjects = this.gameState.universe.spaceConnections
+            .filter(spaceConnection => {
+                return (
+                    spaceConnection.startPlanet == planet ||
+                    spaceConnection.endPlanet == planet
+                );
+            })
+            .map(c => this.createConnectionObject(c));
+        this.connectionObjects.forEach(c =>
+            this.drawedSpaceConnections.push(c.draw(this))
+        );
+    }
 
     createPlanetObject(model) {
         let sprite = this.add.sprite(0, 0, "planet");

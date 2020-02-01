@@ -162,19 +162,6 @@ export function setupInfoArea(scene, callbacks, graphics) {
     );
     scene.add.existing(selectedUpdateSpread);
 
-    // chooseBaseButton = scene.add.text(
-    //     InfoArea.x + InfoArea.margin,
-    //     selectedObjectY + 380 + InfoArea.margin,
-    //     "Choose as home planet",
-    //     {
-    //         fontFamily: '"Roboto Condensed"',
-    //         fontSize: 32,
-    //     }
-    // );
-    // chooseBaseButton.setInteractive();
-    // chooseBaseButton.on("pointerup", () =>
-    //     eventEmitter.emit("choosePlanetClicked")
-    // );
     chooseBaseButton = new TextButton(
         scene,
         InfoArea.x + InfoArea.margin,
