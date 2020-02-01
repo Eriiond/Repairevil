@@ -17,7 +17,7 @@ export default class extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" });
 
-        this.level = 1;
+        this.level = 10;
 
         this.selectedObject = null;
         this.planetObjects = Array();

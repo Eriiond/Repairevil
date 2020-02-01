@@ -3,12 +3,15 @@ import { SpaceConnection } from "./SpaceConnection";
 import * as Utils from "./Utils";
 var seedrandom = require("seedrandom");
 
+const virusDivider = 4; // Level / Divider for each penalty
+const virusMultiplier = 1.25; // Level * Multiplier for each buff
+
 const base_minVirusPopulation = 1000;
 const base_maxVirusPopulation = 2500;
-const base_minVirusGrowthRate = 1;
-const base_maxVirusGrowthRate = 2;
-const base_minVirusSpreadRate = 0;
-const base_maxVirusSpreadRate = 1;
+const base_minVirusGrowthRate = 10;
+const base_maxVirusGrowthRate = 20;
+const base_minVirusSpreadRate = 2;
+const base_maxVirusSpreadRate = 8;
 
 export class Universe {
     // planets : Array<Planet>
@@ -30,8 +33,8 @@ export class Universe {
         let planetAmount = Math.min(
             Utils.getRandomArbitrary(
                 Math.floor(level / 2),
-                (Math.floor(level / 2) + 1) * 2
-            ) + 10,
+                (Math.floor(level / 2) + 1) * 3
+            ) + 5,
             Math.floor(maxCell / 2)
         );
 
@@ -182,22 +185,22 @@ export class Universe {
 
     generateVirusPopulation(level) {
         return Utils.getRandomArbitrary(
-            base_minVirusPopulation * level,
-            base_maxVirusPopulation * level
+            Math.floor(base_minVirusPopulation * level * virusMultiplier),
+            Math.floor(base_maxVirusPopulation * level * virusMultiplier)
         );
     }
 
     generateVirusGrowthRate(level) {
         return Utils.getRandomArbitrary(
-            base_minVirusGrowthRate * level,
-            base_maxVirusGrowthRate * level
+            Math.floor(base_minVirusGrowthRate * level * virusMultiplier),
+            Math.floor(base_maxVirusGrowthRate * level * virusMultiplier)
         );
     }
 
     generateVirusSpreadRate(level) {
         let rate = Utils.getRandomArbitrary(
-            base_minVirusSpreadRate + level * 2,
-            base_maxVirusSpreadRate + level * 2
+            Math.floor(base_minVirusSpreadRate + level * virusMultiplier * 2),
+            Math.floor(base_maxVirusSpreadRate + level * virusMultiplier * 2)
         );
         if (rate > 99) {
             rate = 99;
