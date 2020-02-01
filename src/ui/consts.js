@@ -9,6 +9,11 @@ export const InfoArea = {
 };
 
 export const colors = {
-  selectedPlanetTint: 0xffffff,
+  noTint: 0xffffff,
+  selectedDefaultPlanetTint: 0xaaaaaa,
+  selectedPlayerPlanetTint: 0x00bb00,
+  selectedVirusPlanetTint: 0xbb0000,
+  playerPlanetTint: 0x00ff00,
+  virusPlanetTint: 0xff0000,
   connectionColor: 0x00ff00
 };
