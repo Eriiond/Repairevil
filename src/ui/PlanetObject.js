@@ -35,7 +35,8 @@ export class PlanetObject {
                 alpha: 1,
             },
         });
-        this.circle = graphics.strokeCircle(x, y, scale * 65);
+        let radius = Math.max(scale * 65, 35);
+        this.circle = graphics.strokeCircle(x, y, radius);
         this.sprite.scale = scale;
     }
 

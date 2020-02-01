@@ -21,7 +21,7 @@ export default class extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" });
 
-        this.level = 1;
+        this.level = 2;
 
         this.selectedObject = null;
         this.planetObjects = Array();
@@ -111,7 +111,7 @@ export default class extends Phaser.Scene {
         const percentiles = getPopulationPercentiles(this.planetObjects);
         percentiles.forEach((percentile, i) =>
             percentile.forEach(planetObject =>
-                planetObject.init(this, 0.9 - 0.1 * i)
+                planetObject.init(this, 0.6 - 0.1 * i)
             )
         );
 
