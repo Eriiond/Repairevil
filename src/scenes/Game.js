@@ -6,6 +6,7 @@ import { GameState } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
+import { colors } from "../ui/consts";
 
 export default class extends Phaser.Scene {
   constructor() {
@@ -44,6 +45,12 @@ export default class extends Phaser.Scene {
     this.planetObjects = this.gameState.universe.planets.map(p =>
       this.createPlanetObject(p)
     );
+
+    this.planetObjects[0].model.population = {
+      default: 0,
+      virus: 0,
+      player: 1000
+    };
   }
 
   setupUI() {
@@ -83,6 +90,7 @@ export default class extends Phaser.Scene {
 
   update() {
     GameLogic.update(this.gameState);
+    this.updateUI();
   }
 
   onUnselect() {
@@ -94,7 +102,7 @@ export default class extends Phaser.Scene {
     updateInfoArea(this.selectedObject, this.gameState);
     this.planetObjects
       .filter(p => p !== this.selectedObject)
-      .forEach(p => (p.sprite.tint = 0xffffff));
+      .forEach(p => (p.sprite.tint = colors.selectedPlanetTint));
   }
 
   createPlanetObject(model) {

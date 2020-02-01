@@ -7,3 +7,8 @@ export const InfoArea = {
   height: Viewport.height,
   margin: 20
 };
+
+export const colors = {
+  selectedPlanetTint: 0xffffff,
+  connectionColor: 0x00ff00
+};

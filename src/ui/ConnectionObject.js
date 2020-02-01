@@ -1,3 +1,5 @@
+import { colors } from "./consts";
+
 export class ConnectionObject {
   constructor(model) {
     this.model = model;
@@ -13,7 +15,7 @@ export class ConnectionObject {
     // const line = new Phaser.Geom.Line(100, 100, startX, startY, endX, endY);
     // graphics.strokeLineShape(line);
     scene.add
-      .line(0, 0, startX, startY, endX, endY, 0x00ff00, 0.5)
+      .line(0, 0, startX, startY, endX, endY, colors.connectionColor, 0.5)
       .setOrigin(0, 0);
   }
 
