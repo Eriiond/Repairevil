@@ -31,7 +31,7 @@ export class GameLogic {
                 element.population.virus += Math.floor(
                     element.growthRate *
                     virusFactor *
-                    (Math.floor(gameState.level / 5) + 1)
+                    (Math.floor(gameState.level / 2) + 1)
                 );
             }
             if (element.population.player > 0) {

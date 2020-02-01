@@ -3,11 +3,11 @@ import { SpaceConnection } from "./SpaceConnection";
 import * as Utils from "./Utils";
 
 const base_minVirusPopulation = 1000;
-const base_maxVirusPopulation = 10000;
+const base_maxVirusPopulation = 2500;
 const base_minVirusGrowthRate = 1;
-const base_maxVirusGrowthRate = 10;
-const base_minVirusSpreadRate = 1;
-const base_maxVirusSpreadRate = 100;
+const base_maxVirusGrowthRate = 2;
+const base_minVirusSpreadRate = 0;
+const base_maxVirusSpreadRate = 1;
 
 export class Universe {
   // planets : Array<Planet>
@@ -26,9 +26,9 @@ export class Universe {
     let maxCell = cellX * cellY;
     let planetAmount = Math.min(
       Utils.getRandomArbitrary(
-        Math.floor(level / 5),
-        (Math.floor(level / 5) + 1) * 2
-      ) + 5,
+        Math.floor(level / 2),
+        (Math.floor(level / 2) + 1) * 2
+      ) + 10,
       Math.floor(maxCell / 2)
     );
 
@@ -51,7 +51,7 @@ export class Universe {
     // Create connections
     let maxConnectionAmount = Math.min(
       Math.floor(level / 5) + 1,
-      Math.floor(planetAmount / 2)
+      Math.floor(planetAmount / 5)
     );
 
     let freePlanets = [];
@@ -183,11 +183,11 @@ export class Universe {
 
   generateVirusSpreadRate(level) {
     let rate = Utils.getRandomArbitrary(
-      base_minVirusSpreadRate * level,
-      base_maxVirusSpreadRate * level
+      base_minVirusSpreadRate + level * 2,
+      base_maxVirusSpreadRate + level * 2
     );
-    if (rate > 100) {
-      rate = 100;
+    if (rate > 99) {
+      rate = 99;
     }
     return rate;
   }

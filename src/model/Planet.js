@@ -52,15 +52,15 @@ export class Planet {
   constructor(position, level) {
     this.name = `${
       greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-    } ${position}`;
-    this.minPopulation = base_minPopulation * (Math.floor(level / 5) + 1);
-    this.maxPopulation = base_maxPopulation * (Math.floor(level / 5) + 1);
-    this.minIncome = base_minIncome * (Math.floor(level / 5) + 1);
-    this.maxIncome = base_maxIncome * (Math.floor(level / 5) + 1);
-    this.minGrowthRate = base_minGrowthRate * (Math.floor(level / 5) + 1);
-    this.maxGrowthRate = base_maxGrowthRate * (Math.floor(level / 5) + 1);
-    this.minSpreadRate = base_minSpreadRate * (Math.floor(level / 5) + 1);
-    this.maxSpreadRate = base_maxSpreadRate * (Math.floor(level / 5) + 1);
+      } ${position}`;
+    this.minPopulation = base_minPopulation * (Math.floor(level / 2) + 1);
+    this.maxPopulation = base_maxPopulation * (Math.floor(level / 2) + 1);
+    this.minIncome = base_minIncome * (Math.floor(level / 2) + 1);
+    this.maxIncome = base_maxIncome * (Math.floor(level / 2) + 1);
+    this.minGrowthRate = base_minGrowthRate * (Math.floor(level / 2) + 1);
+    this.maxGrowthRate = base_maxGrowthRate * (Math.floor(level / 2) + 1);
+    this.minSpreadRate = base_minSpreadRate * (Math.floor(level / 2) + 1);
+    this.maxSpreadRate = base_maxSpreadRate * (Math.floor(level / 2) + 1);
 
     if (this.minSpreadRate > 99) {
       this.minSpreadRate = 99;
@@ -128,10 +128,13 @@ export class Planet {
 
   upgradeSpread(gameState) {
     var price = this.getSpreadPrice();
-    if (gameState.player.money >= price && this.population.player > 0) {
+    if (gameState.player.money >= price && this.population.player > 0 && this.spreadRate < 99) {
       gameState.player.money -= price;
       this.upgrades.spreadRate++;
       this.spreadRate = Math.round(((this.spreadRate * 110) / 100) * 100) / 100;
+      if (this.spreadRate > 99) {
+        this.spreadRate = 99;
+      }
     }
   }
 
@@ -161,8 +164,8 @@ export class Planet {
     return this.population.virus > 0
       ? OwnerVirus
       : this.population.player > 0
-      ? OwnerPlayer
-      : OwnerDefault;
+        ? OwnerPlayer
+        : OwnerDefault;
   }
 
   getPopulation() {
