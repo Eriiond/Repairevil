@@ -36,7 +36,10 @@ export class Universe {
     }
 
     // Create connections
-    let maxConnectionAmount = Math.floor(level / 5) + 1;
+    let maxConnectionAmount = Math.min(
+      Math.floor(level / 5) + 1,
+      Math.floor(planetAmount / 2)
+    );
 
     let freePlanets = [];
     let occupiedPlanets = [];
