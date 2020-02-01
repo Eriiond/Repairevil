@@ -20,7 +20,6 @@ export class Universe {
     }
 
     generate(level) {
-        console.error("generate level " + level);
         seedrandom("Repairevil" + level, { global: true });
         let maxX = 1200;
         let maxY = 900;

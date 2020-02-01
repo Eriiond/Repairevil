@@ -217,6 +217,11 @@ export default class extends Phaser.Scene {
         }
         this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
         updateInfoArea(this.selectedObject, this.gameState);
+
+        // let keyDownA = false
+        // this.input.keyboard.on("keydown-A", () => {
+        //     console.log("!!!");
+        // });
     }
 
     onUnselect() {
