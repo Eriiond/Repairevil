@@ -36,6 +36,8 @@ export default class extends Phaser.Scene {
   preload() {
     this.load.image("planet", "src/assets/planet.png");
     this.load.image("galaxy", "src/assets/galaxy.jpg");
+    this.load.image("virus", "src/assets/virus.png");
+    this.load.image("cure", "src/assets/cure.png");
   }
 
   create() {
@@ -52,50 +54,6 @@ export default class extends Phaser.Scene {
     this.connectionObjects.forEach(c => c.draw(this));
 
     this.setupSelectBase();
-
-    this.eventEmitter.on("spreadVirus", (fromPlanet, toPlanet, shipFleet) => {
-      let graphics = this.add.graphics();
-      let follower = { t: 0, vec: new Phaser.Math.Vector2() };
-
-      let fromPlanetPosition = fromPlanet.getPosition();
-      let toPlanetPosition = toPlanet.getPosition();
-
-      let path = new Phaser.Curves.Path(
-        fromPlanetPosition[0],
-        fromPlanetPosition[1]
-      );
-
-      path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
-
-      let refreshRate = 50;
-      let duration = 1000;
-
-      this.tweens.add({
-        targets: follower,
-        t: 1,
-        ease: "Sine.easeInOut",
-        duration: duration,
-        yoyo: false,
-        repeat: 0
-      });
-
-      let timerId = setInterval(() => {
-        graphics.clear();
-        //graphics.lineStyle(1, colors.connectionVirusColor, 1);
-
-        path.draw(graphics);
-
-        path.getPoint(follower.t, follower.vec);
-
-        graphics.fillStyle(colors.connectionVirusColor, 1);
-        graphics.fillCircle(follower.vec.x, follower.vec.y, shipFleet / 1000);
-      }, refreshRate);
-
-      setTimeout(() => {
-        clearInterval(timerId);
-        graphics.destroy();
-      }, duration);
-    });
 
     this.planetObjects = this.gameState.universe.planets.map(p =>
       this.createPlanetObject(p)
@@ -129,6 +87,44 @@ export default class extends Phaser.Scene {
     this.eventEmitter.on("gameStep", this.updateUI);
     this.eventEmitter.on("endGame", this.onEndGame);
     this.eventEmitter.on("spreadVirus", this.onEndGame);
+
+    this.eventEmitter.on(
+      "spread",
+      (fromPlanet, toPlanet, shipFleet, sprite) => {
+        let fromPlanetPosition = fromPlanet.getPosition();
+        let toPlanetPosition = toPlanet.getPosition();
+
+        let path = new Phaser.Curves.Path(
+          fromPlanetPosition[0],
+          fromPlanetPosition[1]
+        );
+
+        path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
+
+        let delay = 100;
+        let duration = 1000;
+
+        for (var i = 0; i < shipFleet / 1000; i++) {
+          var follower = this.add.follower(path, 0, 0, sprite);
+
+          follower.startFollow({
+            duration: duration,
+            positionOnPath: true,
+            repeat: 0,
+            ease: "Sine.easeInOut",
+            delay: i * delay
+          });
+
+          setTimeout(
+            f => {
+              f.destroy();
+            },
+            duration + i * delay,
+            follower
+          );
+        }
+      }
+    );
 
     updateInfoArea(this.selectedObject, this.gameState);
     this.eventEmitter.emit("planetSelected", this.selectedObject);
