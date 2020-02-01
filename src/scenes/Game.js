@@ -6,11 +6,12 @@ import { GameState } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
-import { colors } from "../ui/consts";
 
 export default class extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
+
+    // GameLogic.setEventListener(this.handleGameEvent);
 
     this.level = 0;
 
@@ -21,6 +22,7 @@ export default class extends Phaser.Scene {
     this.onUpgradeIncome = this.onUpgradeIncome.bind(this);
     this.onUpgradeSpread = this.onUpgradeSpread.bind(this);
     this.onUnselect = this.onUnselect.bind(this);
+    this.update = this.update.bind(this);
     this.updateUI = this.updateUI.bind(this);
   }
 
@@ -51,6 +53,8 @@ export default class extends Phaser.Scene {
       virus: 0,
       player: 1000
     };
+
+    this.planetObjects.forEach(p => p.init());
   }
 
   setupUI() {
@@ -84,25 +88,28 @@ export default class extends Phaser.Scene {
 
   onPlanetClicked(planetObject) {
     this.selectedObject = planetObject;
-    this.updateUI();
-    planetObject.sprite.tint = 0x888888;
+    this.onPlanetSelected();
   }
 
   update() {
     GameLogic.update(this.gameState);
-    this.updateUI();
+    updateInfoArea(this.selectedObject, this.gameState);
   }
 
   onUnselect() {
+    this.selectedObject && this.selectedObject.reset();
     this.selectedObject = null;
-    this.updateUI();
   }
 
   updateUI() {
     updateInfoArea(this.selectedObject, this.gameState);
+  }
+
+  onPlanetSelected() {
     this.planetObjects
       .filter(p => p !== this.selectedObject)
-      .forEach(p => (p.sprite.tint = colors.selectedPlanetTint));
+      .forEach(p => p.reset());
+    this.selectedObject.onSelected();
   }
 
   createPlanetObject(model) {
@@ -116,4 +123,11 @@ export default class extends Phaser.Scene {
     let connection = new ConnectionObject(model);
     return connection;
   }
+
+  // handleGameEvent(eventType, args) {
+  //   switch (eventType) {
+  //     case "spread": {
+  //     }
+  //   }
+  // }
 }

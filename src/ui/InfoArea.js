@@ -125,16 +125,9 @@ export function updateInfoArea(selectedObject, gameState) {
   if (selectedObject) {
     selectedObjectTitle.setText(selectedObject.model.name);
 
-    let owner =
-      selectedObject.model.population.default > 0
-        ? "default"
-        : selectedObject.model.population.player > 0
-        ? "player"
-        : selectedObject.model.population.virus > 0
-        ? "virus"
-        : null;
-    let population = owner ? selectedObject.model.population[owner] : "0";
-    selectedPopulation.setText("Population: " + population);
+    selectedPopulation.setText(
+      "Population: " + selectedObject.model.getPopulation()
+    );
     selectedGrowthRate.setText(
       "Growth Rate: " + selectedObject.model.growthRate
     );
