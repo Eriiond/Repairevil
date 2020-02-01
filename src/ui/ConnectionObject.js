@@ -26,11 +26,6 @@ export class ConnectionObject {
     }
 
     draw(scene, owner) {
-        this.spreadText &&
-            this.spreadText.setText(
-                "" + connectionText(this.model.sendPorbability)
-            );
-
         let [startX, startY] = this.model.startPlanet.getPosition();
         let [endX, endY] = this.model.endPlanet.getPosition();
 
@@ -114,6 +109,10 @@ export class ConnectionObject {
             }
 
             default: {
+                this.spreadText &&
+                    this.spreadText.setText(
+                        "" + connectionText(this.model.sendPorbability)
+                    );
                 this.defaultLine = scene.add
                     .line(0, 0, startX, startY, endX, endY, strokeColor, 0.5)
                     .setOrigin(0, 0);
