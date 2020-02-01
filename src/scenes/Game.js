@@ -43,6 +43,7 @@ export default class extends Phaser.Scene {
         this.restartGame = this.restartGame.bind(this);
         this.startLevel = this.startLevel.bind(this);
         this.selectNextPlanet = this.selectNextPlanet.bind(this);
+        this.allConnectionsVisible = false;
     }
 
     preload() {
@@ -59,8 +60,7 @@ export default class extends Phaser.Scene {
             onD: () => this.onUpgradeSpread(),
             onF: () => this.onBaseChosen(),
             onTab: () => this.selectNextPlanet(),
-            onSpaceDown: () => this.showSpaceConnections(),
-            onSpaceUp: () => this.hideSpaceConnections(),
+            onSpaceUp: () => this.toggleSpaceConnections(),
         };
         this.inputManager = new InputManager(this, callbacks);
 
@@ -236,6 +236,8 @@ export default class extends Phaser.Scene {
             this.endGameText.setText("Try again");
         }
         this.endGameText.visible = true;
+
+        this.allConnectionsVisible = false;
         setTimeout(this.restartGame, 3000);
     }
 
@@ -294,9 +296,11 @@ export default class extends Phaser.Scene {
     }
 
     onUnselect() {
-        this.selectedObject = null;
+        if (this.allConnectionsVisible == false) {
+            this.selectedObject = null;
 
-        this.clearDrawedSpaceConnection();
+            this.clearDrawedSpaceConnection();
+        }
     }
 
     updateUI() {
@@ -304,17 +308,19 @@ export default class extends Phaser.Scene {
     }
 
     onPlanetSelected(planetObject) {
-        this.clearDrawedSpaceConnection();
-        let planet = planetObject.model;
-        let connectionObjects = this.connectionObjects.filter(
-            spaceConnection => {
-                return (
-                    spaceConnection.model.startPlanet == planet ||
-                    spaceConnection.model.endPlanet == planet
-                );
-            }
-        );
-        connectionObjects.forEach(c => c.draw(this));
+        if (this.allConnectionsVisible == false) {
+            this.clearDrawedSpaceConnection();
+            let planet = planetObject.model;
+            let connectionObjects = this.connectionObjects.filter(
+                spaceConnection => {
+                    return (
+                        spaceConnection.model.startPlanet == planet ||
+                        spaceConnection.model.endPlanet == planet
+                    );
+                }
+            );
+            connectionObjects.forEach(c => c.draw(this));
+        }
     }
 
     createPlanetObject(model) {
@@ -335,7 +341,7 @@ export default class extends Phaser.Scene {
 
     clearDrawedSpaceConnection() {
         this.connectionObjects &&
-            this.connectionObjects.forEach(c => c.destroyDefaultLine());
+            this.connectionObjects.forEach(c => c.hideDefaultLine());
     }
 
     selectNextPlanet() {
@@ -348,5 +354,18 @@ export default class extends Phaser.Scene {
         }
         this.selectedObject = this.planetObjects[nextIndex];
         this.onPlanetSelected(this.planetObjects[nextIndex]);
+    }
+
+    toggleSpaceConnections() {
+        if (this.allConnectionsVisible) {
+            this.connectionObjects.forEach(connectionObject => {
+                connectionObject.hideDefaultLine();
+            });
+        } else {
+            this.connectionObjects.forEach(connectionObject => {
+                connectionObject.draw(this);
+            });
+        }
+        this.allConnectionsVisible = !this.allConnectionsVisible;
     }
 }
