@@ -1,6 +1,7 @@
 import { Planet } from "./Planet";
 import { SpaceConnection } from "./SpaceConnection";
 import * as Utils from "./Utils";
+var seedrandom = require("seedrandom");
 
 const base_minVirusPopulation = 1000;
 const base_maxVirusPopulation = 2500;
@@ -19,6 +20,11 @@ export class Universe {
     }
 
     generate(level) {
+<<<<<<< HEAD
+=======
+        console.error("generate level " + level);
+        seedrandom("Repairevil" + level, { global: true });
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
         let maxX = 1200;
         let maxY = 900;
         let cellX = (maxX / 100) * 2; // 24
@@ -26,9 +32,15 @@ export class Universe {
         let maxCell = cellX * cellY;
         let planetAmount = Math.min(
             Utils.getRandomArbitrary(
+<<<<<<< HEAD
                 Math.floor(level / 2),
                 (Math.floor(level / 2) + 1) * 2
             ) + 10,
+=======
+                Math.floor(level / 5),
+                (Math.floor(level / 5) + 1) * 2
+            ) + 5,
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
             Math.floor(maxCell / 2)
         );
 
@@ -51,7 +63,11 @@ export class Universe {
         // Create connections
         let maxConnectionAmount = Math.min(
             Math.floor(level / 5) + 1,
+<<<<<<< HEAD
             Math.floor(planetAmount / 5)
+=======
+            Math.floor(planetAmount / 2)
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
         );
 
         let freePlanets = [];
@@ -66,7 +82,13 @@ export class Universe {
 
         // Connect each free planet with an occupied planet
         while (freePlanets.length > 0) {
+<<<<<<< HEAD
             let occupiedPlanetNumber = this.getOccupiedPlanetNumber(occupiedPlanets);
+=======
+            let occupiedPlanetNumber = this.getOccupiedPlanetNumber(
+                occupiedPlanets
+            );
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
             let freePlanetNumber = this.getFreePLanetNumber(freePlanets);
             occupiedPlanets.push(freePlanetNumber);
 
@@ -105,7 +127,13 @@ export class Universe {
                     } else if (spaceConnection.endPlanet == currentPlanet) {
                         freePlanetsToConnectTo.splice(
                             freePlanetsToConnectTo.indexOf(
+<<<<<<< HEAD
                                 this.planets.indexOf(spaceConnection.startPlanet)
+=======
+                                this.planets.indexOf(
+                                    spaceConnection.startPlanet
+                                )
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
                             ),
                             1
                         );
@@ -121,7 +149,14 @@ export class Universe {
                     );
 
                     this.spaceConnections.push(
+<<<<<<< HEAD
                         new SpaceConnection(this.planets[i], this.planets[freePlanetNumber])
+=======
+                        new SpaceConnection(
+                            this.planets[i],
+                            this.planets[freePlanetNumber]
+                        )
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
                     );
                     connectionAmount--;
                 }
@@ -140,7 +175,14 @@ export class Universe {
     }
 
     getOccupiedPlanetNumber(occupiedPlanets) {
+<<<<<<< HEAD
         let planetIndex = Utils.getRandomArbitrary(0, occupiedPlanets.length - 1);
+=======
+        let planetIndex = Utils.getRandomArbitrary(
+            0,
+            occupiedPlanets.length - 1
+        );
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
         let planetNumber = occupiedPlanets[planetIndex];
         return planetNumber;
     }
@@ -183,11 +225,19 @@ export class Universe {
 
     generateVirusSpreadRate(level) {
         let rate = Utils.getRandomArbitrary(
+<<<<<<< HEAD
             base_minVirusSpreadRate + level * 2,
             base_maxVirusSpreadRate + level * 2
         );
         if (rate > 99) {
             rate = 99;
+=======
+            base_minVirusSpreadRate * level,
+            base_maxVirusSpreadRate * level
+        );
+        if (rate > 100) {
+            rate = 100;
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
         }
         return rate;
     }

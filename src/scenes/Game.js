@@ -1,66 +1,54 @@
-import Phaser from "phaser"
-import { PlanetObject } from "../ui/PlanetObject"
-import { ConnectionObject } from "../ui/ConnectionObject"
-import { Player } from "../model/Player"
-import { GameState, GamePhaseIngame, GamePhaseEnd } from "../model/GameState"
-import { Universe } from "../model/Universe"
-import { GameLogic } from "../model/GameLogic"
-import { setupInfoArea, updateInfoArea } from "../ui/InfoArea"
-import { Viewport } from "../ui/consts"
-var seedrandom = require("seedrandom")
+import Phaser from "phaser";
+import { PlanetObject } from "../ui/PlanetObject";
+import { ConnectionObject } from "../ui/ConnectionObject";
+import { Player } from "../model/Player";
+import {
+    GameState,
+    GamePhaseIngame,
+    GamePhaseEnd,
+    GamePhaseChooseBase,
+} from "../model/GameState";
+import { Universe } from "../model/Universe";
+import { GameLogic } from "../model/GameLogic";
+import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
+import { Viewport } from "../ui/consts";
 
 export default class extends Phaser.Scene {
     constructor() {
-        super({ key: "GameScene" })
+        super({ key: "GameScene" });
 
-        this.level = 1
+        this.level = 1;
 
-        this.selectedObject = null
-        this.planetObjects = Array()
-        this.frameCounter = 0
+        this.selectedObject = null;
+        this.planetObjects = Array();
+        this.frameCounter = 0;
 
-        this.eventEmitter = new Phaser.Events.EventEmitter()
-        GameLogic.setEventEmitter(this.eventEmitter)
+        this.eventEmitter = new Phaser.Events.EventEmitter();
+        GameLogic.setEventEmitter(this.eventEmitter);
 
-        this.onUpgradeGrowth = this.onUpgradeGrowth.bind(this)
-        this.onUpgradeIncome = this.onUpgradeIncome.bind(this)
-        this.onUpgradeSpread = this.onUpgradeSpread.bind(this)
-        this.onUnselect = this.onUnselect.bind(this)
-        this.update = this.update.bind(this)
-        this.updateUI = this.updateUI.bind(this)
-        this.onPlanetClicked = this.onPlanetClicked.bind(this)
-        this.onBaseChosen = this.onBaseChosen.bind(this)
-        this.onPlanetSelected = this.onPlanetSelected.bind(this)
-        this.onEndGame = this.onEndGame.bind(this)
+        this.onUpgradeGrowth = this.onUpgradeGrowth.bind(this);
+        this.onUpgradeIncome = this.onUpgradeIncome.bind(this);
+        this.onUpgradeSpread = this.onUpgradeSpread.bind(this);
+        this.onUnselect = this.onUnselect.bind(this);
+        this.update = this.update.bind(this);
+        this.updateUI = this.updateUI.bind(this);
+        this.onPlanetClicked = this.onPlanetClicked.bind(this);
+        this.onBaseChosen = this.onBaseChosen.bind(this);
+        this.onPlanetSelected = this.onPlanetSelected.bind(this);
+        this.onEndGame = this.onEndGame.bind(this);
+        this.restartGame = this.restartGame.bind(this);
+        this.startLevel = this.startLevel.bind(this);
     }
 
     preload() {
-        this.load.image("planet", "src/assets/planet.png")
-        this.load.image("galaxy", "src/assets/galaxy.jpg")
-        this.load.image("virus", "src/assets/virus.png")
-        this.load.image("cure", "src/assets/cure.png")
+        this.load.image("planet", "src/assets/planet.png");
+        this.load.image("galaxy", "src/assets/galaxy.jpg");
+        this.load.image("virus", "src/assets/virus.png");
+        this.load.image("cure", "src/assets/cure.png");
     }
 
     create() {
-        this.setupUI()
-
-        seedrandom("Repairevil", { global: true })
-        let universe = new Universe()
-        universe.generate(this.level)
-        let player = new Player()
-        this.gameState = new GameState(universe, player, this.level)
-
-        this.connectionObjects = this.gameState.universe.spaceConnections.map(
-            c => this.createConnectionObject(c)
-        )
-        this.connectionObjects.forEach(c => c.draw(this))
-
-        this.setupSelectBase()
-
-        this.planetObjects = this.gameState.universe.planets.map(p =>
-            this.createPlanetObject(p)
-        )
-
+        this.setupUI();
         this.endGameText = this.add.text(
             (Viewport.width * 3) / 4 / 2,
             Viewport.height / 3,
@@ -68,46 +56,74 @@ export default class extends Phaser.Scene {
             {
                 fontFamily: '"Roboto Condensed"',
                 fontSize: 50,
-                color: "#b0b0b0",
+                color: "#ffffff",
             }
-        )
-        this.endGameText.setOrigin(0.5, 0)
+        );
+        this.endGameText.setOrigin(0.5, 0);
+
+        this.startLevel(this.level);
+    }
+
+    destroy() {
+        this.selectedObject = null;
+        this.planetObjects && this.planetObjects.forEach(p => p.destroy());
+        this.connectionObjects &&
+            this.connectionObjects.forEach(c => c.destroy());
+    }
+
+    startLevel(level) {
+        let universe = new Universe();
+        universe.generate(level);
+        let player = new Player();
+        this.gameState = new GameState(universe, player, level);
+
+        this.connectionObjects = this.gameState.universe.spaceConnections.map(
+            c => this.createConnectionObject(c)
+        );
+
+        this.planetObjects = this.gameState.universe.planets.map(p =>
+            this.createPlanetObject(p)
+        );
+
+        this.setupSelectBase();
+
+        this.gameState.gamePhase = GamePhaseChooseBase;
+        this.endGameText.visible = false;
     }
 
     setupSelectBase() {
-        this.eventEmitter.removeAllListeners()
-        this.eventEmitter.on("planetClicked", this.onPlanetClicked)
-        this.eventEmitter.on("planetSelected", this.onPlanetSelected)
-        this.eventEmitter.on("choosePlanetClicked", this.onBaseChosen)
-        updateInfoArea(this.selectedObject, this.gameState)
+        this.eventEmitter.removeAllListeners();
+        this.eventEmitter.on("planetClicked", this.onPlanetClicked);
+        this.eventEmitter.on("planetSelected", this.onPlanetSelected);
+        this.eventEmitter.on("choosePlanetClicked", this.onBaseChosen);
+        updateInfoArea(this.selectedObject, this.gameState);
     }
 
     setupIngame() {
-        this.eventEmitter.removeAllListeners()
-        this.eventEmitter.on("planetClicked", this.onPlanetClicked)
-        this.eventEmitter.on("planetSelected", this.onPlanetSelected)
-        this.eventEmitter.on("gameStep", this.updateUI)
-        this.eventEmitter.on("endGame", this.onEndGame)
-        this.eventEmitter.on("spreadVirus", this.onEndGame)
+        this.eventEmitter.removeAllListeners();
+        this.eventEmitter.on("planetClicked", this.onPlanetClicked);
+        this.eventEmitter.on("planetSelected", this.onPlanetSelected);
+        this.eventEmitter.on("gameStep", this.updateUI);
+        this.eventEmitter.on("endGame", this.onEndGame);
 
         this.eventEmitter.on(
             "spread",
             (fromPlanet, toPlanet, shipFleet, sprite) => {
-                let fromPlanetPosition = fromPlanet.getPosition()
-                let toPlanetPosition = toPlanet.getPosition()
+                let fromPlanetPosition = fromPlanet.getPosition();
+                let toPlanetPosition = toPlanet.getPosition();
 
                 let path = new Phaser.Curves.Path(
                     fromPlanetPosition[0],
                     fromPlanetPosition[1]
-                )
+                );
 
-                path.lineTo(toPlanetPosition[0], toPlanetPosition[1])
+                path.lineTo(toPlanetPosition[0], toPlanetPosition[1]);
 
-                let delay = 50
-                let duration = 1000
+                let delay = 50;
+                let duration = 1000;
 
                 for (var i = 0; i < shipFleet / 200; i++) {
-                    var follower = this.add.follower(path, 0, 0, sprite)
+                    var follower = this.add.follower(path, 0, 0, sprite);
 
                     follower.startFollow({
                         duration: duration,
@@ -115,102 +131,136 @@ export default class extends Phaser.Scene {
                         repeat: 0,
                         ease: "Sine.easeInOut",
                         delay: i * delay,
-                    })
+                    });
 
                     setTimeout(
                         f => {
-                            f.destroy()
+                            f.destroy();
                         },
                         duration + i * delay,
                         follower
-                    )
+                    );
                 }
             }
-        )
+        );
 
-        updateInfoArea(this.selectedObject, this.gameState)
-        this.eventEmitter.emit("planetSelected", this.selectedObject)
+        updateInfoArea(this.selectedObject, this.gameState);
+        this.eventEmitter.emit("planetSelected", this.selectedObject);
     }
 
     onBaseChosen() {
         if (this.selectedObject) {
-            this.selectedObject.model.spawnPlayer(this.gameState)
-            this.setupIngame()
-        } else console.error("no planet is selected")
+            this.selectedObject.model.spawnPlayer(this.gameState);
+            this.setupIngame();
+        } else console.error("no planet is selected");
     }
 
     setupUI() {
-        let background = this.add.sprite(800, 450, "galaxy")
-        background.on("pointerup", this.onUnselect)
-        background.setInteractive()
+        let background = this.add.sprite(800, 450, "galaxy");
+        background.on("pointerup", this.onUnselect);
+        background.setInteractive();
 
         const infoAreaCallbacks = {
             onUpgradeGrowth: this.onUpgradeGrowth,
             onUpgradeIncome: this.onUpgradeIncome,
             onUpgradeSpread: this.onUpgradeSpread,
-        }
-        let graphics = this.add.graphics({ fillStyle: { color: 0xa0a0a0 } })
-        setupInfoArea(this, infoAreaCallbacks, graphics)
+        };
+        let graphics = this.add.graphics({ fillStyle: { color: 0xa0a0a0 } });
+        setupInfoArea(this, infoAreaCallbacks, graphics);
     }
 
     onEndGame(won) {
-        console.log("onEndGame:", won)
-        this.gameState.gamePhase = GamePhaseEnd
-        this.endGameText.setText(won ? "You won!" : "GameOver")
-        this.endGameText.visible = true
+        if (this.gameState.gamePhase !== GamePhaseIngame) {
+            return;
+        }
+
+        console.error("Game.onEndGame:", won);
+        this.gameState.gamePhase = GamePhaseEnd;
+        if (won) {
+            this.endGameText.setText("You won!");
+            this.level = this.level + 1;
+        } else {
+            this.endGameText.setText("Try again");
+        }
+        this.endGameText.visible = true;
+        setTimeout(this.restartGame, 3000);
+    }
+
+    restartGame() {
+        this.destroy();
+        this.startLevel(this.level);
     }
 
     onUpgradeGrowth() {
-        this.selectedObject.model.upgradeGrowth(this.gameState)
-        this.updateUI()
+        this.selectedObject.model.upgradeGrowth(this.gameState);
+        this.updateUI();
     }
 
     onUpgradeIncome() {
-        this.selectedObject.model.upgradeIncome(this.gameState)
-        this.updateUI()
+        this.selectedObject.model.upgradeIncome(this.gameState);
+        this.updateUI();
     }
 
     onUpgradeSpread() {
-        this.selectedObject.model.upgradeSpread(this.gameState)
-        this.updateUI()
+        this.selectedObject.model.upgradeSpread(this.gameState);
+        this.updateUI();
     }
 
     onPlanetClicked(planetObject) {
-        this.selectedObject = planetObject
-        this.eventEmitter.emit("planetSelected", planetObject)
+        this.selectedObject = planetObject;
+        this.eventEmitter.emit("planetSelected", planetObject);
     }
 
     update() {
         if (this.gameState.gamePhase == GamePhaseIngame) {
-            GameLogic.update(this.gameState, this.eventEmitter)
+            GameLogic.update(this.gameState, this.eventEmitter);
         }
-        this.planetObjects.forEach(p => p.draw(p === this.selectedObject))
-        updateInfoArea(this.selectedObject, this.gameState)
+        this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
+        updateInfoArea(this.selectedObject, this.gameState);
     }
 
     onUnselect() {
-        this.selectedObject = null
+        this.selectedObject = null;
+
+        this.clearDrawedSpaceConnection();
     }
 
     updateUI() {
-        updateInfoArea(this.selectedObject, this.gameState)
+        updateInfoArea(this.selectedObject, this.gameState);
     }
 
-    onPlanetSelected(planetObject) {}
+    onPlanetSelected(planetObject) {
+        this.clearDrawedSpaceConnection();
+        let planet = planetObject.model;
+        this.connectionObjects = this.gameState.universe.spaceConnections
+            .filter(spaceConnection => {
+                return (
+                    spaceConnection.startPlanet == planet ||
+                    spaceConnection.endPlanet == planet
+                );
+            })
+            .map(c => this.createConnectionObject(c));
+        this.connectionObjects.forEach(c => c.draw(this));
+    }
 
     createPlanetObject(model) {
-        let sprite = this.add.sprite(0, 0, "planet")
-        let planet = new PlanetObject(model, sprite)
+        let sprite = this.add.sprite(0, 0, "planet");
+        let planet = new PlanetObject(model, sprite);
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
-        )
-        planet.init(this)
-        return planet
+        );
+        planet.init(this);
+        return planet;
     }
 
     createConnectionObject(model) {
-        let connection = new ConnectionObject(model)
-        connection.init(this)
-        return connection
+        let connection = new ConnectionObject(model);
+        connection.init(this);
+        return connection;
+    }
+
+    clearDrawedSpaceConnection() {
+        this.connectionObjects &&
+            this.connectionObjects.forEach(c => c.destroy());
     }
 }

@@ -1,4 +1,5 @@
 import { getRandomArbitrary } from "../model/Utils";
+import { OwnerPlayer } from "./Planet";
 
 const virusFactor = 0.33; // How fast the virus growth on planets;
 let counter = 0;
@@ -30,8 +31,13 @@ export class GameLogic {
             if (element.population.virus > 0) {
                 element.population.virus += Math.floor(
                     element.growthRate *
+<<<<<<< HEAD
                     virusFactor *
                     (Math.floor(gameState.level / 2) + 1)
+=======
+                        virusFactor *
+                        (Math.floor(gameState.level / 5) + 1)
+>>>>>>> 7b458b3a6a66bdb189ac8305f9e79c6b8a0df7aa
                 );
             }
             if (element.population.player > 0) {
@@ -184,5 +190,14 @@ export class GameLogic {
 
     static setEventEmitter(ee) {
         eventEmitter = ee;
+    }
+
+    static getCurrentIncome(gameState) {
+        return (
+            gameState.universe.planets
+                .filter(p => p.getOwner() === OwnerPlayer)
+                .map(p => p.income)
+                .reduce((acc, i) => acc + i, 0) || 0
+        );
     }
 }
