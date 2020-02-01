@@ -1,4 +1,4 @@
-import Planet from "./Planet";
+import { Planet } from "./Planet";
 
 export class Universe {
   // planets : Array<Planet>
@@ -9,13 +9,13 @@ export class Universe {
     this.spaceConnections = [];
   }
 
-  static generate(seed, level) {
+  generate(level) {
     let maxX = 1200;
     let maxY = 900;
-    let cellX = maxX / 100 * 2; // 24
-    let cellY = maxY / 100 * 2; // 18
+    let cellX = (maxX / 100) * 2; // 24
+    let cellY = (maxY / 100) * 2; // 18
     let maxCell = cellX * cellY;
-    let planetAmount = level % 5 + 5;
+    let planetAmount = (level % 5) + 5;
 
     // Fil array with possible cells
     let freeCells = [];
@@ -34,7 +34,6 @@ export class Universe {
     }
 
     // Create connections
-
   }
   getRandomInt(max) {
     return Math.floor(Math.random() * Math.floor(max));

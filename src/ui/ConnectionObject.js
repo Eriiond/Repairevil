@@ -1,4 +1,4 @@
-export default class ConnectionObject {
+export class ConnectionObject {
   constructor(model) {
     this.model = model;
 
