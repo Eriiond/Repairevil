@@ -33,10 +33,15 @@ export class ConnectionObject {
         let [startX, startY] = this.model.startPlanet.getPosition()
         let [endX, endY] = this.model.endPlanet.getPosition()
 
-        return scene.add
+        this.line = scene.add
             .line(0, 0, startX, startY, endX, endY, colors.noTint, 0.5)
             .setOrigin(0, 0)
     }
 
     onClick() {}
+
+    clear() {
+        this.line.destroy()
+        this.spreadText && this.spreadText.setText("")
+    }
 }
