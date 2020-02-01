@@ -19,6 +19,7 @@ export default class extends Phaser.Scene {
     this.frameCounter = 0;
 
     this.eventEmitter = this.events;
+    GameLogic.setEventEmitter(this.eventEmitter);
 
     this.onUpgradeGrowth = this.onUpgradeGrowth.bind(this);
     this.onUpgradeIncome = this.onUpgradeIncome.bind(this);

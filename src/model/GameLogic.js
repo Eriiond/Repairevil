@@ -2,6 +2,7 @@ import { getRandomArbitrary } from "../model/Utils";
 
 const virusFactor = 0.33; // How fast the virus growth on planets;
 let counter = 0;
+let eventEmitter;
 export class GameLogic {
   static update(gameState) {
     counter = counter + 1;
@@ -77,6 +78,9 @@ export class GameLogic {
     var shipFleet = Math.floor(
       (fromPlanet.population.virus * fromPlanet.spreadRate) / 100
     );
+
+    eventEmitter.emit("spreadVirus", fromPlanet, toPlanet, shipFleet);
+
     fromPlanet.population.virus -= shipFleet;
     this.fightPlanetWithVirus(toPlanet, shipFleet);
   }
@@ -85,6 +89,9 @@ export class GameLogic {
     var shipFleet = Math.floor(
       (fromPlanet.population.player * fromPlanet.spreadRate) / 100
     );
+
+    eventEmitter.emit("spreadPlayer", fromPlanet, toPlanet, shipFleet);
+
     fromPlanet.population.player -= shipFleet;
     this.fightPlanetWithPlayer(toPlanet, shipFleet);
   }
@@ -153,5 +160,9 @@ export class GameLogic {
         attackedPlanet.population.default = 0;
       }
     }
+  }
+
+  static setEventEmitter(ee) {
+    eventEmitter = ee;
   }
 }
