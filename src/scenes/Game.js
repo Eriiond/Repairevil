@@ -13,6 +13,7 @@ import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
 import { Viewport } from "../ui/consts";
 import { OwnerPlayer } from "../model/Planet";
+import { InputManager } from "../ui/InputManager";
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -39,6 +40,7 @@ export default class extends Phaser.Scene {
         this.onEndGame = this.onEndGame.bind(this);
         this.restartGame = this.restartGame.bind(this);
         this.startLevel = this.startLevel.bind(this);
+        this.selectNextPlanet = this.selectNextPlanet.bind(this);
     }
 
     preload() {
@@ -49,6 +51,17 @@ export default class extends Phaser.Scene {
     }
 
     create() {
+        const callbacks = {
+            onA: () => this.onUpgradeGrowth(),
+            onS: () => this.onUpgradeIncome(),
+            onD: () => this.onUpgradeSpread(),
+            onF: () => this.onBaseChosen(),
+            onTab: () => this.selectNextPlanet(),
+            onSpaceDown: () => this.showSpaceConnections(),
+            onSpaceUp: () => this.hideSpaceConnections(),
+        };
+        this.inputManager = new InputManager(this, callbacks);
+
         this.setupUI();
         this.endGameText = this.add.text(
             (Viewport.width * 3) / 4 / 2,
@@ -216,16 +229,25 @@ export default class extends Phaser.Scene {
     }
 
     onUpgradeGrowth() {
+        if (!this.selectedObject) {
+            return;
+        }
         this.selectedObject.model.upgradeGrowth(this.gameState);
         this.updateUI();
     }
 
     onUpgradeIncome() {
+        if (!this.selectedObject) {
+            return;
+        }
         this.selectedObject.model.upgradeIncome(this.gameState);
         this.updateUI();
     }
 
     onUpgradeSpread() {
+        if (!this.selectedObject) {
+            return;
+        }
         this.selectedObject.model.upgradeSpread(this.gameState);
         this.updateUI();
     }
@@ -241,6 +263,11 @@ export default class extends Phaser.Scene {
         }
         this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
         updateInfoArea(this.selectedObject, this.gameState);
+
+        // let keyDownA = false
+        // this.input.keyboard.on("keydown-A", () => {
+        //     console.log("!!!");
+        // });
     }
 
     onUnselect() {
@@ -286,5 +313,17 @@ export default class extends Phaser.Scene {
     clearDrawedSpaceConnection() {
         this.connectionObjects &&
             this.connectionObjects.forEach(c => c.destroyDefaultLine());
+    }
+
+    selectNextPlanet() {
+        const index = this.planetObjects.findIndex(
+            p => p === this.selectedObject
+        );
+        let nextIndex = index + 1;
+        if (nextIndex == this.planetObjects.length) {
+            nextIndex = 0;
+        }
+        this.selectedObject = this.planetObjects[nextIndex];
+        this.onPlanetSelected(this.planetObjects[nextIndex]);
     }
 }
