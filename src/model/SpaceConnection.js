@@ -9,7 +9,7 @@ export class SpaceConnection {
   constructor(startPlanet, endPlanet) {
     this.startPlanet = startPlanet;
     this.endPlanet = endPlanet;
-    this.sendPorbability = generateProability();
+    this.sendPorbability = this.generatePropability();
   }
 
   generatePropability() {
