@@ -1,5 +1,5 @@
 import { getRandomArbitrary } from "../model/Utils";
-import { OwnerPlayer, OwnerVirus } from "./Planet";
+import { OwnerPlayer, OwnerVirus, OwnerDefault } from "./Planet";
 
 const virusFactor = 0.33; // How fast the virus growth on planets
 const virusPanalty = 6; // Initial value that the virus needs to fight default
@@ -215,6 +215,33 @@ export class GameLogic {
             gameState.universe.planets
                 .filter(p => p.getOwner() === OwnerPlayer)
                 .map(p => p.income)
+                .reduce((acc, i) => acc + i, 0) || 0
+        );
+    }
+
+    static getPlayerPopulation(gameState) {
+        return (
+            gameState.universe.planets
+                .filter(p => p.getOwner() === OwnerPlayer)
+                .map(p => p.getPopulation())
+                .reduce((acc, i) => acc + i, 0) || 0
+        );
+    }
+
+    static getVirusPopulation(gameState) {
+        return (
+            gameState.universe.planets
+                .filter(p => p.getOwner() === OwnerVirus)
+                .map(p => p.getPopulation())
+                .reduce((acc, i) => acc + i, 0) || 0
+        );
+    }
+
+    static getDefaultPopulation(gameState) {
+        return (
+            gameState.universe.planets
+                .filter(p => p.getOwner() === OwnerDefault)
+                .map(p => p.getPopulation())
                 .reduce((acc, i) => acc + i, 0) || 0
         );
     }

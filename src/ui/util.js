@@ -44,3 +44,18 @@ export function connectionText(number) {
     const result = str + "%";
     return result;
 }
+
+export function getPopulationPercentiles(planetsObjects) {
+    const percentileCount = 5;
+
+    const populations = planetsObjects.map(p => p);
+    populations.sort(p => p.model.getPopulation());
+    const countPerPercentile = Math.ceil(populations.length / percentileCount);
+    return [
+        populations.slice(0, countPerPercentile),
+        populations.slice(countPerPercentile, 2 * countPerPercentile),
+        populations.slice(2 * countPerPercentile, 3 * countPerPercentile),
+        populations.slice(3 * countPerPercentile, 4 * countPerPercentile),
+        populations.slice(4 * countPerPercentile, populations.length),
+    ];
+}

@@ -11,15 +11,17 @@ import {
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
-import { Viewport } from "../ui/consts";
+import { Viewport, InfoArea } from "../ui/consts";
 import { OwnerPlayer } from "../model/Planet";
 import { InputManager } from "../ui/InputManager";
+import { getPopulationPercentiles } from "../ui/util";
+import { StrengthMeter } from "../ui/StrengthMeter";
 
 export default class extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" });
 
-        this.level = 1;
+        this.level = 2;
 
         this.selectedObject = null;
         this.planetObjects = Array();
@@ -75,6 +77,13 @@ export default class extends Phaser.Scene {
         );
         this.endGameText.setOrigin(0.5, 0);
 
+        this.strengthMeter = new StrengthMeter(
+            InfoArea.x + InfoArea.margin,
+            InfoArea.y + 150,
+            InfoArea.width - 2 * InfoArea.margin,
+            40
+        );
+
         this.startLevel(this.level);
     }
 
@@ -97,6 +106,13 @@ export default class extends Phaser.Scene {
 
         this.planetObjects = this.gameState.universe.planets.map(p =>
             this.createPlanetObject(p)
+        );
+
+        const percentiles = getPopulationPercentiles(this.planetObjects);
+        percentiles.forEach((percentile, i) =>
+            percentile.forEach(planetObject =>
+                planetObject.init(this, 0.6 - 0.1 * i)
+            )
         );
 
         this.setupSelectBase();
@@ -264,6 +280,13 @@ export default class extends Phaser.Scene {
         this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
         updateInfoArea(this.selectedObject, this.gameState);
 
+        this.strengthMeter.update(
+            this,
+            GameLogic.getPlayerPopulation(this.gameState),
+            GameLogic.getVirusPopulation(this.gameState),
+            GameLogic.getDefaultPopulation(this.gameState)
+        );
+
         // let keyDownA = false
         // this.input.keyboard.on("keydown-A", () => {
         //     console.log("!!!");
@@ -301,7 +324,6 @@ export default class extends Phaser.Scene {
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
         );
-        planet.init(this);
         return planet;
     }
 
