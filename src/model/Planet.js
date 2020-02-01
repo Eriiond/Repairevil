@@ -51,7 +51,7 @@ export class Planet {
   constructor(position, level) {
     this.name = `${
       greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-    } ${position}`;
+      } ${position}`;
     this.minPopulation = base_minPopulation * (Math.floor(level / 5) + 1);
     this.maxPopulation = base_maxPopulation * (Math.floor(level / 5) + 1);
     this.minIncome = base_minIncome * (Math.floor(level / 5) + 1);
@@ -96,6 +96,14 @@ export class Planet {
 
   generateSpreadRate() {
     return getRandomArbitrary(this.minSpreadRate, this.maxSpreadRate);
+  }
+
+  spawnPlayer(gameState) {
+    if (!gameState.player.spawned) {
+      this.population.player = this.population.default;
+      this.population.default = 0;
+      gameState.player.spawned = true;
+    }
   }
 
   upgradeIncome(gameState) {
@@ -151,10 +159,10 @@ export class Planet {
     return this.population.default > 0
       ? OwnerDefault
       : this.population.player > 0
-      ? OwnerPlayer
-      : this.population.virus > 0
-      ? OwnerVirus
-      : null;
+        ? OwnerPlayer
+        : this.population.virus > 0
+          ? OwnerVirus
+          : null;
   }
 
   getPopulation() {
