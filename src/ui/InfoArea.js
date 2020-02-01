@@ -4,6 +4,7 @@ import { OwnerPlayer } from "../model/Planet";
 
 // ui elements
 let backgroundRect;
+let level;
 let money;
 let selectedObjectTitle;
 let selectedPopulation;
@@ -29,9 +30,19 @@ export function setupInfoArea(scene, callbacks, graphics) {
   );
   graphics.fillRectShape(backgroundRect);
 
-  money = scene.add.text(
+  level = scene.add.text(
     InfoArea.x + InfoArea.margin,
     InfoArea.y + InfoArea.margin,
+    "",
+    {
+      fontFamily: '"Roboto Condensed"',
+      fontSize: 32
+    }
+  );
+
+  money = scene.add.text(
+    InfoArea.x + InfoArea.margin,
+    InfoArea.y + 60 + InfoArea.margin,
     "",
     {
       fontFamily: '"Roboto Condensed"',
@@ -141,6 +152,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
 }
 
 export function updateInfoArea(selectedObject, gameState) {
+  level.setText("Level " + gameState.level);
   money.setText("$" + gameState.player.money);
 
   if (selectedObject) {

@@ -157,7 +157,6 @@ export class Universe {
     var planet = this.getRandomPlanet();
     planet.population.default = 0;
     planet.population.virus = this.virusPopulation;
-    console.log("planet.population.virus", planet.population.virus);
     planet.growthRate = this.virusGrowthRate;
     planet.spreadRate = this.virusSpreadRate;
   }
@@ -169,15 +168,24 @@ export class Universe {
   }
 
   generateVirusPopulation(level) {
-    return Utils.getRandomArbitrary(base_minVirusPopulation * level, base_maxVirusPopulation * level);
+    return Utils.getRandomArbitrary(
+      base_minVirusPopulation * level,
+      base_maxVirusPopulation * level
+    );
   }
 
   generateVirusGrowthRate(level) {
-    return Utils.getRandomArbitrary(base_minVirusGrowthRate * level, base_maxVirusGrowthRate * level);
+    return Utils.getRandomArbitrary(
+      base_minVirusGrowthRate * level,
+      base_maxVirusGrowthRate * level
+    );
   }
 
   generateVirusSpreadRate(level) {
-    let rate = Utils.getRandomArbitrary(base_minVirusSpreadRate * level, base_maxVirusSpreadRate * level);
+    let rate = Utils.getRandomArbitrary(
+      base_minVirusSpreadRate * level,
+      base_maxVirusSpreadRate * level
+    );
     if (rate > 100) {
       rate = 100;
     }
