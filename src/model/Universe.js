@@ -1,4 +1,6 @@
 import { Planet } from "./Planet";
+import { SpaceConnections } from "./SpaceConnection";
+import * as Utils from "./Utils";
 
 export class Universe {
   // planets : Array<Planet>
@@ -26,7 +28,7 @@ export class Universe {
 
     // Create planets
     for (var i = 0; i < planetAmount; i++) {
-      let cellPosition = this.getRandomInt(freeCells.length);
+      let cellPosition = Utils.getRandomArbitrary(0, freeCells.length);
       let cellIndex = freeCells.indexOf(cellPosition);
       freeCells.splice(cellIndex, 1);
 
@@ -34,8 +36,7 @@ export class Universe {
     }
 
     // Create connections
-  }
-  getRandomInt(max) {
-    return Math.floor(Math.random() * Math.floor(max));
+    // let maxConnectionAmount = (level % 5) + 1;
+    // let connectionAmount = Utils.getRandomArbitrary(1, maxConnections);
   }
 }
