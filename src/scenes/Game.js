@@ -17,6 +17,8 @@ export default class extends Phaser.Scene {
     this.planetObjects = this.planets = Array();
     this.frameCounter = 0;
 
+    this.eventEmitter = this.events;
+
     this.onUpgradeGrowth = this.onUpgradeGrowth.bind(this);
     this.onUpgradeIncome = this.onUpgradeIncome.bind(this);
     this.onUpgradeSpread = this.onUpgradeSpread.bind(this);
@@ -41,6 +43,11 @@ export default class extends Phaser.Scene {
       this.createConnectionObject(c)
     );
     this.connectionObjects.forEach(c => c.draw(this));
+
+    this.eventEmitter.on(
+      "spreadPlayer",
+      (fromPlanet, toPlanet, shipFleet) => {}
+    );
 
     this.planetObjects = this.gameState.universe.planets.map(p =>
       this.createPlanetObject(p)
@@ -89,7 +96,7 @@ export default class extends Phaser.Scene {
   }
 
   update() {
-    GameLogic.update(this.gameState);
+    GameLogic.update(this.gameState, this.eventEmitter);
     this.updateUI();
   }
 
