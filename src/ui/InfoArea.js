@@ -201,15 +201,15 @@ export function updateInfoArea(selectedObject, gameState) {
             "Spread Rate: " + shortenNumberText(selectedObject.model.spreadRate)
         );
         selectedUpdateGrowth.setText(
-            "Update Growth - $" +
+            "Upgrade Growth - $" +
                 shortenNumberText(selectedObject.model.getGrowthPrice())
         );
         selectedUpdateIncome.setText(
-            "Update Income - $" +
+            "Upgrade Income - $" +
                 shortenNumberText(selectedObject.model.getIncomePrice())
         );
         selectedUpdateSpread.setText(
-            "Update Spread  - $" +
+            "Upgrade Spread  - $" +
                 shortenNumberText(selectedObject.model.getSpreadPrice())
         );
     } else {

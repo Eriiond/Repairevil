@@ -80,7 +80,6 @@ export default class extends Phaser.Scene {
         this.connectionObjects = this.gameState.universe.spaceConnections.map(
             c => this.createConnectionObject(c)
         );
-        this.connectionObjects.forEach(c => c.draw(this));
 
         this.planetObjects = this.gameState.universe.planets.map(p =>
             this.createPlanetObject(p)
@@ -222,6 +221,8 @@ export default class extends Phaser.Scene {
 
     onUnselect() {
         this.selectedObject = null;
+
+        this.clearDrawedSpaceConnection();
     }
 
     updateUI() {
@@ -229,9 +230,7 @@ export default class extends Phaser.Scene {
     }
 
     onPlanetSelected(planetObject) {
-        this.drawedSpaceConnections.forEach(spaceConnection => {
-            spaceConnection.destroy();
-        });
+        this.clearDrawedSpaceConnection();
         let planet = planetObject.model;
         this.connectionObjects = this.gameState.universe.spaceConnections
             .filter(spaceConnection => {
@@ -241,9 +240,7 @@ export default class extends Phaser.Scene {
                 );
             })
             .map(c => this.createConnectionObject(c));
-        this.connectionObjects.forEach(c =>
-            this.drawedSpaceConnections.push(c.draw(this))
-        );
+        this.connectionObjects.forEach(c => c.draw(this));
     }
 
     createPlanetObject(model) {
@@ -260,5 +257,10 @@ export default class extends Phaser.Scene {
         let connection = new ConnectionObject(model);
         connection.init(this);
         return connection;
+    }
+
+    clearDrawedSpaceConnection() {
+        this.connectionObjects &&
+            this.connectionObjects.forEach(c => c.destroy());
     }
 }

@@ -31,17 +31,16 @@ export class ConnectionObject {
 
         let [startX, startY] = this.model.startPlanet.getPosition();
         let [endX, endY] = this.model.endPlanet.getPosition();
-        // const line = new Phaser.Geom.Line(100, 100, startX, startY, endX, endY);
-        // graphics.strokeLineShape(line);
+
         this.line = scene.add
-            .line(0, 0, startX, startY, endX, endY, colors.connectionColor, 0.5)
+            .line(0, 0, startX, startY, endX, endY, colors.noTint, 0.5)
             .setOrigin(0, 0);
     }
 
     onClick() {}
 
     destroy() {
-        this.line.destroy();
-        this.spreadText.destroy();
+        this.line && this.line.destroy();
+        this.spreadText && this.spreadText.setText("");
     }
 }
