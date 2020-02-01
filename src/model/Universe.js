@@ -45,8 +45,8 @@ export class Universe {
 
         // Create planets
         for (var i = 0; i < planetAmount; i++) {
-            let cellPosition = Utils.getRandomArbitrary(0, freeCells.length);
-            let cellIndex = freeCells.indexOf(cellPosition);
+            let cellIndex = Utils.getRandomArbitrary(0, freeCells.length);
+            let cellPosition = freeCells[cellIndex];
             freeCells.splice(cellIndex, 1);
 
             this.planets.push(new Planet(cellPosition, level));
