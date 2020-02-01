@@ -91,7 +91,7 @@ export class GameLogic {
       (fromPlanet.population.player * fromPlanet.spreadRate) / 100
     );
 
-    eventEmitter.emit("spread", fromPlanet, toPlanet, shipFleet, "player");
+    eventEmitter.emit("spread", fromPlanet, toPlanet, shipFleet, "cure");
 
     fromPlanet.population.player -= shipFleet;
     this.fightPlanetWithPlayer(toPlanet, shipFleet);

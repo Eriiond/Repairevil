@@ -36,6 +36,7 @@ export default class extends Phaser.Scene {
     this.load.image("planet", "src/assets/planet.png");
     this.load.image("galaxy", "src/assets/galaxy.jpg");
     this.load.image("virus", "src/assets/virus.png");
+    this.load.image("cure", "src/assets/cure.png");
   }
 
   create() {
