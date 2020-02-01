@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { PlanetObject } from "../ui/PlanetObject";
 import { ConnectionObject } from "../ui/ConnectionObject";
 import { Player } from "../model/Player";
-import { GameState } from "../model/GameState";
+import { GameState, GamePhaseIngame } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
@@ -12,9 +12,10 @@ export default class extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
 
-    this.level = 10;
+    this.level = 1;
 
-    this.planetObjects = this.planets = Array();
+    this.selectedObject = null;
+    this.planetObjects = Array();
     this.frameCounter = 0;
 
     this.eventEmitter = new Phaser.Events.EventEmitter();
@@ -26,6 +27,9 @@ export default class extends Phaser.Scene {
     this.onUnselect = this.onUnselect.bind(this);
     this.update = this.update.bind(this);
     this.updateUI = this.updateUI.bind(this);
+    this.onPlanetClicked = this.onPlanetClicked.bind(this);
+    this.onBaseChosen = this.onBaseChosen.bind(this);
+    this.onPlanetSelected = this.onPlanetSelected.bind(this);
   }
 
   preload() {
@@ -45,6 +49,8 @@ export default class extends Phaser.Scene {
       this.createConnectionObject(c)
     );
     this.connectionObjects.forEach(c => c.draw(this));
+
+    this.setupSelectBase();
 
     this.eventEmitter.on("spreadVirus", (fromPlanet, toPlanet, shipFleet) => {
       let graphics = this.add.graphics();
@@ -95,6 +101,31 @@ export default class extends Phaser.Scene {
     );
   }
 
+  setupSelectBase() {
+    this.eventEmitter.removeAllListeners();
+    this.eventEmitter.on("planetClicked", this.onPlanetClicked);
+    this.eventEmitter.on("planetSelected", this.onPlanetSelected);
+    this.eventEmitter.on("choosePlanetClicked", this.onBaseChosen);
+    updateInfoArea(this.selectedObject, this.gameState);
+  }
+
+  setupIngame() {
+    this.eventEmitter.removeAllListeners();
+    this.eventEmitter.on("planetClicked", this.onPlanetClicked);
+    this.eventEmitter.on("planetSelected", this.onPlanetSelected);
+    this.eventEmitter.on("gameStep", this.updateUI);
+
+    updateInfoArea(this.selectedObject, this.gameState);
+    this.eventEmitter.emit("planetSelected", this.selectedObject);
+  }
+
+  onBaseChosen() {
+    if (this.selectedObject) {
+      this.selectedObject.model.spawnPlayer(this.gameState);
+      this.setupIngame();
+    } else console.error("no planet is selected");
+  }
+
   setupUI() {
     let background = this.add.sprite(800, 450, "galaxy");
     background.on("pointerup", this.onUnselect);
@@ -126,16 +157,19 @@ export default class extends Phaser.Scene {
 
   onPlanetClicked(planetObject) {
     this.selectedObject = planetObject;
-    this.onPlanetSelected();
+    this.eventEmitter.emit("planetSelected", planetObject);
   }
 
   update() {
-    GameLogic.update(this.gameState, this.eventEmitter);
+    if (this.gameState.gamePhase == GamePhaseIngame) {
+      GameLogic.update(this.gameState, this.eventEmitter);
+    }
+    this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
     updateInfoArea(this.selectedObject, this.gameState);
   }
 
   onUnselect() {
-    this.selectedObject && this.selectedObject.reset();
+    // this.selectedObject && this.selectedObject.reset();
     this.selectedObject = null;
   }
 
@@ -143,17 +177,19 @@ export default class extends Phaser.Scene {
     updateInfoArea(this.selectedObject, this.gameState);
   }
 
-  onPlanetSelected() {
-    this.planetObjects
-      .filter(p => p !== this.selectedObject)
-      .forEach(p => p.reset());
-    this.selectedObject.onSelected();
+  onPlanetSelected(planetObject) {
+    // this.planetObjects
+    //   .filter(p => p !== this.selectedObject)
+    //   .forEach(p => p.reset());
+    // this.selectedObject.onSelected();
   }
 
   createPlanetObject(model) {
     let sprite = this.add.sprite(0, 0, "planet");
     let planet = new PlanetObject(model, sprite);
-    sprite.on("pointerup", () => this.onPlanetClicked(planet));
+    sprite.on("pointerup", () =>
+      this.eventEmitter.emit("planetClicked", planet)
+    );
     return planet;
   }
 

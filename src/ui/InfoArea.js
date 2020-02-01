@@ -1,6 +1,9 @@
 import { InfoArea } from "./consts";
+import { GamePhaseChooseBase, GamePhaseIngame } from "../model/GameState";
+import { OwnerPlayer } from "../model/Planet";
 
 // ui elements
+let backgroundRect;
 let money;
 let selectedObjectTitle;
 let selectedPopulation;
@@ -12,15 +15,19 @@ let selectedUpdateIncome;
 let selectedUpdateSpread;
 
 let callbacks;
+let eventEmitter;
+let chooseBaseButton;
 
 export function setupInfoArea(scene, callbacks, graphics) {
-  const rect = new Phaser.Geom.Rectangle(
+  eventEmitter = scene.eventEmitter;
+
+  backgroundRect = new Phaser.Geom.Rectangle(
     InfoArea.x,
     InfoArea.y,
     InfoArea.width,
     InfoArea.height
   );
-  graphics.fillRectShape(rect);
+  graphics.fillRectShape(backgroundRect);
 
   money = scene.add.text(
     InfoArea.x + InfoArea.margin,
@@ -117,6 +124,20 @@ export function setupInfoArea(scene, callbacks, graphics) {
   );
   selectedUpdateSpread.setInteractive();
   selectedUpdateSpread.on("pointerup", () => callbacks.onUpgradeSpread());
+
+  chooseBaseButton = scene.add.text(
+    InfoArea.x + InfoArea.margin,
+    InfoArea.y + InfoArea.height / 2 + 380 + InfoArea.margin,
+    "Choose as home planet",
+    {
+      fontFamily: '"Roboto Condensed"',
+      fontSize: 32
+    }
+  );
+  chooseBaseButton.setInteractive();
+  chooseBaseButton.on("pointerup", () =>
+    eventEmitter.emit("choosePlanetClicked")
+  );
 }
 
 export function updateInfoArea(selectedObject, gameState) {
@@ -146,6 +167,29 @@ export function updateInfoArea(selectedObject, gameState) {
     );
   } else {
     resetSelectedArea();
+  }
+
+  switch (gameState.gamePhase) {
+    case GamePhaseChooseBase:
+      selectedUpdateGrowth.visible = false;
+      selectedUpdateIncome.visible = false;
+      selectedUpdateSpread.visible = false;
+      chooseBaseButton.visible = selectedObject !== null;
+      break;
+    case GamePhaseIngame:
+      selectedUpdateGrowth.visible =
+        selectedObject !== null &&
+        selectedObject.model.getOwner() === OwnerPlayer;
+      selectedUpdateIncome.visible =
+        selectedObject !== null &&
+        selectedObject.model.getOwner() === OwnerPlayer;
+      selectedUpdateSpread.visible =
+        selectedObject !== null &&
+        selectedObject.model.getOwner() === OwnerPlayer;
+      chooseBaseButton.visible = false;
+      break;
+    default:
+      throw new Error("unknown level state");
   }
 }
 

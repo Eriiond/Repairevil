@@ -21,19 +21,25 @@ export class PlanetObject {
 
   update() {}
 
-  onSelected() {
+  draw(selected) {
     let owner = this.model.getOwner();
     switch (owner) {
       case OwnerDefault: {
-        this.sprite.tint = colors.selectedDefaultPlanetTint;
+        this.sprite.tint = selected
+          ? colors.selectedDefaultPlanetTint
+          : colors.noTint;
         break;
       }
       case OwnerPlayer: {
-        this.sprite.tint = colors.selectedPlayerPlanetTint;
+        this.sprite.tint = selected
+          ? colors.selectedPlayerPlanetTint
+          : colors.playerPlanetTint;
         break;
       }
       case OwnerVirus: {
-        this.sprite.tint = colors.selectedVirusPlanetTint;
+        this.sprite.tint = selected
+          ? colors.selectedVirusPlanetTint
+          : colors.virusPlanetTint;
         break;
       }
       default:
@@ -41,23 +47,23 @@ export class PlanetObject {
     }
   }
 
-  reset() {
-    let owner = this.model.getOwner();
-    switch (owner) {
-      case OwnerDefault: {
-        this.sprite.tint = colors.noTint;
-        break;
-      }
-      case OwnerPlayer: {
-        this.sprite.tint = colors.playerPlanetTint;
-        break;
-      }
-      case OwnerVirus: {
-        this.sprite.tint = colors.virusPlanetTint;
-        break;
-      }
-      default:
-        throw new Error("unknown owner constant: ", owner);
-    }
-  }
+  // reset() {
+  //   let owner = this.model.getOwner();
+  //   switch (owner) {
+  //     case OwnerDefault: {
+  //       this.sprite.tint = colors.noTint;
+  //       break;
+  //     }
+  //     case OwnerPlayer: {
+  //       this.sprite.tint = colors.playerPlanetTint;
+  //       break;
+  //     }
+  //     case OwnerVirus: {
+  //       this.sprite.tint = colors.virusPlanetTint;
+  //       break;
+  //     }
+  //     default:
+  //       throw new Error("unknown owner constant: ", owner);
+  //   }
+  // }
 }
