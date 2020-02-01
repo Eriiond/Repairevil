@@ -11,9 +11,7 @@ export default class extends Phaser.Scene {
   constructor() {
     super({ key: "GameScene" });
 
-    // GameLogic.setEventListener(this.handleGameEvent);
-
-    this.level = 0;
+    this.level = 1;
 
     this.planetObjects = this.planets = Array();
     this.frameCounter = 0;
@@ -55,14 +53,6 @@ export default class extends Phaser.Scene {
     this.planetObjects = this.gameState.universe.planets.map(p =>
       this.createPlanetObject(p)
     );
-
-    this.planetObjects[0].model.population = {
-      default: 0,
-      virus: 0,
-      player: 1000
-    };
-
-    this.planetObjects.forEach(p => p.init());
   }
 
   setupUI() {
