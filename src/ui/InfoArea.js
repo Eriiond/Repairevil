@@ -30,7 +30,7 @@ let selectedObjectY;
 
 export function setupInfoArea(scene, callbacks, graphics) {
     eventEmitter = scene.eventEmitter;
-    selectedObjectY = InfoArea.y + 350;
+    selectedObjectY = InfoArea.y + 250;
 
     backgroundRect = new Phaser.Geom.Rectangle(
         InfoArea.x,

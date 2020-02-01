@@ -67,5 +67,6 @@ export class PlanetObject {
     destroy() {
         this.sprite.destroy();
         this.populationText.destroy();
+        this.circle.destroy();
     }
 }
