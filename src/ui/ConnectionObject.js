@@ -7,5 +7,15 @@ export class ConnectionObject {
     // this.sprite.on("pointerup", this.onClick);
   }
 
+  draw(scene) {
+    let [startX, startY] = this.model.startPlanet.getPosition();
+    let [endX, endY] = this.model.endPlanet.getPosition();
+    // const line = new Phaser.Geom.Line(100, 100, startX, startY, endX, endY);
+    // graphics.strokeLineShape(line);
+    scene.add
+      .line(0, 0, startX, startY, endX, endY, 0x00ff00, 0.5)
+      .setOrigin(0, 0);
+  }
+
   onClick() {}
 }

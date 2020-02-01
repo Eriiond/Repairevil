@@ -133,7 +133,12 @@ export class Planet {
   }
 
   getPrice(lvl) {
-    console.log("lvl:", lvl);
     return 1000000 * 2 ** lvl;
+  }
+
+  getPosition() {
+    let xPos = this.position % 24;
+    let yPos = Math.floor(this.position / 24);
+    return [xPos * 50 + 25, yPos * 50 + 25];
   }
 }

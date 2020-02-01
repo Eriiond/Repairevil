@@ -19,6 +19,8 @@ export default class extends Phaser.Scene {
     this.onUpgradeGrowth = this.onUpgradeGrowth.bind(this);
     this.onUpgradeIncome = this.onUpgradeIncome.bind(this);
     this.onUpgradeSpread = this.onUpgradeSpread.bind(this);
+    this.onUnselect = this.onUnselect.bind(this);
+    this.updateUI = this.updateUI.bind(this);
   }
 
   preload() {
@@ -34,21 +36,19 @@ export default class extends Phaser.Scene {
     let player = new Player();
     this.gameState = new GameState(universe, player);
 
+    this.connectionObjects = this.gameState.universe.spaceConnections.map(c =>
+      this.createConnectionObject(c)
+    );
+    this.connectionObjects.forEach(c => c.draw(this));
+
     this.planetObjects = this.gameState.universe.planets.map(p =>
       this.createPlanetObject(p)
     );
-    // this.connectionObjects = this.gameState.universe.connections.map(c =>
-    //   this.createConnectionObject(c)
-    // );
   }
 
   setupUI() {
     let background = this.add.sprite(800, 450, "galaxy");
-    background.on("pointerup", () => {
-      this.selectedObject = null;
-      console.log("set selectedObject to null");
-      updateInfoArea(this.selectedObject, this.gameState);
-    });
+    background.on("pointerup", this.onUnselect);
     background.setInteractive();
 
     const infoAreaCallbacks = {
@@ -56,45 +56,45 @@ export default class extends Phaser.Scene {
       onUpgradeIncome: this.onUpgradeIncome,
       onUpgradeSpread: this.onUpgradeSpread
     };
-    setupInfoArea(this, infoAreaCallbacks);
+    let graphics = this.add.graphics({ fillStyle: { color: 0xa0a0a0 } });
+    setupInfoArea(this, infoAreaCallbacks, graphics);
   }
 
   onUpgradeGrowth() {
-    console.log("onUpgradeGrowth");
     this.selectedObject.model.upgradeGrowth(this.gameState);
-    updateInfoArea(this.selectedObject, this.gameState);
+    this.updateUI();
   }
 
   onUpgradeIncome() {
-    console.log("onUpgradeIncome");
     this.selectedObject.model.upgradeIncome(this.gameState);
-    updateInfoArea(this.selectedObject, this.gameState);
+    this.updateUI();
   }
 
   onUpgradeSpread() {
-    console.log("onUpgradeSpread");
     this.selectedObject.model.upgradeSpread(this.gameState);
-    updateInfoArea(this.selectedObject, this.gameState);
+    this.updateUI();
   }
 
   onPlanetClicked(planetObject) {
     this.selectedObject = planetObject;
-    console.log("set selectedObject to ", planetObject);
-    updateInfoArea(this.selectedObject, this.gameState);
+    this.updateUI();
+    planetObject.sprite.tint = 0x888888;
   }
 
   update() {
     GameLogic.update(this.gameState);
-    if (this.gameState.player) {
-      this.updateUI();
-    }
+  }
+
+  onUnselect() {
+    this.selectedObject = null;
+    this.updateUI();
   }
 
   updateUI() {
-    if (this.frameCounter % 30 == 0) {
-      this.frameCounter = this.frameCounter + 1;
-      updateInfoArea(this.selectedObject, this.gameState);
-    }
+    updateInfoArea(this.selectedObject, this.gameState);
+    this.planetObjects
+      .filter(p => p !== this.selectedObject)
+      .forEach(p => (p.sprite.tint = 0xffffff));
   }
 
   createPlanetObject(model) {

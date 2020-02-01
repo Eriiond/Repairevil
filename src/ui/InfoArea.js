@@ -13,14 +13,13 @@ let selectedUpdateSpread;
 
 let callbacks;
 
-export function setupInfoArea(scene, callbacks) {
+export function setupInfoArea(scene, callbacks, graphics) {
   const rect = new Phaser.Geom.Rectangle(
     InfoArea.x,
     InfoArea.y,
     InfoArea.width,
     InfoArea.height
   );
-  const graphics = scene.add.graphics({ fillStyle: { color: 0xa0a0a0 } });
   graphics.fillRectShape(rect);
 
   money = scene.add.text(
