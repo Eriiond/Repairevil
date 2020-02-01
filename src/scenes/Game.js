@@ -12,6 +12,7 @@ import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
 import { Viewport } from "../ui/consts";
+import { OwnerPlayer } from "../model/Planet";
 import { InputManager } from "../ui/InputManager";
 import { getPopulationPercentiles } from "../ui/util";
 
@@ -130,7 +131,7 @@ export default class extends Phaser.Scene {
 
         this.eventEmitter.on(
             "spread",
-            (fromPlanet, toPlanet, shipFleet, sprite) => {
+            (fromPlanet, toPlanet, shipFleet, owner) => {
                 let fromPlanetPosition = fromPlanet.getPosition();
                 let toPlanetPosition = toPlanet.getPosition();
 
@@ -143,6 +144,29 @@ export default class extends Phaser.Scene {
 
                 let delay = 50;
                 let duration = 1000;
+
+                let connectionObjectList = this.connectionObjects.filter(
+                    connectionObject => {
+                        let startPlanet = connectionObject.model.startPlanet;
+                        let endPlanet = connectionObject.model.endPlanet;
+                        return (
+                            (fromPlanet == startPlanet ||
+                                toPlanet == startPlanet) &&
+                            (fromPlanet == endPlanet || toPlanet == endPlanet)
+                        );
+                    }
+                );
+
+                if (connectionObjectList.length == 1) {
+                    let c = connectionObjectList[0];
+                    c.draw(this, owner);
+                }
+
+                let sprite = "virus";
+
+                if (owner == OwnerPlayer) {
+                    sprite = "cure";
+                }
 
                 for (var i = 0; i < shipFleet / 200; i++) {
                     var follower = this.add.follower(path, 0, 0, sprite);
@@ -268,19 +292,20 @@ export default class extends Phaser.Scene {
     onPlanetSelected(planetObject) {
         this.clearDrawedSpaceConnection();
         let planet = planetObject.model;
-        this.connectionObjects = this.gameState.universe.spaceConnections
-            .filter(spaceConnection => {
+        let connectionObjects = this.connectionObjects.filter(
+            spaceConnection => {
                 return (
-                    spaceConnection.startPlanet == planet ||
-                    spaceConnection.endPlanet == planet
+                    spaceConnection.model.startPlanet == planet ||
+                    spaceConnection.model.endPlanet == planet
                 );
-            })
-            .map(c => this.createConnectionObject(c));
-        this.connectionObjects.forEach(c => c.draw(this));
+            }
+        );
+        connectionObjects.forEach(c => c.draw(this));
     }
 
     createPlanetObject(model) {
         let sprite = this.add.sprite(0, 0, "planet");
+        sprite.setDepth(0.1);
         let planet = new PlanetObject(model, sprite);
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
@@ -296,7 +321,7 @@ export default class extends Phaser.Scene {
 
     clearDrawedSpaceConnection() {
         this.connectionObjects &&
-            this.connectionObjects.forEach(c => c.destroy());
+            this.connectionObjects.forEach(c => c.destroyDefaultLine());
     }
 
     selectNextPlanet() {

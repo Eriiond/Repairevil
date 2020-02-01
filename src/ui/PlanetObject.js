@@ -24,6 +24,8 @@ export class PlanetObject {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
         });
+
+        this.populationText.setDepth(0.2);
         this.populationText.setOrigin(0.5, 0.5);
 
         let graphics = scene.add.graphics({
