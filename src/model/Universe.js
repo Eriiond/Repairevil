@@ -3,6 +3,9 @@ import { SpaceConnection } from "./SpaceConnection";
 import * as Utils from "./Utils";
 var seedrandom = require("seedrandom");
 
+export const horizontalCells = 24;
+export const verticalCells = 18;
+
 const virusDivider = 4; // Level / Divider for each penalty
 const virusMultiplier = 1.25; // Level * Multiplier for each buff
 
@@ -24,11 +27,7 @@ export class Universe {
 
     generate(level) {
         seedrandom("Repair" + level, { global: true });
-        let maxX = 1200;
-        let maxY = 900;
-        let cellX = (maxX / 100) * 2; // 24
-        let cellY = (maxY / 100) * 2; // 18
-        let maxCell = cellX * cellY;
+        let maxCell = horizontalCells * verticalCells;
         let planetAmount = Math.min(
             Utils.getRandomArbitrary(
                 Math.floor(level / 2),

@@ -9,6 +9,7 @@ export class PlanetObject {
         this.sprite = sprite;
         this.sprite.setInteractive();
         this.sprite.on("pointerup", this.onClick);
+        this.sprite.setOrigin(0.5, 0.5);
 
         let [x, y] = this.model.getPosition();
         this.sprite.x = x;
