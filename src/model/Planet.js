@@ -27,6 +27,13 @@ export class Planet {
     this.minSpreadRate = base_minSpreadRate * ((level % 5) + 1);
     this.maxSpreadRate = base_maxSpreadRate * ((level % 5) + 1);
 
+    if (this.minSpreadRate > 100) {
+      this.minSpreadRate = 100;
+    }
+    if (this.maxSpreadRate > 100) {
+      this.maxSpreadRate = 100;
+    }
+
     this.position = position;
     this.population = {};
     this.population.default = this.generatePopulation();
