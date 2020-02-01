@@ -15,5 +15,7 @@ export const colors = {
   selectedVirusPlanetTint: 0xbb0000,
   playerPlanetTint: 0x00ff00,
   virusPlanetTint: 0xff0000,
-  connectionColor: 0x00ff00
+  connectionColor: 0x00ff00,
+  connectionPlayerColor: 0x00ff00,
+  connectionVirusColor: 0xff0000
 };
