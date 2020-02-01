@@ -39,6 +39,7 @@ export default class extends Phaser.Scene {
         this.onEndGame = this.onEndGame.bind(this);
         this.restartGame = this.restartGame.bind(this);
         this.startLevel = this.startLevel.bind(this);
+        this.selectNextPlanet = this.selectNextPlanet.bind(this);
     }
 
     preload() {
@@ -53,6 +54,8 @@ export default class extends Phaser.Scene {
             onA: () => this.onUpgradeGrowth(),
             onS: () => this.onUpgradeIncome(),
             onD: () => this.onUpgradeSpread(),
+            onF: () => this.onBaseChosen(),
+            onTab: () => this.selectNextPlanet(),
             onSpaceDown: () => this.showSpaceConnections(),
             onSpaceUp: () => this.hideSpaceConnections(),
         };
@@ -286,5 +289,17 @@ export default class extends Phaser.Scene {
     clearDrawedSpaceConnection() {
         this.connectionObjects &&
             this.connectionObjects.forEach(c => c.destroy());
+    }
+
+    selectNextPlanet() {
+        const index = this.planetObjects.findIndex(
+            p => p === this.selectedObject
+        );
+        let nextIndex = index + 1;
+        if (nextIndex == this.planetObjects.length) {
+            nextIndex = 0;
+        }
+        this.selectedObject = this.planetObjects[nextIndex];
+        this.onPlanetSelected(this.planetObjects[nextIndex]);
     }
 }

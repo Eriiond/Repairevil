@@ -16,6 +16,12 @@ export class InputManager {
                 case "KeyD":
                     callbacks.onD();
                     break;
+                case "KeyF":
+                    callbacks.onF();
+                    break;
+                case "KeyC":
+                    callbacks.onTab();
+                    break;
             }
         });
         scene.input.keyboard.on("keyup", function(event) {
