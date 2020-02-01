@@ -1,5 +1,8 @@
 import { getRandomArbitrary } from "./Utils";
-import { Utils } from "phaser";
+
+export const OwnerDefault = "default";
+export const OwnerPlayer = "player";
+export const OwnerVirus = "virus";
 
 const base_minPopulation = 100;
 const base_maxPopulation = 1000;
@@ -48,7 +51,7 @@ export class Planet {
   constructor(position, level) {
     this.name = `${
       greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-      } ${position}`;
+    } ${position}`;
     this.minPopulation = base_minPopulation * (Math.floor(level / 5) + 1);
     this.maxPopulation = base_maxPopulation * (Math.floor(level / 5) + 1);
     this.minIncome = base_minIncome * (Math.floor(level / 5) + 1);
@@ -67,7 +70,9 @@ export class Planet {
 
     this.position = position;
     this.population = {};
+    this.population.virus = 0;
     this.population.default = this.generatePopulation();
+    this.population.player = 0;
     this.income = this.generateIncome();
     this.growthRate = this.generateGrowthRate();
     this.spreadRate = this.generateSpreadRate();
@@ -140,5 +145,20 @@ export class Planet {
     let xPos = this.position % 24;
     let yPos = Math.floor(this.position / 24);
     return [xPos * 50 + 25, yPos * 50 + 25];
+  }
+
+  getOwner() {
+    return this.population.default > 0
+      ? OwnerDefault
+      : this.population.player > 0
+      ? OwnerPlayer
+      : this.population.virus > 0
+      ? OwnerVirus
+      : null;
+  }
+
+  getPopulation() {
+    let owner = this.getOwner();
+    return owner ? this.population[owner] : "0";
   }
 }

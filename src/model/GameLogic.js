@@ -1,10 +1,9 @@
 import { getRandomArbitrary } from "../model/Utils";
-import { NoEmitOnErrorsPlugin } from "webpack";
 
 const virusFactor = 0.33; // How fast the virus growth on planets;
 let counter = 0;
 export class GameLogic {
-  static update(gameState, eventEmitter) {
+  static update(gameState) {
     counter = counter + 1;
     if (counter % 30 == 0) {
       console.log("update");
@@ -48,50 +47,46 @@ export class GameLogic {
         startPlanet.population.default == 0 &&
         this.isSpreading(element.sendPorbability)
       ) {
+        console.log("spread from", startPlanet.name, "to", endPlanet.name);
         this.spread(startPlanet, endPlanet);
       }
       if (
         endPlanet.population.default == 0 &&
         this.isSpreading(element.sendPorbability)
       ) {
+        console.log("spread from", endPlanet.name, "to", startPlanet.name);
         this.spread(endPlanet, startPlanet);
       }
     }
   }
 
   static isSpreading(sendPorbability) {
-    getRandomArbitrary(0, 100) < sendPorbability;
+    return getRandomArbitrary(0, 100) < sendPorbability;
   }
 
   static spread(fromPlanet, toPlanet) {
     if (fromPlanet.population.virus > 1) {
-      spreadVirus(fromPlanet, toPlanet);
+      this.spreadVirus(fromPlanet, toPlanet);
     }
     if (fromPlanet.population.player > 1) {
-      spreadPlayer(fromPlanet, toPlanet);
+      this.spreadPlayer(fromPlanet, toPlanet);
     }
   }
 
   static spreadVirus(fromPlanet, toPlanet) {
     var shipFleet = Math.floor(
-      (startPlanet.population.virus * element.startPlanet.spreadRate) / 100
+      (fromPlanet.population.virus * fromPlanet.spreadRate) / 100
     );
-
-    eventEmitter.emit("spreadVirus", fromPlanet, toPlanet, shipFleet);
-
     fromPlanet.population.virus -= shipFleet;
-    fightPlanetWithVirus(toPlanet, shipFleet);
+    this.fightPlanetWithVirus(toPlanet, shipFleet);
   }
 
   static spreadPlayer(fromPlanet, toPlanet) {
     var shipFleet = Math.floor(
-      (startPlanet.population.player * element.startPlanet.spreadRate) / 100
+      (fromPlanet.population.player * fromPlanet.spreadRate) / 100
     );
-
-    eventEmitter.emit("spreadPlayer", fromPlanet, toPlanet, shipFleet);
-
-    fromPlanet.population.virus -= shipFleet;
-    fightPlanetWithPlayer(toPlanet, shipFleet);
+    fromPlanet.population.player -= shipFleet;
+    this.fightPlanetWithPlayer(toPlanet, shipFleet);
   }
 
   static fightPlanetWithVirus(attackedPlanet, shipFleet) {
