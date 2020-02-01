@@ -11,10 +11,11 @@ import {
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
-import { Viewport } from "../ui/consts";
+import { Viewport, InfoArea } from "../ui/consts";
 import { OwnerPlayer } from "../model/Planet";
 import { InputManager } from "../ui/InputManager";
 import { getPopulationPercentiles } from "../ui/util";
+import { StrengthMeter } from "../ui/StrengthMeter";
 
 export default class extends Phaser.Scene {
     constructor() {
@@ -76,6 +77,13 @@ export default class extends Phaser.Scene {
         );
         this.endGameText.setOrigin(0.5, 0);
 
+        this.strengthMeter = new StrengthMeter(
+            InfoArea.x + InfoArea.margin,
+            InfoArea.y + 150,
+            InfoArea.width - 2 * InfoArea.margin,
+            40
+        );
+
         this.startLevel(this.level);
     }
 
@@ -101,10 +109,9 @@ export default class extends Phaser.Scene {
         );
 
         const percentiles = getPopulationPercentiles(this.planetObjects);
-        console.log("percentiles:", percentiles);
         percentiles.forEach((percentile, i) =>
             percentile.forEach(planetObject =>
-                planetObject.init(this, 1 - 0.1 * i)
+                planetObject.init(this, 0.9 - 0.1 * i)
             )
         );
 
@@ -272,6 +279,13 @@ export default class extends Phaser.Scene {
         }
         this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
         updateInfoArea(this.selectedObject, this.gameState);
+
+        this.strengthMeter.update(
+            this,
+            GameLogic.getPlayerPopulation(this.gameState),
+            GameLogic.getVirusPopulation(this.gameState),
+            GameLogic.getDefaultPopulation(this.gameState)
+        );
 
         // let keyDownA = false
         // this.input.keyboard.on("keydown-A", () => {
