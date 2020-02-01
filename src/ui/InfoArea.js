@@ -1,5 +1,6 @@
 import { InfoArea } from "./consts";
 
+// ui elements
 let money;
 let selectedObjectTitle;
 let selectedPopulation;
@@ -10,14 +11,16 @@ let selectedUpdateGrowth;
 let selectedUpdateIncome;
 let selectedUpdateSpread;
 
-export function setupInfoArea(scene) {
-  var rect = new Phaser.Geom.Rectangle(
+let callbacks;
+
+export function setupInfoArea(scene, callbacks) {
+  const rect = new Phaser.Geom.Rectangle(
     InfoArea.x,
     InfoArea.y,
     InfoArea.width,
     InfoArea.height
   );
-  var graphics = scene.add.graphics({ fillStyle: { color: 0xa0a0a0 } });
+  const graphics = scene.add.graphics({ fillStyle: { color: 0xa0a0a0 } });
   graphics.fillRectShape(rect);
 
   money = scene.add.text(
@@ -83,32 +86,38 @@ export function setupInfoArea(scene) {
   selectedUpdateGrowth = scene.add.text(
     InfoArea.x + InfoArea.margin,
     InfoArea.y + InfoArea.height / 2 + 300 + InfoArea.margin,
-    "Update Growth",
+    "",
     {
       fontFamily: '"Roboto Condensed"',
       fontSize: 18
     }
   );
+  selectedUpdateGrowth.setInteractive();
+  selectedUpdateGrowth.on("pointerup", () => callbacks.onUpgradeGrowth());
 
   selectedUpdateIncome = scene.add.text(
     InfoArea.x + InfoArea.margin,
     InfoArea.y + InfoArea.height / 2 + 340 + InfoArea.margin,
-    "Update Income",
+    "",
     {
       fontFamily: '"Roboto Condensed"',
       fontSize: 18
     }
   );
+  selectedUpdateIncome.setInteractive();
+  selectedUpdateIncome.on("pointerup", () => callbacks.onUpgradeIncome());
 
   selectedUpdateSpread = scene.add.text(
     InfoArea.x + InfoArea.margin,
     InfoArea.y + InfoArea.height / 2 + 380 + InfoArea.margin,
-    "Update Spread",
+    "",
     {
       fontFamily: '"Roboto Condensed"',
       fontSize: 18
     }
   );
+  selectedUpdateSpread.setInteractive();
+  selectedUpdateSpread.on("pointerup", () => callbacks.onUpgradeSpread());
 }
 
 export function updateInfoArea(selectedObject, gameState) {

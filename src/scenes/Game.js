@@ -45,7 +45,24 @@ export default class extends Phaser.Scene {
     });
     background.setInteractive();
 
-    setupInfoArea(this);
+    const infoAreaCallbacks = {
+      onUpgradeGrowth: this.onUpgradeGrowth,
+      onUpgradeIncome: this.onUpgradeIncome,
+      onUpgradeSpread: this.onUpgradeSpread
+    };
+    setupInfoArea(this, infoAreaCallbacks);
+  }
+
+  onUpgradeGrowth() {
+    console.log("onUpgradeGrowth");
+  }
+
+  onUpgradeIncome() {
+    console.log("onUpgradeIncome");
+  }
+
+  onUpgradeSpread() {
+    console.log("onUpgradeSpread");
   }
 
   onPlanetClicked(planetObject) {
