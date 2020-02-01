@@ -2,7 +2,7 @@ import Phaser from "phaser";
 import { PlanetObject } from "../ui/PlanetObject";
 import { ConnectionObject } from "../ui/ConnectionObject";
 import { Player } from "../model/Player";
-import { GameState } from "../model/GameState";
+import { GameState, GamePhaseIngame } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
@@ -13,6 +13,7 @@ export default class extends Phaser.Scene {
 
     this.level = 1;
 
+    this.selectedObject = null;
     this.planetObjects = Array();
     this.frameCounter = 0;
 
@@ -26,6 +27,7 @@ export default class extends Phaser.Scene {
     this.update = this.update.bind(this);
     this.updateUI = this.updateUI.bind(this);
     this.onPlanetClicked = this.onPlanetClicked.bind(this);
+    this.onBaseChosen = this.onBaseChosen.bind(this);
     this.onPlanetSelected = this.onPlanetSelected.bind(this);
   }
 
@@ -91,8 +93,26 @@ export default class extends Phaser.Scene {
   }
 
   setupSelectBase() {
+    this.eventEmitter.removeAllListeners();
     this.eventEmitter.on("planetClicked", this.onPlanetClicked);
     this.eventEmitter.on("planetSelected", this.onPlanetSelected);
+    this.eventEmitter.on("choosePlanetClicked", this.onBaseChosen);
+    updateInfoArea(this.selectedObject, this.gameState);
+  }
+
+  setupIngame() {
+    this.eventEmitter.removeAllListeners();
+    this.eventEmitter.on("planetClicked", this.onPlanetClicked);
+    this.eventEmitter.on("planetSelected", this.onPlanetSelected);
+    updateInfoArea(this.selectedObject, this.gameState);
+    this.eventEmitter.emit("planetSelected", this.selectedObject);
+  }
+
+  onBaseChosen() {
+    if (this.selectedObject) {
+      this.selectedObject.model.spawnPlayer(this.gameState);
+      this.setupIngame();
+    } else console.error("no planet is selected");
   }
 
   setupUI() {
@@ -130,7 +150,8 @@ export default class extends Phaser.Scene {
   }
 
   update() {
-    GameLogic.update(this.gameState, this.eventEmitter);
+    if (this.gameState.gamePhase == GamePhaseIngame)
+      GameLogic.update(this.gameState, this.eventEmitter);
     updateInfoArea(this.selectedObject, this.gameState);
   }
 
