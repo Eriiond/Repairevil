@@ -155,9 +155,9 @@ export class Universe {
 
   spawnVirus() {
     var planet = this.getRandomPlanet();
-    console.log("planet:", planet.name);
     planet.population.default = 0;
     planet.population.virus = this.virusPopulation;
+    console.log("planet.population.virus", planet.population.virus);
     planet.growthRate = this.virusGrowthRate;
     planet.spreadRate = this.virusSpreadRate;
   }

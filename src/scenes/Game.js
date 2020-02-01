@@ -38,7 +38,7 @@ export default class extends Phaser.Scene {
     let universe = new Universe();
     universe.generate(this.level);
     let player = new Player();
-    this.gameState = new GameState(universe, player);
+    this.gameState = new GameState(universe, player, this.level);
 
     this.connectionObjects = this.gameState.universe.spaceConnections.map(c =>
       this.createConnectionObject(c)
