@@ -26,11 +26,8 @@ export class GameLogic {
         for (let i = 0; i < gameState.universe.planets.length; i++) {
             const element = gameState.universe.planets[i];
             if (element.population.virus > 0) {
-                element.population.virus += Math.floor(
-                    element.growthRate *
-                    virusFactor *
-                    (Math.floor(gameState.level / 5) + 1)
-                );
+                var value = Math.floor(element.growthRate * virusFactor * (Math.floor(gameState.level / 5) + 1));
+                element.population.virus += value;
             }
             if (element.population.player > 0) {
                 element.population.player += Math.floor(element.growthRate);
