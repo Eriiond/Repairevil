@@ -48,7 +48,7 @@ export class Planet {
   constructor(position, level) {
     this.name = `${
       greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-    } ${position}`;
+      } ${position}`;
     this.minPopulation = base_minPopulation * (Math.floor(level / 5) + 1);
     this.maxPopulation = base_maxPopulation * (Math.floor(level / 5) + 1);
     this.minIncome = base_minIncome * (Math.floor(level / 5) + 1);
@@ -95,7 +95,7 @@ export class Planet {
 
   upgradeIncome(gameState) {
     var price = this.getIncomePrice();
-    if (gameState.player.money >= price) {
+    if (gameState.player.money >= price && this.population.player > 0) {
       gameState.player.money -= price;
       this.upgrades.income++;
       this.income = Math.floor((this.income * 110) / 100);
@@ -104,7 +104,7 @@ export class Planet {
 
   upgradeGrowth(gameState) {
     var price = this.getGrowthPrice();
-    if (gameState.player.money >= price) {
+    if (gameState.player.money >= price && this.population.player > 0) {
       gameState.player.money -= price;
       this.upgrades.growthRate++;
       this.growthRate = Math.round(((this.growthRate * 110) / 100) * 100) / 100;
@@ -113,7 +113,7 @@ export class Planet {
 
   upgradeSpread(gameState) {
     var price = this.getSpreadPrice();
-    if (gameState.player.money >= price) {
+    if (gameState.player.money >= price && this.population.player > 0) {
       gameState.player.money -= price;
       this.upgrades.spreadRate++;
       this.spreadRate = Math.round(((this.spreadRate * 110) / 100) * 100) / 100;
