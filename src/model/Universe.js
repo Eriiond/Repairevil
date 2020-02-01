@@ -17,7 +17,13 @@ export class Universe {
     let cellX = (maxX / 100) * 2; // 24
     let cellY = (maxY / 100) * 2; // 18
     let maxCell = cellX * cellY;
-    let planetAmount = Math.floor(level / 5) + 5;
+    let planetAmount = Math.min(
+      Utils.getRandomArbitrary(
+        Math.floor(level / 5),
+        (Math.floor(level / 5) + 1) * 2
+      ) + 5,
+      Math.floor(maxCell / 2)
+    );
 
     // Fil array with possible cells
     let freeCells = [];
