@@ -1,22 +1,25 @@
-const base_minSendPropability = 1;
-const base_maxSendPropability = 25;
+const base_minSendPropability = 1
+const base_maxSendPropability = 25
 
 export class SpaceConnection {
-  // startPlanet: Planet;
-  // endPlanet: Planet;
-  // sendPropbability: Number;
+    // startPlanet: Planet;
+    // endPlanet: Planet;
+    // sendPropbability: Number;
 
-  constructor(startPlanet, endPlanet) {
-    this.startPlanet = startPlanet;
-    this.endPlanet = endPlanet;
-    this.sendPorbability = this.generatePropability();
-  }
+    constructor(startPlanet, endPlanet) {
+        this.startPlanet = startPlanet
+        this.endPlanet = endPlanet
+        this.sendPorbability = this.generatePropability()
+    }
 
-  generatePropability() {
-    return getRandomArbitrary(base_minSendPropability, base_maxSendPropability);
-  }
+    generatePropability() {
+        return getRandomArbitrary(
+            base_minSendPropability,
+            base_maxSendPropability
+        )
+    }
 }
 
 function getRandomArbitrary(min, max) {
-  return Math.random() * (max - min) + min;
+    return Math.random() * (max - min) + min
 }
