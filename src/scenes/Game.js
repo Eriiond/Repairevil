@@ -296,6 +296,7 @@ export default class extends Phaser.Scene {
 
     createPlanetObject(model) {
         let sprite = this.add.sprite(0, 0, "planet");
+        sprite.setDepth(0.1);
         let planet = new PlanetObject(model, sprite);
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
