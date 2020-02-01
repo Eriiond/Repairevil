@@ -1,6 +1,6 @@
 import { colors } from "../ui/consts";
 import { OwnerDefault, OwnerPlayer, OwnerVirus } from "../model/Planet";
-import { planetText } from "./util";
+import { shortenNumberText } from "./util";
 
 export class PlanetObject {
   constructor(model, sprite) {
@@ -17,10 +17,11 @@ export class PlanetObject {
 
   init(scene) {
     const [x, y] = this.model.getPosition();
-    this.levelText = scene.add.text(x - 20, y + 15, "", {
+    this.levelText = scene.add.text(x, y, "", {
       fontFamily: '"Roboto Condensed"',
       fontSize: 18
     });
+    this.levelText.setOrigin(0.5, 0.5);
   }
 
   onClick() {}
@@ -29,7 +30,9 @@ export class PlanetObject {
 
   draw(selected) {
     this.levelText &&
-      this.levelText.setText("" + planetText(this.model.getPopulation()));
+      this.levelText.setText(
+        "" + shortenNumberText(this.model.getPopulation())
+      );
 
     let owner = this.model.getOwner();
     switch (owner) {

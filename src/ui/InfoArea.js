@@ -1,6 +1,11 @@
 import { InfoArea } from "./consts";
-import { GamePhaseChooseBase, GamePhaseIngame } from "../model/GameState";
+import {
+  GamePhaseChooseBase,
+  GamePhaseIngame,
+  GamePhaseEnd
+} from "../model/GameState";
 import { OwnerPlayer } from "../model/Planet";
+import { shortenNumberText } from "./util";
 
 // ui elements
 let backgroundRect;
@@ -153,7 +158,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
 
 export function updateInfoArea(selectedObject, gameState) {
   level.setText("Level " + gameState.level);
-  money.setText("$" + gameState.player.money);
+  money.setText("$" + shortenNumberText(gameState.player.money));
 
   if (selectedObject) {
     selectedObjectTitle.setText(selectedObject.model.name);
@@ -200,8 +205,14 @@ export function updateInfoArea(selectedObject, gameState) {
         selectedObject.model.getOwner() === OwnerPlayer;
       chooseBaseButton.visible = false;
       break;
+    case GamePhaseEnd:
+      selectedUpdateGrowth.visible = true;
+      selectedUpdateIncome.visible = true;
+      selectedUpdateSpread.visible = true;
+      chooseBaseButton.visible = false;
+      break;
     default:
-      throw new Error("unknown level state");
+      throw new Error("unknown game phase");
   }
 }
 

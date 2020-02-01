@@ -15,11 +15,12 @@ export class ConnectionObject {
     const [endX, endY] = this.model.endPlanet.getPosition();
     const x = (startX + endX) / 2;
     const y = (startY + endY) / 2;
-    this.spreadText = scene.add.text(x - 20, y - 10, "", {
+    this.spreadText = scene.add.text(x, y, "", {
       fontFamily: '"Roboto Condensed"',
       fontSize: 18,
       color: "#b0b0b0"
     });
+    this.spreadText.setOrigin(0.5, 0.5);
   }
 
   draw(scene) {
