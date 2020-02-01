@@ -1,5 +1,6 @@
 import { colors } from "../ui/consts";
 import { OwnerDefault, OwnerPlayer, OwnerVirus } from "../model/Planet";
+import { planetText } from "./util";
 
 export class PlanetObject {
   constructor(model, sprite) {
@@ -13,8 +14,13 @@ export class PlanetObject {
     this.sprite.x = x;
     this.sprite.y = y;
   }
-  init() {
-    this.reset();
+
+  init(scene) {
+    const [x, y] = this.model.getPosition();
+    this.levelText = scene.add.text(x - 20, y + 15, "", {
+      fontFamily: '"Roboto Condensed"',
+      fontSize: 18
+    });
   }
 
   onClick() {}
@@ -22,6 +28,9 @@ export class PlanetObject {
   update() {}
 
   draw(selected) {
+    this.levelText &&
+      this.levelText.setText("" + planetText(this.model.getPopulation()));
+
     let owner = this.model.getOwner();
     switch (owner) {
       case OwnerDefault: {

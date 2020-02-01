@@ -1,4 +1,5 @@
 import { colors } from "./consts";
+import { connectionText } from "./util";
 
 export class ConnectionObject {
   constructor(model) {
@@ -9,7 +10,22 @@ export class ConnectionObject {
     // this.sprite.on("pointerup", this.onClick);
   }
 
+  init(scene) {
+    const [startX, startY] = this.model.startPlanet.getPosition();
+    const [endX, endY] = this.model.endPlanet.getPosition();
+    const x = (startX + endX) / 2;
+    const y = (startY + endY) / 2;
+    this.spreadText = scene.add.text(x - 20, y - 10, "", {
+      fontFamily: '"Roboto Condensed"',
+      fontSize: 18,
+      color: "#b0b0b0"
+    });
+  }
+
   draw(scene) {
+    this.spreadText &&
+      this.spreadText.setText("" + connectionText(this.model.sendPorbability));
+
     let [startX, startY] = this.model.startPlanet.getPosition();
     let [endX, endY] = this.model.endPlanet.getPosition();
     // const line = new Phaser.Geom.Line(100, 100, startX, startY, endX, endY);
