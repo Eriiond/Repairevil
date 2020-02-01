@@ -1,6 +1,6 @@
 import { Utils } from "phaser";
 
-const virusFactor = 0.25; // How fast the virus growth on planets;
+const virusFactor = 0.33; // How fast the virus growth on planets;
 let counter = 0;
 export class GameLogic {
     static update(gameState) {
