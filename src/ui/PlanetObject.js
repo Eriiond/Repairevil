@@ -112,9 +112,9 @@ export class PlanetObject {
         this.sprite.destroy();
         this.circle.destroy();
         this.populationText.destroy();
-        this.growthRateText.destory();
-        this.incomeRateText.destory();
-        this.spreadRateText.destory();
+        this.growthRateText.destroy();
+        this.incomeRateText.destroy();
+        this.spreadRateText.destroy();
     }
 
     showFullDetails() {
