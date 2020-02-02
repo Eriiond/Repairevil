@@ -17,13 +17,13 @@ export class ResourceIcon {
         if (callback) {
             this.sprite
                 .setInteractive({ useHandCursor: true })
-                .on("pointerover", () => this.enterButtonHoverState())
-                .on("pointerout", () => this.enterButtonRestState())
-                .on("pointerdown", () => this.enterButtonActiveState())
-                .on("pointerup", () => {
-                    this.enterButtonHoverState();
-                    callback();
-                })
+                // .on("pointerover", () => this.enterButtonHoverState())
+                // .on("pointerout", () => this.enterButtonRestState())
+                // .on("pointerdown", () => this.enterButtonActiveState())
+                // .on("pointerup", () => {
+                //     this.enterButtonHoverState();
+                //     callback();
+                // })
                 .on("pointerup", callback);
             this.sprite.scale = this.iconSclae * 0.8;
         }
