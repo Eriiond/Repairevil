@@ -36,17 +36,17 @@ export function setupInfoArea(scene, callbacks, graphics) {
     eventEmitter = scene.eventEmitter;
     selectedObjectY = InfoArea.y + 250;
 
-    let backgroundRectShape = new Phaser.Geom.Rectangle(
-        InfoArea.x,
-        InfoArea.y,
-        InfoArea.width,
-        InfoArea.height
-    );
-    backgroundRect = graphics.fillRectShape(backgroundRectShape);
-    // graphics.setInteractive(backgroundRectShape, event => {
-    //     console.log(event);
-    //     return event.x > 900;
-    // });
+    // let backgroundRectShape = new Phaser.Geom.Rectangle(
+    //     InfoArea.x,
+    //     InfoArea.y,
+    //     InfoArea.width,
+    //     InfoArea.height
+    // );
+    // backgroundRect = graphics.fillRectShape(backgroundRectShape);
+    backgroundRect = scene.add.sprite(0, 0, "menu_background");
+    backgroundRect.setOrigin(0, 0);
+    backgroundRect.x = InfoArea.x;
+    backgroundRect.y = InfoArea.y;
 
     level = scene.add.text(
         InfoArea.x + InfoArea.margin,
@@ -55,6 +55,10 @@ export function setupInfoArea(scene, callbacks, graphics) {
         {
             fontFamily: '"Roboto Condensed"',
             fontSize: 32,
+            stroke: "#000",
+            strokeThickness: 4,
+            stroke: "#000",
+            strokeThickness: 4,
         }
     );
 
@@ -65,6 +69,8 @@ export function setupInfoArea(scene, callbacks, graphics) {
         {
             fontFamily: '"Roboto Condensed"',
             fontSize: 40,
+            stroke: "#000",
+            strokeThickness: 4,
         }
     );
 
@@ -75,6 +81,8 @@ export function setupInfoArea(scene, callbacks, graphics) {
         {
             fontFamily: '"Roboto Condensed"',
             fontSize: 20,
+            stroke: "#000",
+            strokeThickness: 4,
         }
     );
 
@@ -85,6 +93,8 @@ export function setupInfoArea(scene, callbacks, graphics) {
         {
             fontFamily: '"Roboto Condensed"',
             fontSize: 40,
+            stroke: "#000",
+            strokeThickness: 4,
         }
     );
 
@@ -168,6 +178,8 @@ export function setupInfoArea(scene, callbacks, graphics) {
         {
             fontFamily: '"Roboto Condensed"',
             fontSize: 32,
+            stroke: "#000",
+            strokeThickness: 4,
         }
     );
 
@@ -180,6 +192,8 @@ export function setupInfoArea(scene, callbacks, graphics) {
             fontFamily: '"Roboto Condensed"',
             fontSize: 32,
             color: colors.TextButton.default,
+            stroke: "#000",
+            strokeThickness: 4,
         },
         () => eventEmitter.emit("choosePlanetClicked")
     );

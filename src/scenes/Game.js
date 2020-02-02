@@ -80,6 +80,7 @@ export default class extends Phaser.Scene {
         this.load.image("icon_income", "src/assets/icons/icon-income.png");
         this.load.image("icon_spread", "src/assets/icons/icon-spread.png");
         this.load.image("icon_upgrade", "src/assets/icons/icon-upgrade.png");
+        this.load.image("menu_background", "src/assets/menu-background.jpg");
     }
 
     create() {
@@ -106,6 +107,8 @@ export default class extends Phaser.Scene {
                 fontFamily: '"Roboto Condensed"',
                 fontSize: 50,
                 color: "#ffffff",
+                stroke: "#000",
+                strokeThickness: 4,
             }
         );
         this.endGameText.setOrigin(0.5, 0);

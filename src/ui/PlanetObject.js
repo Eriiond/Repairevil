@@ -42,6 +42,8 @@ export class PlanetObject {
             fontSize: 18,
             stroke: "#000",
             strokeThickness: 4,
+            stroke: "#000",
+            strokeThickness: 4,
         });
         this.populationText.setDepth(0.2);
         this.populationText.setOrigin(0.5, 0.5);
@@ -49,6 +51,8 @@ export class PlanetObject {
         this.growthRateText = scene.add.text(x - 30, y, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
+            stroke: "#000",
+            strokeThickness: 4,
             stroke: "#000",
             strokeThickness: 4,
         });
@@ -61,6 +65,8 @@ export class PlanetObject {
             fontSize: 18,
             stroke: "#000",
             strokeThickness: 4,
+            stroke: "#000",
+            strokeThickness: 4,
         });
         this.incomeRateText.setDepth(0.2);
         this.incomeRateText.setOrigin(0.5, 0.5);
@@ -69,6 +75,8 @@ export class PlanetObject {
         this.spreadRateText = scene.add.text(x + 30, y, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
+            stroke: "#000",
+            strokeThickness: 4,
             stroke: "#000",
             strokeThickness: 4,
         });

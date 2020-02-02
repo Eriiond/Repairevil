@@ -35,6 +35,8 @@ export class ResourceIcon {
         this.text = scene.add.text(this.x, this.y + 70, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: callback ? 22 : 28,
+            stroke: "#000",
+            strokeThickness: 4,
         });
 
         this.hide();
