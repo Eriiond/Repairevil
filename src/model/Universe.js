@@ -6,8 +6,9 @@ var seedrandom = require("seedrandom");
 export const horizontalCells = 20;
 export const verticalCells = 15;
 
-const virusDivider = 4; // Level / Divider for each penalty
-const virusMultiplier = 1.11; // Level * Multiplier for each buff
+const populationFactor = 0.9; // Factor on population
+const growthFactor = 1.1; // Factor on growthRate
+const spreadFactor = 2.2; // Factor on spreadRate
 
 const base_minVirusPopulation = 1000;
 const base_maxVirusPopulation = 2500;
@@ -197,22 +198,22 @@ export class Universe {
 
     generateVirusPopulation(level) {
         return Utils.getRandomArbitrary(
-            Math.floor(base_minVirusPopulation * level * virusMultiplier),
-            Math.floor(base_maxVirusPopulation * level * virusMultiplier)
+            Math.floor(base_minVirusPopulation * level * populationFactor),
+            Math.floor(base_maxVirusPopulation * level * populationFactor)
         );
     }
 
     generateVirusGrowthRate(level) {
         return Utils.getRandomArbitrary(
-            Math.floor(base_minVirusGrowthRate * level * virusMultiplier),
-            Math.floor(base_maxVirusGrowthRate * level * virusMultiplier)
+            Math.floor(base_minVirusGrowthRate * level * growthFactor),
+            Math.floor(base_maxVirusGrowthRate * level * growthFactor)
         );
     }
 
     generateVirusSpreadChance(level) {
         let rate = Utils.getRandomArbitrary(
-            Math.floor(base_minVirusSpreadChance + level * virusMultiplier * 2),
-            Math.floor(base_maxVirusSpreadChance + level * virusMultiplier * 2)
+            Math.floor(base_minVirusSpreadChance + level * spreadFactor),
+            Math.floor(base_maxVirusSpreadChance + level * spreadFactor)
         );
         if (rate > 99) {
             rate = 99;
