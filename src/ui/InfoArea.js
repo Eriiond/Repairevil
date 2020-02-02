@@ -8,6 +8,7 @@ import { OwnerPlayer } from "../model/Planet";
 import { shortenNumberText } from "./util";
 import { GameLogic } from "../model/GameLogic";
 import { TextButton } from "./TextButton";
+import { Slider } from "./Slider";
 
 // ui elements
 let backgroundRect;
@@ -22,6 +23,8 @@ let selectedSpreadChance;
 let selectedUpdateGrowth;
 let selectedUpdateIncome;
 let selectedUpdateSpread;
+let slider;
+let sliderText;
 
 let callbacks;
 let eventEmitter;
@@ -120,10 +123,29 @@ export function setupInfoArea(scene, callbacks, graphics) {
         }
     );
 
+    slider = new Slider(
+        InfoArea.x + InfoArea.margin,
+        selectedObjectY + 300 + InfoArea.margin,
+        InfoArea.width - 2 * InfoArea.margin - 100,
+        20
+    );
+    slider.init(scene);
+    slider.alpha = 0;
+
+    sliderText = scene.add.text(
+        InfoArea.x + 310,
+        selectedObjectY + 312,
+        "45%",
+        {
+            fontFamily: '"Roboto Condensed"',
+            fontSize: 32,
+        }
+    );
+
     selectedUpdateGrowth = new TextButton(
         scene,
         InfoArea.x + InfoArea.margin,
-        selectedObjectY + 300 + InfoArea.margin,
+        selectedObjectY + 340 + InfoArea.margin,
         "",
         {
             fontFamily: '"Roboto Condensed"',
@@ -137,7 +159,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
     selectedUpdateIncome = new TextButton(
         scene,
         InfoArea.x + InfoArea.margin,
-        selectedObjectY + 340 + InfoArea.margin,
+        selectedObjectY + 380 + InfoArea.margin,
         "",
         {
             fontFamily: '"Roboto Condensed"',
@@ -151,7 +173,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
     selectedUpdateSpread = new TextButton(
         scene,
         InfoArea.x + InfoArea.margin,
-        selectedObjectY + 380 + InfoArea.margin,
+        selectedObjectY + 420 + InfoArea.margin,
         "",
         {
             fontFamily: '"Roboto Condensed"',
@@ -178,6 +200,9 @@ export function setupInfoArea(scene, callbacks, graphics) {
 }
 
 export function updateInfoArea(selectedObject, gameState) {
+    slider.update();
+    sliderText.setText(parseFloat(slider.getValue() * 100).toFixed(0) + "%");
+
     level.setText("Level " + gameState.level);
     money.setText("$" + shortenNumberText(gameState.player.money));
     const currentIncome = "" + GameLogic.getCurrentIncome(gameState);
@@ -211,7 +236,12 @@ export function updateInfoArea(selectedObject, gameState) {
             "Upgrade Spread  - $" +
             shortenNumberText(selectedObject.model.getSpreadPrice())
         );
+
+        slider.show();
+        sliderText.visible = true;
     } else {
+        slider.hide();
+        sliderText.visible = false;
         resetSelectedArea();
     }
 

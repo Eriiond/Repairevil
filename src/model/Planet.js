@@ -1,5 +1,7 @@
 import { getRandomArbitrary } from "./Utils";
 import { GamePhaseIngame } from "./GameState";
+import { GameGrid } from "../ui/consts";
+import { horizontalCells } from "./Universe";
 
 export const OwnerVirus = "virus";
 export const OwnerDefault = "default";
@@ -44,7 +46,7 @@ const greekLetterList = [
     "Phi",
     "Chi",
     "Psi",
-    "Omega"
+    "Omega",
 ];
 
 export class Planet {
@@ -62,7 +64,7 @@ export class Planet {
     constructor(position, level) {
         this.name = `${
             greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-            } ${position}`;
+        } ${position}`;
         this.minPopulation = base_minPopulation * (Math.floor(level / 2) + 1);
         this.maxPopulation = base_maxPopulation * (Math.floor(level / 2) + 1);
         this.minIncome = base_minIncome * (Math.floor(level / 2) + 1);
@@ -136,16 +138,22 @@ export class Planet {
         if (gameState.player.money >= price && this.population.player > 0) {
             gameState.player.money -= price;
             this.upgrades.growthRate++;
-            this.growthRate = Math.round(((this.growthRate * 106) / 100) * 100) / 100;
+            this.growthRate =
+                Math.round(((this.growthRate * 106) / 100) * 100) / 100;
         }
     }
 
     upgradeSpread(gameState) {
         var price = this.getSpreadPrice();
-        if (gameState.player.money >= price && this.population.player > 0 && this.spreadChance < 99) {
+        if (
+            gameState.player.money >= price &&
+            this.population.player > 0 &&
+            this.spreadChance < 99
+        ) {
             gameState.player.money -= price;
             this.upgrades.spreadChance++;
-            this.spreadChance = Math.round(((this.spreadChance * 102) / 100) * 100) / 100;
+            this.spreadChance =
+                Math.round(((this.spreadChance * 102) / 100) * 100) / 100;
             if (this.spreadChance > 99) {
                 this.spreadChance = 99;
             }
@@ -165,17 +173,19 @@ export class Planet {
     }
 
     getPosition() {
-        let xPos = this.position % 24;
-        let yPos = Math.floor(this.position / 24);
-        return [xPos * 50 + 25, yPos * 50 + 25];
+        let xPos = this.position % horizontalCells;
+        let yPos = Math.floor(this.position / horizontalCells);
+        let x = GameGrid.margin + (xPos + 0.5) * GameGrid.cellWidth;
+        let y = GameGrid.margin + (yPos + 0.5) * GameGrid.cellHeight;
+        return [x, y];
     }
 
     getOwner() {
         return this.population.virus > 0
             ? OwnerVirus
             : this.population.player > 0
-                ? OwnerPlayer
-                : OwnerDefault;
+            ? OwnerPlayer
+            : OwnerDefault;
     }
 
     getPopulation() {

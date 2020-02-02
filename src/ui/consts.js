@@ -1,4 +1,15 @@
+import { horizontalCells, verticalCells } from "../model/Universe";
+
 export const Viewport = { width: 1600, height: 900 };
+let gameGridMargin = 50;
+export const GameGrid = {
+    horizontalCells: horizontalCells,
+    verticalCells: verticalCells,
+    margin: gameGridMargin,
+    cellWidth:
+        ((Viewport.width * 3) / 4 - 2 * gameGridMargin) / horizontalCells,
+    cellHeight: (Viewport.height - 2 * gameGridMargin) / verticalCells,
+};
 
 export const InfoArea = {
     x: (Viewport.width * 3) / 4,

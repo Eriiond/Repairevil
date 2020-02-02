@@ -3,16 +3,23 @@ import { OwnerDefault, OwnerPlayer, OwnerVirus } from "../model/Planet";
 import { shortenNumberText } from "./util";
 
 export class PlanetObject {
-    constructor(model, sprite) {
+    constructor(model, sprite, lightSprite) {
         this.model = model;
 
         this.sprite = sprite;
+        this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setInteractive();
         this.sprite.on("pointerup", this.onClick);
+
+        this.lightSprite = lightSprite;
+        this.lightSprite.setOrigin(0.5, 0.5);
+        this.lightSprite.setOrigin(0.5, 0.5);
 
         let [x, y] = this.model.getPosition();
         this.sprite.x = x;
         this.sprite.y = y;
+        this.lightSprite.x = x;
+        this.lightSprite.y = y;
 
         // this.model.getPopulation()
         // this.sprite.scale = scaleFactor;
@@ -61,6 +68,7 @@ export class PlanetObject {
         let radius = Math.max(scale * 65, 35);
         this.circle = graphics.strokeCircle(x, y, radius);
         this.sprite.scale = scale;
+        this.lightSprite.scale = scale;
     }
 
     onClick() {}
@@ -90,15 +98,15 @@ export class PlanetObject {
         let owner = this.model.getOwner();
         switch (owner) {
             case OwnerDefault: {
-                this.sprite.tint = colors.noTint;
+                this.lightSprite.tint = colors.noTint;
                 break;
             }
             case OwnerPlayer: {
-                this.sprite.tint = colors.playerPlanetTint;
+                this.lightSprite.tint = colors.playerPlanetTint;
                 break;
             }
             case OwnerVirus: {
-                this.sprite.tint = colors.virusPlanetTint;
+                this.lightSprite.tint = colors.virusPlanetTint;
                 break;
             }
             default:
@@ -110,6 +118,8 @@ export class PlanetObject {
 
     destroy() {
         this.sprite.destroy();
+        this.lightSprite.destroy();
+        this.populationText.destroy();
         this.circle.destroy();
         this.populationText.destroy();
         this.growthRateText.destroy();
