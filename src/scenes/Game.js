@@ -80,7 +80,8 @@ export default class extends Phaser.Scene {
             onF: () => this.onBaseChosen(),
             onC: () => this.selectNextPlanet(),
             onC: () => this.selectNextPlanet(),
-            onW: () => this.setSpreadRateToMin(),
+            onQ: () => this.setSpreadRateToMin(),
+            onW: () => this.setSpreadRateToMiddle(),
             onE: () => this.setSpreadRateToMax(),
             onSpaceUp: () => this.toggleSpaceConnections(),
         };
@@ -459,6 +460,10 @@ export default class extends Phaser.Scene {
 
     setSpreadRateToMin() {
         this.selectedObject && setSliderValue(0.0);
+    }
+
+    setSpreadRateToMiddle() {
+        this.selectedObject && setSliderValue(0.5);
     }
 
     setSpreadRateToMax() {
