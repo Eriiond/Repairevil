@@ -199,6 +199,10 @@ export function setupInfoArea(scene, callbacks, graphics) {
     scene.add.existing(chooseBaseButton);
 }
 
+export function setSliderValue(value) {
+    slider.setValue(value);
+}
+
 export function updateInfoArea(selectedObject, gameState) {
     slider.update();
     sliderText.setText(parseFloat(slider.getValue() * 100).toFixed(0) + "%");
@@ -213,7 +217,7 @@ export function updateInfoArea(selectedObject, gameState) {
 
         selectedPopulation.setText(
             "Population: " +
-            shortenNumberText(selectedObject.model.getPopulation())
+                shortenNumberText(selectedObject.model.getPopulation())
         );
         selectedGrowthRate.setText(
             "Growth Rate: " + shortenNumberText(selectedObject.model.growthRate)
@@ -222,26 +226,33 @@ export function updateInfoArea(selectedObject, gameState) {
             "Income Rate: " + shortenNumberText(selectedObject.model.income)
         );
         selectedSpreadChance.setText(
-            "Spread Chance: " + shortenNumberText(selectedObject.model.spreadChance)
+            "Spread Chance: " +
+                shortenNumberText(selectedObject.model.spreadChance)
         );
         selectedUpdateGrowth.setText(
             "Upgrade Growth - $" +
-            shortenNumberText(selectedObject.model.getGrowthPrice())
+                shortenNumberText(selectedObject.model.getGrowthPrice())
         );
         selectedUpdateIncome.setText(
             "Upgrade Income - $" +
-            shortenNumberText(selectedObject.model.getIncomePrice())
+                shortenNumberText(selectedObject.model.getIncomePrice())
         );
         selectedUpdateSpread.setText(
             "Upgrade Spread  - $" +
-            shortenNumberText(selectedObject.model.getSpreadPrice())
+                shortenNumberText(selectedObject.model.getSpreadPrice())
         );
 
-        slider.show();
-        sliderText.visible = true;
+        if (
+            gameState.gamePhase === GamePhaseIngame &&
+            selectedObject.model.getOwner() === OwnerPlayer
+        ) {
+            slider.show();
+            sliderText.visible = true;
+        } else {
+            slider.hide();
+            sliderText.visible = false;
+        }
     } else {
-        slider.hide();
-        sliderText.visible = false;
         resetSelectedArea();
     }
 
