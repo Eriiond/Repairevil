@@ -112,7 +112,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
         InfoArea.x + InfoArea.margin + 100,
         selectedObjectY + 200 + InfoArea.margin,
         0,
-        15
+        10
     );
     selectedUpdateGrowth.init(scene, callbacks.onUpgradeGrowth);
 
@@ -130,7 +130,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
         InfoArea.x + InfoArea.margin + 200,
         selectedObjectY + 200 + InfoArea.margin,
         0,
-        15
+        10
     );
     selectedUpdateIncome.init(scene, callbacks.onUpgradeIncome);
 
@@ -148,7 +148,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
         InfoArea.x + InfoArea.margin + 300,
         selectedObjectY + 200 + InfoArea.margin,
         0,
-        15
+        10
     );
     selectedUpdateSpread.init(scene, callbacks.onUpgradeSpread);
 
