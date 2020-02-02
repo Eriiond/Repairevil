@@ -54,6 +54,7 @@ export class Planet {
     // income: Number
     // growthRate: Number
     // spreadChance: Number
+    // spreadRate: Number
     // upgrades: {income: Number, growthRate: Number, spreadChance: Number }
     // neighbours: <planets>
     // weight: Number
@@ -86,6 +87,7 @@ export class Planet {
         this.income = this.generateIncome();
         this.growthRate = this.generateGrowthRate();
         this.spreadChance = this.generateSpreadChance();
+        this.spreadRate = 20;
         this.upgrades = {};
         this.upgrades.income = 0;
         this.upgrades.growthRate = 0;
