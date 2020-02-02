@@ -40,6 +40,14 @@ export class PlanetObject {
         this.populationText = scene.add.text(x, y + 20, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
+            shadow: {
+                offsetX: 0,
+                offsetY: 0,
+                color: "#000",
+                blur: 0,
+                stroke: true,
+                fill: false,
+            },
         });
         this.populationText.setDepth(0.2);
         this.populationText.setOrigin(0.5, 0.5);
