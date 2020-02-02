@@ -70,9 +70,12 @@ export default class extends Phaser.Scene {
         this.load.image("glow_virus", "src/assets/glow_virus.png");
         this.load.image("glow_default", "src/assets/glow_default.png");
         this.load.image("rect", "src/assets/rect.png");
+
+        this.load.audio("intromusic", "src/assets/intromusic.mp3");
     }
 
     create() {
+        let music = this.game.sound.add("intromusic");
         const callbacks = {
             onA: () => this.onUpgradeGrowth(),
             onS: () => this.onUpgradeIncome(),
@@ -82,7 +85,6 @@ export default class extends Phaser.Scene {
             onSpaceUp: () => this.toggleSpaceConnections(),
         };
         this.inputManager = new InputManager(this, callbacks);
-
         this.setupUI();
         this.endGameText = this.add.text(
             (Viewport.width * 3) / 4 / 2,
@@ -127,6 +129,8 @@ export default class extends Phaser.Scene {
             );
             this.level = parseInt(levelInputElement.value);
             this.startLevel(this.level);
+
+            music.play();
         };
     }
 

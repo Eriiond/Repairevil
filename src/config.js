@@ -12,4 +12,7 @@ export default {
     dom: {
         createContainer: true,
     },
+    audio: {
+        disableWebAudio: true,
+    },
 };
