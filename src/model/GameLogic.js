@@ -13,7 +13,6 @@ export class GameLogic {
     static update(gameState) {
         counter = counter + 1;
         if (counter % 30 == 0) {
-            console.log("update");
             GameLogic.updateMoney(gameState);
             GameLogic.updateShips(gameState);
             GameLogic.updateFights(gameState);
@@ -36,8 +35,8 @@ export class GameLogic {
             if (element.population.virus > 0) {
                 element.population.virus += Math.floor(
                     element.growthRate *
-                    virusFactor *
-                    (Math.floor(gameState.level / virusDivider) + 1)
+                        virusFactor *
+                        (Math.floor(gameState.level / virusDivider) + 1)
                 );
             }
             if (element.population.player > 0) {
@@ -66,7 +65,7 @@ export class GameLogic {
             }
         }
         // player algo
-        gameState.universe.planets.forEach((e) => {
+        gameState.universe.planets.forEach(e => {
             if (e.getOwner() == "player" && this.isSpreading(e.spreadChance)) {
                 this.spreadPlayer(e);
                 this.checkEndCondition(gameState);
@@ -126,26 +125,20 @@ export class GameLogic {
     static spreadPlayer(planet) {
         var nb = planet.getNeightbours();
         var totalW = 0;
-        nb.forEach((e) => {
+        nb.forEach(e => {
             totalW += e.weight;
-        })
+        });
         var totalFleet = Math.floor(
             (planet.population.player * planet.spreadRate) / 100
         );
-        nb.forEach((e) => {
+        nb.forEach(e => {
             var ships = Math.floor(totalFleet * (e.weight / totalW));
 
-            eventEmitter.emit(
-                "spread",
-                planet,
-                e,
-                ships,
-                OwnerPlayer
-            );
+            eventEmitter.emit("spread", planet, e, ships, OwnerPlayer);
 
             planet.population.player -= ships;
             this.fightPlanetWithPlayer(e, ships);
-        })
+        });
     }
 
     static fightPlanetWithVirus(attackedPlanet, shipFleet, gameState) {
@@ -174,7 +167,10 @@ export class GameLogic {
         }
         // planet is owned by default
         if (attackedPlanet.population.default > 0) {
-            attackedPlanet.population.default -= this.getVirusPanalty(shipFleet, gameState);
+            attackedPlanet.population.default -= this.getVirusPanalty(
+                shipFleet,
+                gameState
+            );
             if (attackedPlanet.population.default < 0) {
                 attackedPlanet.population.virus +=
                     attackedPlanet.population.default * -1;
@@ -185,7 +181,8 @@ export class GameLogic {
     }
 
     static getVirusPanalty(shipFleet, gameState) {
-        var divideOfTheDown = (virusPanalty - Math.floor(gameState.level / virusDivider));
+        var divideOfTheDown =
+            virusPanalty - Math.floor(gameState.level / virusDivider);
         if (divideOfTheDown <= 1) {
             divideOfTheDown = 1;
         }

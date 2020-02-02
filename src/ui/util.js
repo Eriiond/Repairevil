@@ -49,7 +49,9 @@ export function getPopulationPercentiles(planetsObjects) {
     const percentileCount = 5;
 
     const populations = planetsObjects.map(p => p);
-    populations.sort(p => p.model.getPopulation());
+    populations.sort((p1, p2) =>
+        p1.model.getPopulation() < p2.model.getPopulation() ? 1 : -1
+    );
     const countPerPercentile = Math.ceil(populations.length / percentileCount);
     return [
         populations.slice(0, countPerPercentile),
