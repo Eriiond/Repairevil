@@ -37,16 +37,16 @@ export class PlanetObject {
         this.planetVirus.scale = scale * 0.35;
 
         const [x, y] = this.model.getPosition();
-        this.populationText = scene.add.text(x, y + 20, "", {
+        this.populationText = scene.add.text(x, y + 30, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
             stroke: "#000",
             strokeThickness: 4,
         });
         this.populationText.setDepth(0.2);
-        this.populationText.setOrigin(0.5, 0);
+        this.populationText.setOrigin(0.5, 0.5);
 
-        this.growthRateText = scene.add.text(x - 30, y - 5, "", {
+        this.growthRateText = scene.add.text(x - 30, y, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
             stroke: "#000",
@@ -66,7 +66,7 @@ export class PlanetObject {
         this.incomeRateText.setOrigin(0.5, 0.5);
         this.incomeRateText.visible = false;
 
-        this.spreadRateText = scene.add.text(x + 30, y - 5, "", {
+        this.spreadRateText = scene.add.text(x + 30, y, "", {
             fontFamily: '"Roboto Condensed"',
             fontSize: 18,
             stroke: "#000",
