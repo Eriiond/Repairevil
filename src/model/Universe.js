@@ -25,8 +25,8 @@ export class Universe {
         this.spaceConnections = [];
     }
 
-    generate(level) {
-        seedrandom("Repair" + level, { global: true });
+    generate(seed, level) {
+        seedrandom(seed + level, { global: true });
         let maxCell = horizontalCells * verticalCells;
         let planetAmount = Math.min(
             Utils.getRandomArbitrary(
@@ -144,7 +144,7 @@ export class Universe {
         this.spawnVirus();
 
         // save all neighbours
-        this.planets.forEach((e) => {
+        this.planets.forEach(e => {
             e.saveNeighbours(this);
             e.resetWeight();
         });
