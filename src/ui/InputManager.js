@@ -4,9 +4,6 @@ export class InputManager {
 
         scene.input.keyboard.on("keydown", function(event) {
             switch (event.code) {
-                case "Space":
-                    callbacks.onSpaceDown();
-                    break;
                 case "KeyA":
                     callbacks.onA();
                     break;

@@ -11,15 +11,17 @@ import {
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
 import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
-import { Viewport } from "../ui/consts";
+import { Viewport, InfoArea } from "../ui/consts";
 import { OwnerPlayer } from "../model/Planet";
 import { InputManager } from "../ui/InputManager";
+import { getPopulationPercentiles } from "../ui/util";
+import { StrengthMeter } from "../ui/StrengthMeter";
 
 export default class extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" });
 
-        this.level = 1;
+        this.level = 2;
 
         this.selectedObject = null;
         this.planetObjects = Array();
@@ -41,6 +43,7 @@ export default class extends Phaser.Scene {
         this.restartGame = this.restartGame.bind(this);
         this.startLevel = this.startLevel.bind(this);
         this.selectNextPlanet = this.selectNextPlanet.bind(this);
+        this.allConnectionsVisible = false;
     }
 
     preload() {
@@ -57,8 +60,7 @@ export default class extends Phaser.Scene {
             onD: () => this.onUpgradeSpread(),
             onF: () => this.onBaseChosen(),
             onTab: () => this.selectNextPlanet(),
-            onSpaceDown: () => this.showSpaceConnections(),
-            onSpaceUp: () => this.hideSpaceConnections(),
+            onSpaceUp: () => this.toggleSpaceConnections(),
         };
         this.inputManager = new InputManager(this, callbacks);
 
@@ -74,6 +76,13 @@ export default class extends Phaser.Scene {
             }
         );
         this.endGameText.setOrigin(0.5, 0);
+
+        this.strengthMeter = new StrengthMeter(
+            InfoArea.x + InfoArea.margin,
+            InfoArea.y + 150,
+            InfoArea.width - 2 * InfoArea.margin,
+            40
+        );
 
         this.startLevel(this.level);
     }
@@ -97,6 +106,13 @@ export default class extends Phaser.Scene {
 
         this.planetObjects = this.gameState.universe.planets.map(p =>
             this.createPlanetObject(p)
+        );
+
+        const percentiles = getPopulationPercentiles(this.planetObjects);
+        percentiles.forEach((percentile, i) =>
+            percentile.forEach(planetObject =>
+                planetObject.init(this, 0.6 - 0.1 * i)
+            )
         );
 
         this.setupSelectBase();
@@ -220,6 +236,8 @@ export default class extends Phaser.Scene {
             this.endGameText.setText("Try again");
         }
         this.endGameText.visible = true;
+
+        this.allConnectionsVisible = false;
         setTimeout(this.restartGame, 3000);
     }
 
@@ -264,6 +282,13 @@ export default class extends Phaser.Scene {
         this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
         updateInfoArea(this.selectedObject, this.gameState);
 
+        this.strengthMeter.update(
+            this,
+            GameLogic.getPlayerPopulation(this.gameState),
+            GameLogic.getVirusPopulation(this.gameState),
+            GameLogic.getDefaultPopulation(this.gameState)
+        );
+
         // let keyDownA = false
         // this.input.keyboard.on("keydown-A", () => {
         //     console.log("!!!");
@@ -271,9 +296,11 @@ export default class extends Phaser.Scene {
     }
 
     onUnselect() {
-        this.selectedObject = null;
+        if (this.allConnectionsVisible == false) {
+            this.selectedObject = null;
 
-        this.clearDrawedSpaceConnection();
+            this.clearDrawedSpaceConnection();
+        }
     }
 
     updateUI() {
@@ -281,17 +308,19 @@ export default class extends Phaser.Scene {
     }
 
     onPlanetSelected(planetObject) {
-        this.clearDrawedSpaceConnection();
-        let planet = planetObject.model;
-        let connectionObjects = this.connectionObjects.filter(
-            spaceConnection => {
-                return (
-                    spaceConnection.model.startPlanet == planet ||
-                    spaceConnection.model.endPlanet == planet
-                );
-            }
-        );
-        connectionObjects.forEach(c => c.draw(this));
+        if (this.allConnectionsVisible == false) {
+            this.clearDrawedSpaceConnection();
+            let planet = planetObject.model;
+            let connectionObjects = this.connectionObjects.filter(
+                spaceConnection => {
+                    return (
+                        spaceConnection.model.startPlanet == planet ||
+                        spaceConnection.model.endPlanet == planet
+                    );
+                }
+            );
+            connectionObjects.forEach(c => c.draw(this));
+        }
     }
 
     createPlanetObject(model) {
@@ -301,7 +330,6 @@ export default class extends Phaser.Scene {
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
         );
-        planet.init(this);
         return planet;
     }
 
@@ -313,7 +341,7 @@ export default class extends Phaser.Scene {
 
     clearDrawedSpaceConnection() {
         this.connectionObjects &&
-            this.connectionObjects.forEach(c => c.destroyDefaultLine());
+            this.connectionObjects.forEach(c => c.hideDefaultLine());
     }
 
     selectNextPlanet() {
@@ -326,5 +354,24 @@ export default class extends Phaser.Scene {
         }
         this.selectedObject = this.planetObjects[nextIndex];
         this.onPlanetSelected(this.planetObjects[nextIndex]);
+    }
+
+    toggleSpaceConnections() {
+        if (this.allConnectionsVisible) {
+            this.connectionObjects.forEach(connectionObject => {
+                connectionObject.hideDefaultLine();
+            });
+            this.planetObjects.forEach(planetObject => {
+                planetObject.hideFullDetails();
+            });
+        } else {
+            this.connectionObjects.forEach(connectionObject => {
+                connectionObject.draw(this);
+            });
+            this.planetObjects.forEach(planetObject => {
+                planetObject.showFullDetails();
+            });
+        }
+        this.allConnectionsVisible = !this.allConnectionsVisible;
     }
 }

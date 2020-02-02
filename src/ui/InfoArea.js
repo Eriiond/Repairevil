@@ -181,7 +181,6 @@ export function updateInfoArea(selectedObject, gameState) {
     level.setText("Level " + gameState.level);
     money.setText("$" + shortenNumberText(gameState.player.money));
     const currentIncome = "" + GameLogic.getCurrentIncome(gameState);
-    // console.log("income: ", currentIncome);
     income.setText("+ " + shortenNumberText(currentIncome) + " $/sec");
 
     if (selectedObject) {
