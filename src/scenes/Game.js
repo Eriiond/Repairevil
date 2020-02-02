@@ -72,6 +72,14 @@ export default class extends Phaser.Scene {
         this.load.image("rect", "src/assets/rect.png");
 
         this.load.audio("intromusic", "src/assets/intromusic.mp3");
+        this.load.image(
+            "icon_population",
+            "src/assets/icons/icon-population.png"
+        );
+        this.load.image("icon_growth", "src/assets/icons/icon-growth.png");
+        this.load.image("icon_income", "src/assets/icons/icon-income.png");
+        this.load.image("icon_spread", "src/assets/icons/icon-spread.png");
+        this.load.image("icon_upgrade", "src/assets/icons/icon-upgrade.png");
     }
 
     create() {
