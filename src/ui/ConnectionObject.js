@@ -24,6 +24,8 @@ export class ConnectionObject {
                 fontFamily: '"Roboto Condensed"',
                 fontSize: 18,
                 color: "#ffffff",
+                stroke: "#000",
+                strokeThickness: 4,
             }
         );
         this.spreadText.setOrigin(0.5, 0.5);
