@@ -3,8 +3,8 @@ import { SpaceConnection } from "./SpaceConnection";
 import * as Utils from "./Utils";
 var seedrandom = require("seedrandom");
 
-export const horizontalCells = 24;
-export const verticalCells = 18;
+export const horizontalCells = 20;
+export const verticalCells = 15;
 
 const virusDivider = 4; // Level / Divider for each penalty
 const virusMultiplier = 1.25; // Level * Multiplier for each buff

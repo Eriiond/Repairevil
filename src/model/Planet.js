@@ -1,6 +1,7 @@
 import { getRandomArbitrary } from "./Utils";
 import { GamePhaseIngame } from "./GameState";
 import { GameGrid } from "../ui/consts";
+import { horizontalCells } from "./Universe";
 
 export const OwnerDefault = "default";
 export const OwnerPlayer = "player";
@@ -161,8 +162,8 @@ export class Planet {
     }
 
     getPosition() {
-        let xPos = this.position % 24;
-        let yPos = Math.floor(this.position / 24);
+        let xPos = this.position % horizontalCells;
+        let yPos = Math.floor(this.position / horizontalCells);
         let x = GameGrid.margin + (xPos + 0.5) * GameGrid.cellWidth;
         let y = GameGrid.margin + (yPos + 0.5) * GameGrid.cellHeight;
         return [x, y];

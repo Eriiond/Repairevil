@@ -43,9 +43,18 @@ export default class extends Phaser.Scene {
         this.restartGame = this.restartGame.bind(this);
         this.startLevel = this.startLevel.bind(this);
         this.selectNextPlanet = this.selectNextPlanet.bind(this);
+        this.onChangeSpreadRate = this.onChangeSpreadRate.bind(this);
     }
 
     preload() {
+        // var url;
+        // url =
+        //     "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js";
+        // this.load.plugin("rexsliderplugin", url, true);
+        // url =
+        //     "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/white-dot.png";
+        // this.load.image("dot", url);
+
         this.load.image("planet0", "src/assets/planets/purple.png");
         this.load.image("planet1", "src/assets/planets/orange.png");
         this.load.image("planet2", "src/assets/planets/white.png");
@@ -53,6 +62,7 @@ export default class extends Phaser.Scene {
         this.load.image("virus", "src/assets/virus.png");
         this.load.image("cure", "src/assets/cure.png");
         this.load.image("light", "src/assets/light.png");
+        this.load.image("rect", "src/assets/rect.png");
     }
 
     create() {
@@ -79,6 +89,7 @@ export default class extends Phaser.Scene {
             }
         );
         this.endGameText.setOrigin(0.5, 0);
+        this.endGameText.setDepth(5);
 
         this.strengthMeter = new StrengthMeter(
             InfoArea.x + InfoArea.margin,
@@ -138,6 +149,7 @@ export default class extends Phaser.Scene {
         this.eventEmitter.on("planetSelected", this.onPlanetSelected);
         this.eventEmitter.on("gameStep", this.updateUI);
         this.eventEmitter.on("endGame", this.onEndGame);
+        this.eventEmitter.on("changeSpreadRate", this.onChangeSpreadRate);
 
         this.eventEmitter.on(
             "spread",
@@ -230,7 +242,6 @@ export default class extends Phaser.Scene {
             return;
         }
 
-        console.error("Game.onEndGame:", won);
         this.gameState.gamePhase = GamePhaseEnd;
         if (won) {
             this.endGameText.setText("You won!");
@@ -322,7 +333,6 @@ export default class extends Phaser.Scene {
 
     createPlanetObject(model) {
         const assetName = "planet" + Math.floor(Math.random() * 3);
-        console.log(assetName);
         let sprite = this.add.sprite(0, 0, assetName);
         sprite.setDepth(0.1);
         let lightSprite = this.add.sprite(0, 0, "light");
@@ -355,5 +365,11 @@ export default class extends Phaser.Scene {
         }
         this.selectedObject = this.planetObjects[nextIndex];
         this.onPlanetSelected(this.planetObjects[nextIndex]);
+    }
+
+    onChangeSpreadRate(value) {
+        // console.log("onChangeSpreadRate:", value);
+        // this.selectedObject.spreadRate =
+        //     value * this.selectedObject.maxSpreadRate;
     }
 }
