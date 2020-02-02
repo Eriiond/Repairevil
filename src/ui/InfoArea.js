@@ -18,7 +18,7 @@ let selectedObjectTitle;
 let selectedPopulation;
 let selectedGrowthRate;
 let selectedIncomeRate;
-let selectedSpreadRate;
+let selectedSpreadChance;
 let selectedUpdateGrowth;
 let selectedUpdateIncome;
 let selectedUpdateSpread;
@@ -110,7 +110,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
         }
     );
 
-    selectedSpreadRate = scene.add.text(
+    selectedSpreadChance = scene.add.text(
         InfoArea.x + InfoArea.margin,
         selectedObjectY + 250 + InfoArea.margin,
         "",
@@ -181,7 +181,7 @@ export function updateInfoArea(selectedObject, gameState) {
     level.setText("Level " + gameState.level);
     money.setText("$" + shortenNumberText(gameState.player.money));
     const currentIncome = "" + GameLogic.getCurrentIncome(gameState);
-    console.log("income: ", currentIncome);
+    // console.log("income: ", currentIncome);
     income.setText("+ " + shortenNumberText(currentIncome) + " $/sec");
 
     if (selectedObject) {
@@ -197,8 +197,8 @@ export function updateInfoArea(selectedObject, gameState) {
         selectedIncomeRate.setText(
             "Income Rate: " + shortenNumberText(selectedObject.model.income)
         );
-        selectedSpreadRate.setText(
-            "Spread Rate: " + shortenNumberText(selectedObject.model.spreadChance)
+        selectedSpreadChance.setText(
+            "Spread Chance: " + shortenNumberText(selectedObject.model.spreadChance)
         );
         selectedUpdateGrowth.setText(
             "Upgrade Growth - $" +
@@ -251,7 +251,7 @@ function resetSelectedArea() {
     selectedPopulation.setText("");
     selectedGrowthRate.setText("");
     selectedIncomeRate.setText("");
-    selectedSpreadRate.setText("");
+    selectedSpreadChance.setText("");
     selectedUpdateGrowth.setText("");
     selectedUpdateIncome.setText("");
     selectedUpdateSpread.setText("");

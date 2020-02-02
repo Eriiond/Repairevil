@@ -18,8 +18,8 @@ const base_minIncome = ONE_MILLION;
 const base_maxIncome = 2500000;
 const base_minGrowthRate = 1;
 const base_maxGrowthRate = 10;
-const base_minSpreadRate = 1;
-const base_maxSpreadRate = 20;
+const base_minSpreadChance = 5;
+const base_maxSpreadChance = 25;
 const greekLetterList = [
     "Alpha",
     "Beta",
@@ -68,14 +68,14 @@ export class Planet {
         this.maxIncome = base_maxIncome * (Math.floor(level / 2) + 1);
         this.minGrowthRate = base_minGrowthRate * (Math.floor(level / 2) + 1);
         this.maxGrowthRate = base_maxGrowthRate * (Math.floor(level / 2) + 1);
-        this.minSpreadRate = base_minSpreadRate * (Math.floor(level / 2) + 1);
-        this.maxSpreadRate = base_maxSpreadRate * (Math.floor(level / 2) + 1);
+        this.minSpreadChance = base_minSpreadChance;
+        this.maxSpreadChance = base_maxSpreadChance;
 
-        if (this.minSpreadRate > 99) {
-            this.minSpreadRate = 99;
+        if (this.minSpreadChance > 99) {
+            this.minSpreadChance = 99;
         }
-        if (this.maxSpreadRate > 99) {
-            this.maxSpreadRate = 99;
+        if (this.maxSpreadChance > 99) {
+            this.maxSpreadChance = 99;
         }
 
         this.position = position;
@@ -85,7 +85,7 @@ export class Planet {
         this.population.player = 0;
         this.income = this.generateIncome();
         this.growthRate = this.generateGrowthRate();
-        this.spreadChance = this.generateSpreadRate();
+        this.spreadChance = this.generateSpreadChance();
         this.upgrades = {};
         this.upgrades.income = 0;
         this.upgrades.growthRate = 0;
@@ -106,8 +106,8 @@ export class Planet {
         return getRandomArbitrary(this.minGrowthRate, this.maxGrowthRate);
     }
 
-    generateSpreadRate() {
-        return getRandomArbitrary(this.minSpreadRate, this.maxSpreadRate);
+    generateSpreadChance() {
+        return getRandomArbitrary(this.minSpreadChance, this.maxSpreadChance);
     }
 
     spawnPlayer(gameState) {
@@ -204,13 +204,12 @@ export class Planet {
     }
 
     resetWeight() {
-        var w = 0;
+        var w = this.getWeightValue(this);
         for (let i = 0; i < this.neighbours.length; i++) {
             const element = this.neighbours[i];
             w += this.getWeightValue(element);
         }
         this.weight = w;
-        console.log(this.name, "weight", w);
     }
 
     getWeightValue(planet) {

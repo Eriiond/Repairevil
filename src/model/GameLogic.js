@@ -5,6 +5,8 @@ const virusFactor = 0.33; // How fast the virus growth on planets
 const virusPanalty = 6; // Initial value that the virus needs to fight default
 const virusDivider = 4; // Level / Divider for each penalty
 
+const SPREAD_RATE = 25; // Amount in percent that will be spread
+
 let counter = 0;
 let eventEmitter;
 export class GameLogic {
@@ -45,6 +47,7 @@ export class GameLogic {
     }
 
     static updateFights(gameState) {
+        // virus algo
         for (let i = 0; i < gameState.universe.spaceConnections.length; i++) {
             const element = gameState.universe.spaceConnections[i];
             const startPlanet = element.startPlanet;
@@ -62,6 +65,13 @@ export class GameLogic {
                 this.spread(endPlanet, startPlanet, gameState);
             }
         }
+        // player algo
+        gameState.universe.planets.forEach((e) => {
+            if (e.getOwner() == "player" && this.isSpreading(e.spreadChance)) {
+                this.spreadPlayer(e);
+                this.checkEndCondition(gameState);
+            }
+        });
     }
 
     static isSpreading(sendPorbability) {
@@ -73,10 +83,10 @@ export class GameLogic {
             this.spreadVirus(fromPlanet, toPlanet, gameState);
             this.checkEndCondition(gameState);
         }
-        if (fromPlanet.population.player > 1) {
-            this.spreadPlayer(fromPlanet, toPlanet, gameState);
-            this.checkEndCondition(gameState);
-        }
+        // if (fromPlanet.population.player > 1) {
+        //     this.spreadPlayer(fromPlanet, toPlanet, gameState);
+        //     this.checkEndCondition(gameState);
+        // }
     }
 
     static spreadVirus(fromPlanet, toPlanet, gameState) {
@@ -96,21 +106,46 @@ export class GameLogic {
         this.fightPlanetWithVirus(toPlanet, shipFleet, gameState);
     }
 
-    static spreadPlayer(fromPlanet, toPlanet, gameState) {
-        var shipFleet = Math.floor(
-            (fromPlanet.population.player * fromPlanet.spreadChance) / 100
-        );
+    // static spreadPlayer(fromPlanet, toPlanet, gameState) {
+    //     var shipFleet = Math.floor(
+    //         (fromPlanet.population.player * fromPlanet.spreadChance) / 100
+    //     );
 
-        eventEmitter.emit(
-            "spread",
-            fromPlanet,
-            toPlanet,
-            shipFleet,
-            OwnerPlayer
-        );
+    //     eventEmitter.emit(
+    //         "spread",
+    //         fromPlanet,
+    //         toPlanet,
+    //         shipFleet,
+    //         OwnerPlayer
+    //     );
 
-        fromPlanet.population.player -= shipFleet;
-        this.fightPlanetWithPlayer(toPlanet, shipFleet, gameState);
+    //     fromPlanet.population.player -= shipFleet;
+    //     this.fightPlanetWithPlayer(toPlanet, shipFleet, gameState);
+    // }
+
+    static spreadPlayer(planet) {
+        var nb = planet.getNeightbours();
+        var totalW = 0;
+        nb.forEach((e) => {
+            totalW += e.weight;
+        })
+        var totalFleet = Math.floor(
+            (planet.population.player * SPREAD_RATE) / 100
+        );
+        nb.forEach((e) => {
+            var ships = Math.floor(totalFleet * (e.weight / totalW));
+
+            eventEmitter.emit(
+                "spread",
+                planet,
+                e,
+                ships,
+                OwnerPlayer
+            );
+
+            planet.population.player -= ships;
+            this.fightPlanetWithPlayer(e, ships);
+        })
     }
 
     static fightPlanetWithVirus(attackedPlanet, shipFleet, gameState) {
@@ -157,7 +192,7 @@ export class GameLogic {
         return Math.floor(shipFleet / divideOfTheDown);
     }
 
-    static fightPlanetWithPlayer(attackedPlanet, shipFleet, gameState) {
+    static fightPlanetWithPlayer(attackedPlanet, shipFleet) {
         // planet is unowned
         if (
             attackedPlanet.population.virus == 0 &&
