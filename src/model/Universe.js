@@ -7,7 +7,7 @@ export const horizontalCells = 20;
 export const verticalCells = 15;
 
 const virusDivider = 4; // Level / Divider for each penalty
-const virusMultiplier = 1.25; // Level * Multiplier for each buff
+const virusMultiplier = 1.11; // Level * Multiplier for each buff
 
 const base_minVirusPopulation = 1000;
 const base_maxVirusPopulation = 2500;

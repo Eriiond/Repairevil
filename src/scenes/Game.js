@@ -81,7 +81,10 @@ export default class extends Phaser.Scene {
             onS: () => this.onUpgradeIncome(),
             onD: () => this.onUpgradeSpread(),
             onF: () => this.onBaseChosen(),
-            onTab: () => this.selectNextPlanet(),
+            onC: () => this.selectNextPlanet(),
+            onC: () => this.selectNextPlanet(),
+            onW: () => this.setSpreadRateToMin(),
+            onE: () => this.setSpreadRateToMax(),
             onSpaceUp: () => this.toggleSpaceConnections(),
         };
         this.inputManager = new InputManager(this, callbacks);
@@ -456,5 +459,13 @@ export default class extends Phaser.Scene {
             });
         }
         this.allConnectionsVisible = !this.allConnectionsVisible;
+    }
+
+    setSpreadRateToMin() {
+        this.selectedObject && setSliderValue(0.0);
+    }
+
+    setSpreadRateToMax() {
+        this.selectedObject && setSliderValue(0.99);
     }
 }
