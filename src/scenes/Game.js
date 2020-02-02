@@ -21,7 +21,7 @@ export default class extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" });
 
-        this.level = 5;
+        this.level = 1;
 
         this.selectedObject = null;
         this.planetObjects = Array();
@@ -46,10 +46,13 @@ export default class extends Phaser.Scene {
     }
 
     preload() {
-        this.load.image("planet", "src/assets/planet.png");
+        this.load.image("planet0", "src/assets/planets/purple.png");
+        this.load.image("planet1", "src/assets/planets/orange.png");
+        this.load.image("planet2", "src/assets/planets/white.png");
         this.load.image("galaxy", "src/assets/galaxy.jpg");
         this.load.image("virus", "src/assets/virus.png");
         this.load.image("cure", "src/assets/cure.png");
+        this.load.image("light", "src/assets/light.png");
     }
 
     create() {
@@ -318,9 +321,13 @@ export default class extends Phaser.Scene {
     }
 
     createPlanetObject(model) {
-        let sprite = this.add.sprite(0, 0, "planet");
+        const assetName = "planet" + Math.floor(Math.random() * 3);
+        console.log(assetName);
+        let sprite = this.add.sprite(0, 0, assetName);
         sprite.setDepth(0.1);
-        let planet = new PlanetObject(model, sprite);
+        let lightSprite = this.add.sprite(0, 0, "light");
+        lightSprite.setDepth(0.05);
+        let planet = new PlanetObject(model, sprite, lightSprite);
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
         );
