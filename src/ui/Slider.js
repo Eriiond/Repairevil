@@ -41,6 +41,7 @@ export class Slider {
 
     update() {
         if (this.slider.value !== this.previousValue) {
+            console.log("slider.onChangeSpreadRate:", this.slider.value * 100);
             this.eventEmitter.emit(
                 "changeSpreadRate",
                 Math.min(this.slider.value, 0.99)

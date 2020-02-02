@@ -428,6 +428,7 @@ export default class extends Phaser.Scene {
     }
 
     onChangeSpreadRate(value) {
+        console.log("onChangeSpreadRate:", value * 100);
         this.selectedObject.model.spreadRate = value * 100;
     }
 

@@ -209,6 +209,8 @@ export function setSliderValue(value) {
 }
 
 export function updateInfoArea(selectedObject, gameState) {
+    slider.update();
+    sliderText.setText(parseFloat(slider.getValue() * 100).toFixed(0) + "%");
     if (selectedObject) {
         selectedObjectTitle.setText(selectedObject.model.name);
 
