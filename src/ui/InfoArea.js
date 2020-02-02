@@ -242,13 +242,17 @@ export function updateInfoArea(selectedObject, gameState) {
                 shortenNumberText(selectedObject.model.getSpreadPrice())
         );
 
-        if (gameState.gamePhase === GamePhaseIngame) {
+        if (
+            gameState.gamePhase === GamePhaseIngame &&
+            selectedObject.model.getOwner() === OwnerPlayer
+        ) {
             slider.show();
             sliderText.visible = true;
+        } else {
+            slider.hide();
+            sliderText.visible = false;
         }
     } else {
-        slider.hide();
-        sliderText.visible = false;
         resetSelectedArea();
     }
 

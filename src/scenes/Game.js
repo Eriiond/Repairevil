@@ -62,7 +62,10 @@ export default class extends Phaser.Scene {
         this.load.image("galaxy", "src/assets/galaxy.jpg");
         this.load.image("virus", "src/assets/virus.png");
         this.load.image("cure", "src/assets/cure.png");
-        this.load.image("light", "src/assets/light.png");
+        // this.load.image("light", "src/assets/light.png");
+        this.load.image("glow_player", "src/assets/glow_player.png");
+        this.load.image("glow_virus", "src/assets/glow_virus.png");
+        this.load.image("glow_default", "src/assets/glow_default.png");
         this.load.image("rect", "src/assets/rect.png");
     }
 
@@ -322,7 +325,8 @@ export default class extends Phaser.Scene {
     }
 
     onPlanetSelected(planetObject) {
-        setSliderValue(planetObject.model.spreadRate);
+        console.log("spreadRate:" + planetObject.model.spreadRate);
+        setSliderValue(planetObject.model.spreadRate / 100);
         if (this.allConnectionsVisible == false) {
             this.clearDrawedSpaceConnection();
             let planet = planetObject.model;
@@ -342,9 +346,22 @@ export default class extends Phaser.Scene {
         const assetName = "planet" + Math.floor(Math.random() * 3);
         let sprite = this.add.sprite(0, 0, assetName);
         sprite.setDepth(0.1);
-        let lightSprite = this.add.sprite(0, 0, "light");
-        lightSprite.setDepth(0.05);
-        let planet = new PlanetObject(model, sprite, lightSprite);
+
+        let glowSpritePlayer = this.add.sprite(0, 0, "glow_player");
+        glowSpritePlayer.setDepth(0.05);
+        glowSpritePlayer.setOrigin(0.5, 0.5);
+        let glowSpriteVirus = this.add.sprite(0, 0, "glow_virus");
+        glowSpriteVirus.setDepth(0.05);
+        glowSpriteVirus.setOrigin(0.5, 0.5);
+        let glowSpriteDefault = this.add.sprite(0, 0, "glow_default");
+        glowSpriteDefault.setDepth(0.05);
+        glowSpriteDefault.setOrigin(0.5, 0.5);
+
+        let planet = new PlanetObject(model, sprite, {
+            glowSpritePlayer,
+            glowSpriteVirus,
+            glowSpriteDefault,
+        });
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
         );
