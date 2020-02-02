@@ -44,6 +44,8 @@ export default class extends Phaser.Scene {
         this.startLevel = this.startLevel.bind(this);
         this.selectNextPlanet = this.selectNextPlanet.bind(this);
         this.onChangeSpreadRate = this.onChangeSpreadRate.bind(this);
+        this.onClickBackground = this.onClickBackground.bind(this);
+
         this.allConnectionsVisible = false;
     }
 
@@ -228,7 +230,7 @@ export default class extends Phaser.Scene {
 
     setupUI() {
         let background = this.add.sprite(800, 450, "galaxy");
-        background.on("pointerup", this.onUnselect);
+        background.on("pointerup", this.onClickBackground);
         background.setInteractive();
 
         const infoAreaCallbacks = {
@@ -238,6 +240,12 @@ export default class extends Phaser.Scene {
         };
         let graphics = this.add.graphics({ fillStyle: { color: 0xa0a0a0 } });
         setupInfoArea(this, infoAreaCallbacks, graphics);
+    }
+
+    onClickBackground() {
+        if (event.screenX < window.innerWidth * (3 / 4)) {
+            this.onUnselect();
+        }
     }
 
     onEndGame(won) {

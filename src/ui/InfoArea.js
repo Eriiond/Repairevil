@@ -42,9 +42,10 @@ export function setupInfoArea(scene, callbacks, graphics) {
         InfoArea.height
     );
     backgroundRect = graphics.fillRectShape(backgroundRectShape);
-    graphics.setInteractive(backgroundRectShape, () => {
-        return true;
-    });
+    // graphics.setInteractive(backgroundRectShape, event => {
+    //     console.log(event);
+    //     return event.x > 900;
+    // });
 
     level = scene.add.text(
         InfoArea.x + InfoArea.margin,
