@@ -17,7 +17,13 @@ export class InputManager {
                     callbacks.onF();
                     break;
                 case "KeyC":
-                    callbacks.onTab();
+                    callbacks.onC();
+                    break;
+                case "KeyW":
+                    callbacks.onW();
+                    break;
+                case "KeyE":
+                    callbacks.onE();
                     break;
             }
         });
