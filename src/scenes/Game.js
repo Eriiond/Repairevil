@@ -10,7 +10,7 @@ import {
 } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
-import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
+import { setupInfoArea, updateInfoArea, setSliderValue } from "../ui/InfoArea";
 import { Viewport, InfoArea } from "../ui/consts";
 import { OwnerPlayer } from "../model/Planet";
 import { InputManager } from "../ui/InputManager";
@@ -322,6 +322,7 @@ export default class extends Phaser.Scene {
     }
 
     onPlanetSelected(planetObject) {
+        setSliderValue(planetObject.model.spreadRate);
         if (this.allConnectionsVisible == false) {
             this.clearDrawedSpaceConnection();
             let planet = planetObject.model;
@@ -374,9 +375,8 @@ export default class extends Phaser.Scene {
     }
 
     onChangeSpreadRate(value) {
-        // console.log("onChangeSpreadRate:", value);
-        // this.selectedObject.spreadRate =
-        //     value * this.selectedObject.maxSpreadRate;
+        console.log("onChangeSpreadRate:", value);
+        this.selectedObject.model.spreadRate = value * 100;
     }
 
     toggleSpaceConnections() {

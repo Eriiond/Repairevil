@@ -199,6 +199,10 @@ export function setupInfoArea(scene, callbacks, graphics) {
     scene.add.existing(chooseBaseButton);
 }
 
+export function setSliderValue(value) {
+    slider.setValue(value);
+}
+
 export function updateInfoArea(selectedObject, gameState) {
     slider.update();
     sliderText.setText(parseFloat(slider.getValue() * 100).toFixed(0) + "%");

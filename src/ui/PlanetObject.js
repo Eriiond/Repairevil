@@ -13,7 +13,6 @@ export class PlanetObject {
 
         this.lightSprite = lightSprite;
         this.lightSprite.setOrigin(0.5, 0.5);
-        this.lightSprite.setOrigin(0.5, 0.5);
 
         let [x, y] = this.model.getPosition();
         this.sprite.x = x;
@@ -68,7 +67,7 @@ export class PlanetObject {
         let radius = Math.max(scale * 65, 35);
         this.circle = graphics.strokeCircle(x, y, radius);
         this.sprite.scale = scale;
-        this.lightSprite.scale = scale;
+        this.lightSprite.scale = 0.6;
     }
 
     onClick() {}
@@ -83,7 +82,7 @@ export class PlanetObject {
 
         this.spreadRateText &&
             this.spreadRateText.setText(
-                "" + shortenNumberText(this.model.spreadRate)
+                "" + shortenNumberText(this.model.spreadChance)
             );
 
         this.growthRateText &&

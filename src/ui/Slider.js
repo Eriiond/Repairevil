@@ -53,6 +53,10 @@ export class Slider {
         return Math.min(this.slider.value, 0.99);
     }
 
+    setValue(value) {
+        this.slider.value = value;
+    }
+
     hide() {
         this.img.visible = false;
         this.line.visible = false;
