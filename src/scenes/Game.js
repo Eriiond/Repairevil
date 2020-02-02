@@ -142,7 +142,7 @@ export default class extends Phaser.Scene {
             this.level = parseInt(levelInputElement.value);
             this.startLevel(this.level);
 
-            music.play();
+            music.play({ loop: true });
         };
     }
 
