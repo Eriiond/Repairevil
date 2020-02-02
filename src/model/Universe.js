@@ -92,7 +92,15 @@ export class Universe {
                 maxConnectionAmount - 1
             );
 
-            while (connectionAmount > 0) {
+            let currentPlanet = this.planets[i];
+            let currentPlanetSpaceConnections = this.getSpaceConnections(
+                currentPlanet
+            );
+
+            let currentPlanetRemainingSpaceConnectionAmount =
+                connectionAmount - currentPlanetSpaceConnections.length;
+
+            while (currentPlanetRemainingSpaceConnectionAmount > 0) {
                 var freePlanetsToConnectTo = [];
                 for (var j = 0; j < planetAmount; j++) {
                     if (i != j) {
@@ -100,7 +108,6 @@ export class Universe {
                     }
                 }
 
-                let currentPlanet = this.planets[i];
                 this.spaceConnections.forEach(spaceConnection => {
                     if (spaceConnection.startPlanet == currentPlanet) {
                         freePlanetsToConnectTo.splice(
@@ -123,7 +130,7 @@ export class Universe {
 
                 if (freePlanetsToConnectTo.length === 0) {
                     // If no free planet is available cancel the operation.
-                    connectionAmount = 0;
+                    currentPlanetRemainingSpaceConnectionAmount = 0;
                 } else {
                     let freePlanetNumber = this.getFreePLanetNumber(
                         freePlanetsToConnectTo
@@ -135,7 +142,7 @@ export class Universe {
                             this.planets[freePlanetNumber]
                         )
                     );
-                    connectionAmount--;
+                    currentPlanetRemainingSpaceConnectionAmount--;
                 }
             }
         }
@@ -212,5 +219,19 @@ export class Universe {
             rate = 99;
         }
         return rate;
+    }
+
+    getSpaceConnections(planet) {
+        let spaceConnections = [];
+        this.spaceConnections.forEach(spaceConnection => {
+            if (
+                spaceConnection.startPlanet == planet ||
+                spaceConnection.endPlanet == planet
+            ) {
+                spaceConnections.push(spaceConnection);
+            }
+        });
+
+        return spaceConnections;
     }
 }
