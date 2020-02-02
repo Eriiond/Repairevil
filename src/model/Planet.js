@@ -1,9 +1,15 @@
 import { getRandomArbitrary } from "./Utils";
 import { GamePhaseIngame } from "./GameState";
+import { GameGrid } from "../ui/consts";
+import { horizontalCells } from "./Universe";
 
+export const OwnerVirus = "virus";
 export const OwnerDefault = "default";
 export const OwnerPlayer = "player";
-export const OwnerVirus = "virus";
+
+const WEIGHT_VIRUS = 25;
+const WEIGHT_DEFAULT = 20;
+const WEIGHT_PLAYER = 5;
 
 const ONE_MILLION = 1000000;
 const ONE_BILLION = 1000000000;
@@ -14,8 +20,8 @@ const base_minIncome = ONE_MILLION;
 const base_maxIncome = 2500000;
 const base_minGrowthRate = 1;
 const base_maxGrowthRate = 10;
-const base_minSpreadRate = 1;
-const base_maxSpreadRate = 20;
+const base_minSpreadChance = 5;
+const base_maxSpreadChance = 25;
 const greekLetterList = [
     "Alpha",
     "Beta",
@@ -40,7 +46,7 @@ const greekLetterList = [
     "Phi",
     "Chi",
     "Psi",
-    "Omega"
+    "Omega",
 ];
 
 export class Planet {
@@ -49,27 +55,30 @@ export class Planet {
     // population: {virus: Number, player: Number, default: Number}
     // income: Number
     // growthRate: Number
+    // spreadChance: Number
     // spreadRate: Number
-    // upgrades: {income: Number, growthRate: Number, spreadRate: Number }
+    // upgrades: {income: Number, growthRate: Number, spreadChance: Number }
+    // neighbours: <planets>
+    // weight: Number
 
     constructor(position, level) {
         this.name = `${
             greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-            } ${position}`;
+        } ${position}`;
         this.minPopulation = base_minPopulation * (Math.floor(level / 2) + 1);
         this.maxPopulation = base_maxPopulation * (Math.floor(level / 2) + 1);
         this.minIncome = base_minIncome * (Math.floor(level / 2) + 1);
         this.maxIncome = base_maxIncome * (Math.floor(level / 2) + 1);
         this.minGrowthRate = base_minGrowthRate * (Math.floor(level / 2) + 1);
         this.maxGrowthRate = base_maxGrowthRate * (Math.floor(level / 2) + 1);
-        this.minSpreadRate = base_minSpreadRate * (Math.floor(level / 2) + 1);
-        this.maxSpreadRate = base_maxSpreadRate * (Math.floor(level / 2) + 1);
+        this.minSpreadChance = base_minSpreadChance;
+        this.maxSpreadChance = base_maxSpreadChance;
 
-        if (this.minSpreadRate > 99) {
-            this.minSpreadRate = 99;
+        if (this.minSpreadChance > 99) {
+            this.minSpreadChance = 99;
         }
-        if (this.maxSpreadRate > 99) {
-            this.maxSpreadRate = 99;
+        if (this.maxSpreadChance > 99) {
+            this.maxSpreadChance = 99;
         }
 
         this.position = position;
@@ -79,11 +88,14 @@ export class Planet {
         this.population.player = 0;
         this.income = this.generateIncome();
         this.growthRate = this.generateGrowthRate();
-        this.spreadRate = this.generateSpreadRate();
+        this.spreadChance = this.generateSpreadChance();
+        this.spreadRate = 20;
         this.upgrades = {};
         this.upgrades.income = 0;
         this.upgrades.growthRate = 0;
-        this.upgrades.spreadRate = 0;
+        this.upgrades.spreadChance = 0;
+        this.neighbours = [];
+        this.weight = 0;
     }
 
     generatePopulation() {
@@ -98,14 +110,15 @@ export class Planet {
         return getRandomArbitrary(this.minGrowthRate, this.maxGrowthRate);
     }
 
-    generateSpreadRate() {
-        return getRandomArbitrary(this.minSpreadRate, this.maxSpreadRate);
+    generateSpreadChance() {
+        return getRandomArbitrary(this.minSpreadChance, this.maxSpreadChance);
     }
 
     spawnPlayer(gameState) {
         if (!gameState.player.spawned) {
             this.population.player = this.population.default;
             this.population.default = 0;
+            this.updateNeighbours();
             gameState.player.spawned = true;
             gameState.gamePhase = GamePhaseIngame;
         }
@@ -125,18 +138,24 @@ export class Planet {
         if (gameState.player.money >= price && this.population.player > 0) {
             gameState.player.money -= price;
             this.upgrades.growthRate++;
-            this.growthRate = Math.round(((this.growthRate * 106) / 100) * 100) / 100;
+            this.growthRate =
+                Math.round(((this.growthRate * 106) / 100) * 100) / 100;
         }
     }
 
     upgradeSpread(gameState) {
         var price = this.getSpreadPrice();
-        if (gameState.player.money >= price && this.population.player > 0 && this.spreadRate < 99) {
+        if (
+            gameState.player.money >= price &&
+            this.population.player > 0 &&
+            this.spreadChance < 99
+        ) {
             gameState.player.money -= price;
-            this.upgrades.spreadRate++;
-            this.spreadRate = Math.round(((this.spreadRate * 102) / 100) * 100) / 100;
-            if (this.spreadRate > 99) {
-                this.spreadRate = 99;
+            this.upgrades.spreadChance++;
+            this.spreadChance =
+                Math.round(((this.spreadChance * 102) / 100) * 100) / 100;
+            if (this.spreadChance > 99) {
+                this.spreadChance = 99;
             }
         }
     }
@@ -150,25 +169,74 @@ export class Planet {
     }
 
     getSpreadPrice() {
-        return ONE_MILLION * (1 + 2 * this.upgrades.spreadRate);
+        return ONE_MILLION * (1 + 2 * this.upgrades.spreadChance);
     }
 
     getPosition() {
-        let xPos = this.position % 24;
-        let yPos = Math.floor(this.position / 24);
-        return [xPos * 50 + 25, yPos * 50 + 25];
+        let xPos = this.position % horizontalCells;
+        let yPos = Math.floor(this.position / horizontalCells);
+        let x = GameGrid.margin + (xPos + 0.5) * GameGrid.cellWidth;
+        let y = GameGrid.margin + (yPos + 0.5) * GameGrid.cellHeight;
+        return [x, y];
     }
 
     getOwner() {
         return this.population.virus > 0
             ? OwnerVirus
             : this.population.player > 0
-                ? OwnerPlayer
-                : OwnerDefault;
+            ? OwnerPlayer
+            : OwnerDefault;
     }
 
     getPopulation() {
         let owner = this.getOwner();
         return owner ? this.population[owner] : "0";
+    }
+
+    saveNeighbours(universe) {
+        for (let i = 0; i < universe.spaceConnections.length; i++) {
+            const element = universe.spaceConnections[i];
+            if (element.startPlanet == this) {
+                this.neighbours.push(element.endPlanet);
+            }
+            if (element.endPlanet == this) {
+                this.neighbours.push(element.startPlanet);
+            }
+        }
+    }
+
+    updateNeighbours() {
+        this.neighbours.forEach(e => {
+            e.resetWeight();
+        });
+    }
+
+    getNeightbours() {
+        return this.neighbours;
+    }
+
+    resetWeight() {
+        var w = this.getWeightValue(this);
+        for (let i = 0; i < this.neighbours.length; i++) {
+            const element = this.neighbours[i];
+            w += this.getWeightValue(element);
+        }
+        this.weight = w;
+    }
+
+    getWeightValue(planet) {
+        switch (planet.getOwner()) {
+            case OwnerVirus:
+                return WEIGHT_VIRUS;
+                break;
+            case OwnerDefault:
+                return WEIGHT_DEFAULT;
+                break;
+            case OwnerPlayer:
+                return WEIGHT_PLAYER;
+                break;
+            default:
+                console.log("Switch Case - Error in getWeightValue(planet)");
+        }
     }
 }

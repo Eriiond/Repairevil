@@ -3,10 +3,11 @@ import { OwnerDefault, OwnerPlayer, OwnerVirus } from "../model/Planet";
 import { shortenNumberText } from "./util";
 
 export class PlanetObject {
-    constructor(model, sprite) {
+    constructor(model, sprite, glowSprites) {
         this.model = model;
 
         this.sprite = sprite;
+        this.sprite.setOrigin(0.5, 0.5);
         this.sprite.setInteractive();
         this.sprite.on("pointerup", this.onClick);
 
@@ -14,11 +15,25 @@ export class PlanetObject {
         this.sprite.x = x;
         this.sprite.y = y;
 
+        this.glowSpriteDefault = glowSprites.glowSpriteDefault;
+        this.glowSpritePlayer = glowSprites.glowSpritePlayer;
+        this.glowSpriteVirus = glowSprites.glowSpriteVirus;
+        this.glowSpriteDefault.x = x;
+        this.glowSpriteDefault.y = y;
+        this.glowSpritePlayer.x = x;
+        this.glowSpritePlayer.y = y;
+        this.glowSpriteVirus.x = x;
+        this.glowSpriteVirus.y = y;
+
         // this.model.getPopulation()
         // this.sprite.scale = scaleFactor;
     }
 
     init(scene, scale) {
+        this.glowSpriteDefault.scale = scale * 0.8;
+        this.glowSpritePlayer.scale = scale * 0.8;
+        this.glowSpriteVirus.scale = scale * 0.8;
+
         const [x, y] = this.model.getPosition();
         this.populationText = scene.add.text(x, y + 20, "", {
             fontFamily: '"Roboto Condensed"',
@@ -61,6 +76,7 @@ export class PlanetObject {
         let radius = Math.max(scale * 65, 35);
         this.circle = graphics.strokeCircle(x, y, radius);
         this.sprite.scale = scale;
+        // this.lightSprite.scale = 0.6;
     }
 
     onClick() {}
@@ -75,7 +91,7 @@ export class PlanetObject {
 
         this.spreadRateText &&
             this.spreadRateText.setText(
-                "" + shortenNumberText(this.model.spreadRate)
+                "" + shortenNumberText(this.model.spreadChance)
             );
 
         this.growthRateText &&
@@ -90,15 +106,21 @@ export class PlanetObject {
         let owner = this.model.getOwner();
         switch (owner) {
             case OwnerDefault: {
-                this.sprite.tint = colors.noTint;
+                this.glowSpriteDefault.visible = true;
+                this.glowSpritePlayer.visible = false;
+                this.glowSpriteVirus.visible = false;
                 break;
             }
             case OwnerPlayer: {
-                this.sprite.tint = colors.playerPlanetTint;
+                this.glowSpriteDefault.visible = false;
+                this.glowSpritePlayer.visible = true;
+                this.glowSpriteVirus.visible = false;
                 break;
             }
             case OwnerVirus: {
-                this.sprite.tint = colors.virusPlanetTint;
+                this.glowSpriteDefault.visible = false;
+                this.glowSpritePlayer.visible = false;
+                this.glowSpriteVirus.visible = true;
                 break;
             }
             default:
@@ -110,6 +132,10 @@ export class PlanetObject {
 
     destroy() {
         this.sprite.destroy();
+        this.glowSpriteDefault.destroy();
+        this.glowSpritePlayer.destroy();
+        this.glowSpriteVirus.destroy();
+        this.populationText.destroy();
         this.circle.destroy();
         this.populationText.destroy();
         this.growthRateText.destroy();

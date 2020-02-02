@@ -8,6 +8,7 @@ import { OwnerPlayer } from "../model/Planet";
 import { shortenNumberText } from "./util";
 import { GameLogic } from "../model/GameLogic";
 import { TextButton } from "./TextButton";
+import { Slider } from "./Slider";
 
 // ui elements
 let backgroundRect;
@@ -18,10 +19,12 @@ let selectedObjectTitle;
 let selectedPopulation;
 let selectedGrowthRate;
 let selectedIncomeRate;
-let selectedSpreadRate;
+let selectedSpreadChance;
 let selectedUpdateGrowth;
 let selectedUpdateIncome;
 let selectedUpdateSpread;
+let slider;
+let sliderText;
 
 let callbacks;
 let eventEmitter;
@@ -32,13 +35,16 @@ export function setupInfoArea(scene, callbacks, graphics) {
     eventEmitter = scene.eventEmitter;
     selectedObjectY = InfoArea.y + 250;
 
-    backgroundRect = new Phaser.Geom.Rectangle(
+    let backgroundRectShape = new Phaser.Geom.Rectangle(
         InfoArea.x,
         InfoArea.y,
         InfoArea.width,
         InfoArea.height
     );
-    graphics.fillRectShape(backgroundRect);
+    backgroundRect = graphics.fillRectShape(backgroundRectShape);
+    graphics.setInteractive(backgroundRectShape, () => {
+        return true;
+    });
 
     level = scene.add.text(
         InfoArea.x + InfoArea.margin,
@@ -110,7 +116,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
         }
     );
 
-    selectedSpreadRate = scene.add.text(
+    selectedSpreadChance = scene.add.text(
         InfoArea.x + InfoArea.margin,
         selectedObjectY + 250 + InfoArea.margin,
         "",
@@ -120,10 +126,29 @@ export function setupInfoArea(scene, callbacks, graphics) {
         }
     );
 
+    slider = new Slider(
+        InfoArea.x + InfoArea.margin,
+        selectedObjectY + 300 + InfoArea.margin,
+        InfoArea.width - 2 * InfoArea.margin - 100,
+        20
+    );
+    slider.init(scene);
+    slider.alpha = 0;
+
+    sliderText = scene.add.text(
+        InfoArea.x + 310,
+        selectedObjectY + 312,
+        "45%",
+        {
+            fontFamily: '"Roboto Condensed"',
+            fontSize: 32,
+        }
+    );
+
     selectedUpdateGrowth = new TextButton(
         scene,
         InfoArea.x + InfoArea.margin,
-        selectedObjectY + 300 + InfoArea.margin,
+        selectedObjectY + 340 + InfoArea.margin,
         "",
         {
             fontFamily: '"Roboto Condensed"',
@@ -137,7 +162,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
     selectedUpdateIncome = new TextButton(
         scene,
         InfoArea.x + InfoArea.margin,
-        selectedObjectY + 340 + InfoArea.margin,
+        selectedObjectY + 380 + InfoArea.margin,
         "",
         {
             fontFamily: '"Roboto Condensed"',
@@ -151,7 +176,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
     selectedUpdateSpread = new TextButton(
         scene,
         InfoArea.x + InfoArea.margin,
-        selectedObjectY + 380 + InfoArea.margin,
+        selectedObjectY + 420 + InfoArea.margin,
         "",
         {
             fontFamily: '"Roboto Condensed"',
@@ -178,6 +203,10 @@ export function setupInfoArea(scene, callbacks, graphics) {
     chooseBaseButton.visible = false;
 }
 
+export function setSliderValue(value) {
+    slider.setValue(value);
+}
+
 export function updateInfoArea(selectedObject, gameState) {
     if (selectedObject) {
         selectedObjectTitle.setText(selectedObject.model.name);
@@ -192,8 +221,9 @@ export function updateInfoArea(selectedObject, gameState) {
         selectedIncomeRate.setText(
             "Income Rate: " + shortenNumberText(selectedObject.model.income)
         );
-        selectedSpreadRate.setText(
-            "Spread Rate: " + shortenNumberText(selectedObject.model.spreadRate)
+        selectedSpreadChance.setText(
+            "Spread Chance: " +
+                shortenNumberText(selectedObject.model.spreadChance)
         );
         selectedUpdateGrowth.setText(
             "Upgrade Growth - $" +
@@ -207,7 +237,20 @@ export function updateInfoArea(selectedObject, gameState) {
             "Upgrade Spread  - $" +
                 shortenNumberText(selectedObject.model.getSpreadPrice())
         );
+
+        if (
+            gameState.gamePhase === GamePhaseIngame &&
+            selectedObject.model.getOwner() === OwnerPlayer
+        ) {
+            slider.show();
+            sliderText.visible = true;
+        } else {
+            slider.hide();
+            sliderText.visible = false;
+        }
     } else {
+        slider.hide();
+        sliderText.visible = false;
         resetSelectedArea();
     }
 
@@ -253,7 +296,7 @@ function resetSelectedArea() {
     selectedPopulation.setText("");
     selectedGrowthRate.setText("");
     selectedIncomeRate.setText("");
-    selectedSpreadRate.setText("");
+    selectedSpreadChance.setText("");
     selectedUpdateGrowth.setText("");
     selectedUpdateIncome.setText("");
     selectedUpdateSpread.setText("");

@@ -10,7 +10,7 @@ import {
 } from "../model/GameState";
 import { Universe } from "../model/Universe";
 import { GameLogic } from "../model/GameLogic";
-import { setupInfoArea, updateInfoArea } from "../ui/InfoArea";
+import { setupInfoArea, updateInfoArea, setSliderValue } from "../ui/InfoArea";
 import { Viewport, InfoArea } from "../ui/consts";
 import { OwnerPlayer } from "../model/Planet";
 import { InputManager } from "../ui/InputManager";
@@ -43,15 +43,31 @@ export default class extends Phaser.Scene {
         this.restartGame = this.restartGame.bind(this);
         this.startLevel = this.startLevel.bind(this);
         this.selectNextPlanet = this.selectNextPlanet.bind(this);
+        this.onChangeSpreadRate = this.onChangeSpreadRate.bind(this);
         this.allConnectionsVisible = false;
     }
 
     preload() {
-        this.load.image("planet", "src/assets/planet.png");
+        // var url;
+        // url =
+        //     "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/dist/rexsliderplugin.min.js";
+        // this.load.plugin("rexsliderplugin", url, true);
+        // url =
+        //     "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/white-dot.png";
+        // this.load.image("dot", url);
+
+        this.load.image("planet0", "src/assets/planets/purple.png");
+        this.load.image("planet1", "src/assets/planets/orange.png");
+        this.load.image("planet2", "src/assets/planets/white.png");
         this.load.image("galaxy", "src/assets/galaxy.jpg");
         this.load.image("virus", "src/assets/virus.png");
         this.load.image("cure", "src/assets/cure.png");
         this.load.html("startscreen", "src/assets/StartScreen.html");
+        // this.load.image("light", "src/assets/light.png");
+        this.load.image("glow_player", "src/assets/glow_player.png");
+        this.load.image("glow_virus", "src/assets/glow_virus.png");
+        this.load.image("glow_default", "src/assets/glow_default.png");
+        this.load.image("rect", "src/assets/rect.png");
     }
 
     create() {
@@ -77,6 +93,7 @@ export default class extends Phaser.Scene {
             }
         );
         this.endGameText.setOrigin(0.5, 0);
+        this.endGameText.setDepth(5);
 
         this.strengthMeter = new StrengthMeter(
             InfoArea.x + InfoArea.margin,
@@ -155,6 +172,7 @@ export default class extends Phaser.Scene {
         this.eventEmitter.on("planetSelected", this.onPlanetSelected);
         this.eventEmitter.on("gameStep", this.updateUI);
         this.eventEmitter.on("endGame", this.onEndGame);
+        this.eventEmitter.on("changeSpreadRate", this.onChangeSpreadRate);
 
         this.eventEmitter.on(
             "spread",
@@ -247,7 +265,6 @@ export default class extends Phaser.Scene {
             return;
         }
 
-        console.error("Game.onEndGame:", won);
         this.gameState.gamePhase = GamePhaseEnd;
         if (won) {
             this.endGameText.setText("You won!");
@@ -331,6 +348,7 @@ export default class extends Phaser.Scene {
     }
 
     onPlanetSelected(planetObject) {
+        setSliderValue(planetObject.model.spreadRate / 100);
         if (this.allConnectionsVisible == false) {
             this.clearDrawedSpaceConnection();
             let planet = planetObject.model;
@@ -347,9 +365,25 @@ export default class extends Phaser.Scene {
     }
 
     createPlanetObject(model) {
-        let sprite = this.add.sprite(0, 0, "planet");
+        const assetName = "planet" + Math.floor(Math.random() * 3);
+        let sprite = this.add.sprite(0, 0, assetName);
         sprite.setDepth(0.1);
-        let planet = new PlanetObject(model, sprite);
+
+        let glowSpritePlayer = this.add.sprite(0, 0, "glow_player");
+        glowSpritePlayer.setDepth(0.05);
+        glowSpritePlayer.setOrigin(0.5, 0.5);
+        let glowSpriteVirus = this.add.sprite(0, 0, "glow_virus");
+        glowSpriteVirus.setDepth(0.05);
+        glowSpriteVirus.setOrigin(0.5, 0.5);
+        let glowSpriteDefault = this.add.sprite(0, 0, "glow_default");
+        glowSpriteDefault.setDepth(0.05);
+        glowSpriteDefault.setOrigin(0.5, 0.5);
+
+        let planet = new PlanetObject(model, sprite, {
+            glowSpritePlayer,
+            glowSpriteVirus,
+            glowSpriteDefault,
+        });
         sprite.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
         );
@@ -377,6 +411,10 @@ export default class extends Phaser.Scene {
         }
         this.selectedObject = this.planetObjects[nextIndex];
         this.onPlanetSelected(this.planetObjects[nextIndex]);
+    }
+
+    onChangeSpreadRate(value) {
+        this.selectedObject.model.spreadRate = value * 100;
     }
 
     toggleSpaceConnections() {
