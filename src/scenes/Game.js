@@ -120,8 +120,10 @@ export default class extends Phaser.Scene {
                 duration: 10000,
                 alpha: 0,
             });
-            let inputElement = startScreenElement.getChildByID("seedInput");
-            this.seed = inputElement.value;
+            let seedInputElement = startScreenElement.getChildByID("seedInput");
+            this.seed = seedInputElement.value;
+            let levelInputElement = startScreenElement.getChildByID("levelInput");
+            this.level = levelInputElement.value;
             this.startLevel(this.level);
         };
     }
