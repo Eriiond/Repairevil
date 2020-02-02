@@ -130,7 +130,7 @@ export class GameLogic {
             totalW += e.weight;
         })
         var totalFleet = Math.floor(
-            (planet.population.player * SPREAD_RATE) / 100
+            (planet.population.player * planet.spreadRate) / 100
         );
         nb.forEach((e) => {
             var ships = Math.floor(totalFleet * (e.weight / totalW));
