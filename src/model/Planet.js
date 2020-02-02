@@ -14,8 +14,8 @@ const WEIGHT_PLAYER = 5;
 const ONE_MILLION = 1000000;
 const ONE_BILLION = 1000000000;
 
-const base_minPopulation = 200;
-const base_maxPopulation = 350;
+const base_minPopulation = 100;
+const base_maxPopulation = 275;
 const base_minIncome = ONE_MILLION;
 const base_maxIncome = 2500000;
 const base_minGrowthRate = 2;

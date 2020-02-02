@@ -2,10 +2,8 @@ import { getRandomArbitrary } from "../model/Utils";
 import { OwnerPlayer, OwnerVirus, OwnerDefault } from "./Planet";
 
 const virusFactor = 0.33; // How fast the virus growth on planets
-const virusPanalty = 6; // Initial value that the virus needs to fight default
-const virusDivider = 4; // Level / Divider for each penalty
-
-const SPREAD_RATE = 25; // Amount in percent that will be spread
+const virusPanalty = 8; // Initial value that the virus needs to fight default
+const virusDivider = 5; // Level / Divider for each penalty
 
 let counter = 0;
 let eventEmitter;
