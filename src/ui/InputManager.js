@@ -19,6 +19,9 @@ export class InputManager {
                 case "KeyC":
                     callbacks.onC();
                     break;
+                case "KeyQ":
+                    callbacks.onQ();
+                    break;
                 case "KeyW":
                     callbacks.onW();
                     break;
