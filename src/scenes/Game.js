@@ -361,9 +361,15 @@ export default class extends Phaser.Scene {
             this.connectionObjects.forEach(connectionObject => {
                 connectionObject.hideDefaultLine();
             });
+            this.planetObjects.forEach(planetObject => {
+                planetObject.hideFullDetails();
+            });
         } else {
             this.connectionObjects.forEach(connectionObject => {
                 connectionObject.draw(this);
+            });
+            this.planetObjects.forEach(planetObject => {
+                planetObject.showFullDetails();
             });
         }
         this.allConnectionsVisible = !this.allConnectionsVisible;
