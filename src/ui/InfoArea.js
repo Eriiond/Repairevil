@@ -35,13 +35,16 @@ export function setupInfoArea(scene, callbacks, graphics) {
     eventEmitter = scene.eventEmitter;
     selectedObjectY = InfoArea.y + 250;
 
-    backgroundRect = new Phaser.Geom.Rectangle(
+    let backgroundRectShape = new Phaser.Geom.Rectangle(
         InfoArea.x,
         InfoArea.y,
         InfoArea.width,
         InfoArea.height
     );
-    graphics.fillRectShape(backgroundRect);
+    backgroundRect = graphics.fillRectShape(backgroundRectShape);
+    graphics.setInteractive(backgroundRectShape, () => {
+        return true;
+    });
 
     level = scene.add.text(
         InfoArea.x + InfoArea.margin,
@@ -253,6 +256,8 @@ export function updateInfoArea(selectedObject, gameState) {
             sliderText.visible = false;
         }
     } else {
+        slider.hide();
+        sliderText.visible = false;
         resetSelectedArea();
     }
 

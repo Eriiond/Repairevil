@@ -20,19 +20,20 @@ export class PlanetObject {
         this.glowSpriteVirus = glowSprites.glowSpriteVirus;
         this.glowSpriteDefault.x = x;
         this.glowSpriteDefault.y = y;
-        this.glowSpriteDefault.scale = 0.4;
         this.glowSpritePlayer.x = x;
         this.glowSpritePlayer.y = y;
-        this.glowSpritePlayer.scale = 0.4;
         this.glowSpriteVirus.x = x;
         this.glowSpriteVirus.y = y;
-        this.glowSpriteVirus.scale = 0.4;
 
         // this.model.getPopulation()
         // this.sprite.scale = scaleFactor;
     }
 
     init(scene, scale) {
+        this.glowSpriteDefault.scale = scale * 0.8;
+        this.glowSpritePlayer.scale = scale * 0.8;
+        this.glowSpriteVirus.scale = scale * 0.8;
+
         const [x, y] = this.model.getPosition();
         this.populationText = scene.add.text(x, y + 20, "", {
             fontFamily: '"Roboto Condensed"',

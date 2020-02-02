@@ -305,11 +305,6 @@ export default class extends Phaser.Scene {
             GameLogic.getVirusPopulation(this.gameState),
             GameLogic.getDefaultPopulation(this.gameState)
         );
-
-        // let keyDownA = false
-        // this.input.keyboard.on("keydown-A", () => {
-        //     console.log("!!!");
-        // });
     }
 
     onUnselect() {
@@ -325,7 +320,6 @@ export default class extends Phaser.Scene {
     }
 
     onPlanetSelected(planetObject) {
-        console.log("spreadRate:" + planetObject.model.spreadRate);
         setSliderValue(planetObject.model.spreadRate / 100);
         if (this.allConnectionsVisible == false) {
             this.clearDrawedSpaceConnection();
@@ -392,7 +386,6 @@ export default class extends Phaser.Scene {
     }
 
     onChangeSpreadRate(value) {
-        console.log("onChangeSpreadRate:", value);
         this.selectedObject.model.spreadRate = value * 100;
     }
 
