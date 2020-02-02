@@ -129,7 +129,7 @@ export class Planet {
         if (gameState.player.money >= price && this.population.player > 0) {
             gameState.player.money -= price;
             this.upgrades.income++;
-            this.income = Math.floor((this.income * 111) / 100);
+            this.income = Math.floor((this.income * 108) / 100);
         }
     }
 
@@ -152,8 +152,8 @@ export class Planet {
         ) {
             gameState.player.money -= price;
             this.upgrades.spreadChance++;
-            this.spreadChance =
-                Math.round(((this.spreadChance * 102) / 100) * 100) / 100;
+            this.spreadChance +=
+                Math.round((((100 - this.spreadChance) * 1) / 100) * 100) / 100;
             if (this.spreadChance > 99) {
                 this.spreadChance = 99;
             }
@@ -165,11 +165,11 @@ export class Planet {
     }
 
     getGrowthPrice() {
-        return ONE_MILLION * (1 + this.upgrades.growthRate ** 2);
+        return ONE_MILLION * (1 + this.upgrades.growthRate ** 2 * (this.upgrades.growthRate / 2));
     }
 
     getSpreadPrice() {
-        return ONE_MILLION * (1 + 2 * this.upgrades.spreadChance);
+        return ONE_MILLION * (10 + 10 * this.upgrades.spreadChance);
     }
 
     getPosition() {
