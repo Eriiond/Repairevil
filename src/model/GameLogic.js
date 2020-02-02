@@ -3,7 +3,7 @@ import { OwnerPlayer, OwnerVirus, OwnerDefault } from "./Planet";
 
 const virusFactor = 0.33; // How fast the virus growth on planets
 const virusPanalty = 6; // Initial value that the virus needs to fight default
-const virusDivider = 4; // Level / Divider for each penalty
+const virusDivider = 3; // Level / Divider for each penalty
 
 const SPREAD_RATE = 25; // Amount in percent that will be spread
 
@@ -35,8 +35,8 @@ export class GameLogic {
             if (element.population.virus > 0) {
                 element.population.virus += Math.floor(
                     element.growthRate *
-                        virusFactor *
-                        (Math.floor(gameState.level / virusDivider) + 1)
+                    virusFactor *
+                    (Math.floor(gameState.level / virusDivider) + 1)
                 );
             }
             if (element.population.player > 0) {

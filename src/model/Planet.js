@@ -14,11 +14,11 @@ const WEIGHT_PLAYER = 5;
 const ONE_MILLION = 1000000;
 const ONE_BILLION = 1000000000;
 
-const base_minPopulation = 100;
-const base_maxPopulation = 250;
+const base_minPopulation = 200;
+const base_maxPopulation = 350;
 const base_minIncome = ONE_MILLION;
 const base_maxIncome = 2500000;
-const base_minGrowthRate = 1;
+const base_minGrowthRate = 2;
 const base_maxGrowthRate = 10;
 const base_minSpreadChance = 5;
 const base_maxSpreadChance = 25;
@@ -64,7 +64,7 @@ export class Planet {
     constructor(position, level) {
         this.name = `${
             greekLetterList[getRandomArbitrary(0, greekLetterList.length - 1)]
-        } ${position}`;
+            } ${position}`;
         this.minPopulation = base_minPopulation * (Math.floor(level / 2) + 1);
         this.maxPopulation = base_maxPopulation * (Math.floor(level / 2) + 1);
         this.minIncome = base_minIncome * (Math.floor(level / 2) + 1);
@@ -184,8 +184,8 @@ export class Planet {
         return this.population.virus > 0
             ? OwnerVirus
             : this.population.player > 0
-            ? OwnerPlayer
-            : OwnerDefault;
+                ? OwnerPlayer
+                : OwnerDefault;
     }
 
     getPopulation() {
