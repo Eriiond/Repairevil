@@ -58,9 +58,9 @@ export default class extends Phaser.Scene {
         //     "https://raw.githubusercontent.com/rexrainbow/phaser3-rex-notes/master/assets/images/white-dot.png";
         // this.load.image("dot", url);
 
-        this.load.image("planet0", "src/assets/planets/purple.png");
-        this.load.image("planet1", "src/assets/planets/orange.png");
-        this.load.image("planet2", "src/assets/planets/white.png");
+        this.load.image("planet_player", "src/assets/planet_player.png");
+        this.load.image("planet_virus", "src/assets/planet_virus.png");
+        this.load.image("planet_default", "src/assets/planet_default.png");
         this.load.image("galaxy", "src/assets/galaxy.jpg");
         this.load.image("virus", "src/assets/virus.png");
         this.load.image("cure", "src/assets/cure.png");
@@ -345,26 +345,32 @@ export default class extends Phaser.Scene {
     }
 
     createPlanetObject(model) {
-        const assetName = "planet" + Math.floor(Math.random() * 3);
-        let sprite = this.add.sprite(0, 0, assetName);
-        sprite.setDepth(0.1);
+        // const assetName = "planet" + Math.floor(Math.random() * 3);
+        // let sprite = this.add.sprite(0, 0, assetName);
+        // sprite.setDepth(0.1);
 
-        let glowSpritePlayer = this.add.sprite(0, 0, "glow_player");
-        glowSpritePlayer.setDepth(0.05);
-        glowSpritePlayer.setOrigin(0.5, 0.5);
-        let glowSpriteVirus = this.add.sprite(0, 0, "glow_virus");
-        glowSpriteVirus.setDepth(0.05);
-        glowSpriteVirus.setOrigin(0.5, 0.5);
-        let glowSpriteDefault = this.add.sprite(0, 0, "glow_default");
-        glowSpriteDefault.setDepth(0.05);
-        glowSpriteDefault.setOrigin(0.5, 0.5);
+        let planetPlayer = this.add.sprite(0, 0, "planet_player");
+        planetPlayer.setOrigin(0.5, 0.5);
+        planetPlayer.setDepth(0.1);
+        let planetVirus = this.add.sprite(0, 0, "planet_virus");
+        planetVirus.setOrigin(0.5, 0.5);
+        planetVirus.setDepth(0.1);
+        let planetDefault = this.add.sprite(0, 0, "planet_default");
+        planetDefault.setOrigin(0.5, 0.5);
+        planetDefault.setDepth(0.1);
 
-        let planet = new PlanetObject(model, sprite, {
-            glowSpritePlayer,
-            glowSpriteVirus,
-            glowSpriteDefault,
+        let planet = new PlanetObject(model, {
+            planetPlayer,
+            planetVirus,
+            planetDefault,
         });
-        sprite.on("pointerup", () =>
+        planetPlayer.on("pointerup", () =>
+            this.eventEmitter.emit("planetClicked", planet)
+        );
+        planetVirus.on("pointerup", () =>
+            this.eventEmitter.emit("planetClicked", planet)
+        );
+        planetDefault.on("pointerup", () =>
             this.eventEmitter.emit("planetClicked", planet)
         );
         return planet;
