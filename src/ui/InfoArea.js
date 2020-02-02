@@ -1,4 +1,4 @@
-import { InfoArea, colors } from "./consts";
+import { InfoArea, colors, Viewport } from "./consts";
 import {
     GamePhaseChooseBase,
     GamePhaseIngame,
@@ -199,6 +199,18 @@ export function setupInfoArea(scene, callbacks, graphics) {
     );
     scene.add.existing(chooseBaseButton);
     chooseBaseButton.visible = false;
+
+    scene.add.text(
+        InfoArea.x + InfoArea.margin + 50,
+        Viewport.height - 50,
+        "repairevil.surge.sh",
+        {
+            fontFamily: '"Roboto Condensed"',
+            fontSize: 32,
+            stroke: "#000",
+            strokeThickness: 6,
+        }
+    );
 }
 
 export function setSliderValue(value) {
