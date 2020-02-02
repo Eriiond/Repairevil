@@ -1,38 +1,40 @@
-import { colors } from "../ui/consts";
 import { OwnerDefault, OwnerPlayer, OwnerVirus } from "../model/Planet";
 import { shortenNumberText } from "./util";
 
 export class PlanetObject {
-    constructor(model, sprite, glowSprites) {
+    constructor(model, planetSprites) {
         this.model = model;
 
-        this.sprite = sprite;
-        this.sprite.setOrigin(0.5, 0.5);
-        this.sprite.setInteractive();
-        this.sprite.on("pointerup", this.onClick);
+        // this.sprite = sprite;
+        // this.sprite.setOrigin(0.5, 0.5);
+        // this.sprite.setInteractive();
+        // this.sprite.on("pointerup", this.onClick);
 
         let [x, y] = this.model.getPosition();
-        this.sprite.x = x;
-        this.sprite.y = y;
+        // this.sprite.x = x;
+        // this.sprite.y = y;
 
-        this.glowSpriteDefault = glowSprites.glowSpriteDefault;
-        this.glowSpritePlayer = glowSprites.glowSpritePlayer;
-        this.glowSpriteVirus = glowSprites.glowSpriteVirus;
-        this.glowSpriteDefault.x = x;
-        this.glowSpriteDefault.y = y;
-        this.glowSpritePlayer.x = x;
-        this.glowSpritePlayer.y = y;
-        this.glowSpriteVirus.x = x;
-        this.glowSpriteVirus.y = y;
+        this.planetDefault = planetSprites.planetDefault;
+        this.planetDefault.setInteractive();
+        this.planetPlayer = planetSprites.planetPlayer;
+        this.planetPlayer.setInteractive();
+        this.planetVirus = planetSprites.planetVirus;
+        this.planetVirus.setInteractive();
+        this.planetDefault.x = x;
+        this.planetDefault.y = y;
+        this.planetPlayer.x = x;
+        this.planetPlayer.y = y;
+        this.planetVirus.x = x;
+        this.planetVirus.y = y;
 
         // this.model.getPopulation()
         // this.sprite.scale = scaleFactor;
     }
 
     init(scene, scale) {
-        this.glowSpriteDefault.scale = scale * 0.8;
-        this.glowSpritePlayer.scale = scale * 0.8;
-        this.glowSpriteVirus.scale = scale * 0.8;
+        this.planetDefault.scale = scale * 0.35;
+        this.planetPlayer.scale = scale * 0.35;
+        this.planetVirus.scale = scale * 0.35;
 
         const [x, y] = this.model.getPosition();
         this.populationText = scene.add.text(x, y + 20, "", {
@@ -75,7 +77,7 @@ export class PlanetObject {
         });
         let radius = Math.max(scale * 65, 35);
         this.circle = graphics.strokeCircle(x, y, radius);
-        this.sprite.scale = scale;
+        // this.sprite.scale = scale;
         // this.lightSprite.scale = 0.6;
     }
 
@@ -106,21 +108,21 @@ export class PlanetObject {
         let owner = this.model.getOwner();
         switch (owner) {
             case OwnerDefault: {
-                this.glowSpriteDefault.visible = true;
-                this.glowSpritePlayer.visible = false;
-                this.glowSpriteVirus.visible = false;
+                this.planetDefault.visible = true;
+                this.planetPlayer.visible = false;
+                this.planetVirus.visible = false;
                 break;
             }
             case OwnerPlayer: {
-                this.glowSpriteDefault.visible = false;
-                this.glowSpritePlayer.visible = true;
-                this.glowSpriteVirus.visible = false;
+                this.planetDefault.visible = false;
+                this.planetPlayer.visible = true;
+                this.planetVirus.visible = false;
                 break;
             }
             case OwnerVirus: {
-                this.glowSpriteDefault.visible = false;
-                this.glowSpritePlayer.visible = false;
-                this.glowSpriteVirus.visible = true;
+                this.planetDefault.visible = false;
+                this.planetPlayer.visible = false;
+                this.planetVirus.visible = true;
                 break;
             }
             default:
@@ -131,10 +133,9 @@ export class PlanetObject {
     }
 
     destroy() {
-        this.sprite.destroy();
-        this.glowSpriteDefault.destroy();
-        this.glowSpritePlayer.destroy();
-        this.glowSpriteVirus.destroy();
+        this.planetPlayer.destroy();
+        this.planetVirus.destroy();
+        this.planetDefault.destroy();
         this.populationText.destroy();
         this.circle.destroy();
         this.populationText.destroy();
