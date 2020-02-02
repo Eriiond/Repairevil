@@ -200,6 +200,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
         () => eventEmitter.emit("choosePlanetClicked")
     );
     scene.add.existing(chooseBaseButton);
+    chooseBaseButton.visible = false;
 }
 
 export function setSliderValue(value) {
@@ -207,14 +208,6 @@ export function setSliderValue(value) {
 }
 
 export function updateInfoArea(selectedObject, gameState) {
-    slider.update();
-    sliderText.setText(parseFloat(slider.getValue() * 100).toFixed(0) + "%");
-
-    level.setText("Level " + gameState.level);
-    money.setText("$" + shortenNumberText(gameState.player.money));
-    const currentIncome = "" + GameLogic.getCurrentIncome(gameState);
-    income.setText("+ " + shortenNumberText(currentIncome) + " $/sec");
-
     if (selectedObject) {
         selectedObjectTitle.setText(selectedObject.model.name);
 
@@ -261,33 +254,40 @@ export function updateInfoArea(selectedObject, gameState) {
         resetSelectedArea();
     }
 
-    switch (gameState.gamePhase) {
-        case GamePhaseChooseBase:
-            selectedUpdateGrowth.visible = false;
-            selectedUpdateIncome.visible = false;
-            selectedUpdateSpread.visible = false;
-            chooseBaseButton.visible = selectedObject !== null;
-            break;
-        case GamePhaseIngame:
-            selectedUpdateGrowth.visible =
-                selectedObject !== null &&
-                selectedObject.model.getOwner() === OwnerPlayer;
-            selectedUpdateIncome.visible =
-                selectedObject !== null &&
-                selectedObject.model.getOwner() === OwnerPlayer;
-            selectedUpdateSpread.visible =
-                selectedObject !== null &&
-                selectedObject.model.getOwner() === OwnerPlayer;
-            chooseBaseButton.visible = false;
-            break;
-        case GamePhaseEnd:
-            selectedUpdateGrowth.visible = true;
-            selectedUpdateIncome.visible = true;
-            selectedUpdateSpread.visible = true;
-            chooseBaseButton.visible = false;
-            break;
-        default:
-            throw new Error("unknown game phase");
+    if (gameState) {
+        level.setText("Level " + gameState.level);
+        money.setText("$" + shortenNumberText(gameState.player.money));
+        const currentIncome = "" + GameLogic.getCurrentIncome(gameState);
+        income.setText("+ " + shortenNumberText(currentIncome) + " $/sec");
+
+        switch (gameState.gamePhase) {
+            case GamePhaseChooseBase:
+                selectedUpdateGrowth.visible = false;
+                selectedUpdateIncome.visible = false;
+                selectedUpdateSpread.visible = false;
+                chooseBaseButton.visible = selectedObject !== null;
+                break;
+            case GamePhaseIngame:
+                selectedUpdateGrowth.visible =
+                    selectedObject !== null &&
+                    selectedObject.model.getOwner() === OwnerPlayer;
+                selectedUpdateIncome.visible =
+                    selectedObject !== null &&
+                    selectedObject.model.getOwner() === OwnerPlayer;
+                selectedUpdateSpread.visible =
+                    selectedObject !== null &&
+                    selectedObject.model.getOwner() === OwnerPlayer;
+                chooseBaseButton.visible = false;
+                break;
+            case GamePhaseEnd:
+                selectedUpdateGrowth.visible = true;
+                selectedUpdateIncome.visible = true;
+                selectedUpdateSpread.visible = true;
+                chooseBaseButton.visible = false;
+                break;
+            default:
+                throw new Error("unknown game phase");
+        }
     }
 }
 

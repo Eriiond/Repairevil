@@ -9,4 +9,7 @@ export default {
     scale: {
         mode: Phaser.Scale.FIT,
     },
+    dom: {
+        createContainer: true,
+    },
 };
