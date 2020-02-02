@@ -16,33 +16,34 @@ export class ConnectionObject {
         const [endX, endY] = this.model.endPlanet.getPosition();
         const x = (startX + endX) / 2;
         const y = (startY + endY) / 2;
-        this.spreadText = scene.add.text(x, y, "", {
-            fontFamily: '"Roboto Condensed"',
-            fontSize: 18,
-            color: "#ffffff",
-        });
+        this.spreadText = scene.add.text(
+            x,
+            y,
+            "" + connectionText(this.model.sendPorbability),
+            {
+                fontFamily: '"Roboto Condensed"',
+                fontSize: 18,
+                color: "#ffffff",
+            }
+        );
         this.spreadText.setOrigin(0.5, 0.5);
         this.strokeAlpha = 0.3;
+
+        this.defaultLine = scene.add
+            .line(0, 0, startX, startY, endX, endY, colors.noTint, 0.5)
+            .setOrigin(0, 0);
+
+        this.spreadText.visible = false;
+        this.defaultLine.visible = false;
     }
 
     draw(scene, owner) {
         let [startX, startY] = this.model.startPlanet.getPosition();
         let [endX, endY] = this.model.endPlanet.getPosition();
+        let strokeColor = colors.playerPlanetTint;
 
-        let strokeColor = colors.noTint;
-        switch (owner) {
-            case OwnerPlayer: {
-                strokeColor = colors.playerPlanetTint;
-                break;
-            }
-
-            case OwnerVirus: {
-                strokeColor = colors.virusPlanetTint;
-                break;
-            }
-
-            default: {
-            }
+        if (owner == OwnerVirus) {
+            strokeColor = colors.virusPlanetTint;
         }
 
         switch (owner) {
@@ -109,22 +110,17 @@ export class ConnectionObject {
             }
 
             default: {
-                this.spreadText &&
-                    this.spreadText.setText(
-                        "" + connectionText(this.model.sendPorbability)
-                    );
-                this.defaultLine = scene.add
-                    .line(0, 0, startX, startY, endX, endY, strokeColor, 0.5)
-                    .setOrigin(0, 0);
+                this.spreadText.visible = true;
+                this.defaultLine.visible = true;
             }
         }
     }
 
     onClick() {}
 
-    destroyDefaultLine() {
-        this.defaultLine && this.defaultLine.destroy();
-        this.spreadText && this.spreadText.setText("");
+    hideDefaultLine() {
+        this.spreadText.visible = false;
+        this.defaultLine.visible = false;
     }
 
     destroy() {

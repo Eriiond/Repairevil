@@ -19,7 +19,7 @@ let selectedObjectTitle;
 let selectedPopulation;
 let selectedGrowthRate;
 let selectedIncomeRate;
-let selectedSpreadRate;
+let selectedSpreadChance;
 let selectedUpdateGrowth;
 let selectedUpdateIncome;
 let selectedUpdateSpread;
@@ -113,7 +113,7 @@ export function setupInfoArea(scene, callbacks, graphics) {
         }
     );
 
-    selectedSpreadRate = scene.add.text(
+    selectedSpreadChance = scene.add.text(
         InfoArea.x + InfoArea.margin,
         selectedObjectY + 250 + InfoArea.margin,
         "",
@@ -213,7 +213,7 @@ export function updateInfoArea(selectedObject, gameState) {
 
         selectedPopulation.setText(
             "Population: " +
-                shortenNumberText(selectedObject.model.getPopulation())
+            shortenNumberText(selectedObject.model.getPopulation())
         );
         selectedGrowthRate.setText(
             "Growth Rate: " + shortenNumberText(selectedObject.model.growthRate)
@@ -221,20 +221,20 @@ export function updateInfoArea(selectedObject, gameState) {
         selectedIncomeRate.setText(
             "Income Rate: " + shortenNumberText(selectedObject.model.income)
         );
-        selectedSpreadRate.setText(
-            "Spread Rate: " + shortenNumberText(selectedObject.model.spreadRate)
+        selectedSpreadChance.setText(
+            "Spread Chance: " + shortenNumberText(selectedObject.model.spreadChance)
         );
         selectedUpdateGrowth.setText(
             "Upgrade Growth - $" +
-                shortenNumberText(selectedObject.model.getGrowthPrice())
+            shortenNumberText(selectedObject.model.getGrowthPrice())
         );
         selectedUpdateIncome.setText(
             "Upgrade Income - $" +
-                shortenNumberText(selectedObject.model.getIncomePrice())
+            shortenNumberText(selectedObject.model.getIncomePrice())
         );
         selectedUpdateSpread.setText(
             "Upgrade Spread  - $" +
-                shortenNumberText(selectedObject.model.getSpreadPrice())
+            shortenNumberText(selectedObject.model.getSpreadPrice())
         );
 
         slider.show();
@@ -280,7 +280,7 @@ function resetSelectedArea() {
     selectedPopulation.setText("");
     selectedGrowthRate.setText("");
     selectedIncomeRate.setText("");
-    selectedSpreadRate.setText("");
+    selectedSpreadChance.setText("");
     selectedUpdateGrowth.setText("");
     selectedUpdateIncome.setText("");
     selectedUpdateSpread.setText("");

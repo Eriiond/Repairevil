@@ -13,8 +13,8 @@ const base_minVirusPopulation = 1000;
 const base_maxVirusPopulation = 2500;
 const base_minVirusGrowthRate = 10;
 const base_maxVirusGrowthRate = 20;
-const base_minVirusSpreadRate = 2;
-const base_maxVirusSpreadRate = 8;
+const base_minVirusSpreadChance = 2;
+const base_maxVirusSpreadChance = 8;
 
 export class Universe {
     // planets : Array<Planet>
@@ -139,8 +139,15 @@ export class Universe {
             }
         }
 
+        // generate Virus
         this.generateVirus(level);
         this.spawnVirus();
+
+        // save all neighbours
+        this.planets.forEach((e) => {
+            e.saveNeighbours(this);
+            e.resetWeight();
+        });
     }
 
     getFreePLanetNumber(freePlanets) {
@@ -172,13 +179,13 @@ export class Universe {
         planet.population.default = 0;
         planet.population.virus = this.virusPopulation;
         planet.growthRate = this.virusGrowthRate;
-        planet.spreadRate = this.virusSpreadRate;
+        planet.spreadChance = this.virusSpreadChance;
     }
 
     generateVirus(level) {
         this.virusPopulation = this.generateVirusPopulation(level);
         this.virusGrowthRate = this.generateVirusGrowthRate(level);
-        this.virusSpreadRate = this.generateVirusSpreadRate(level);
+        this.virusSpreadChance = this.generateVirusSpreadChance(level);
     }
 
     generateVirusPopulation(level) {
@@ -195,10 +202,10 @@ export class Universe {
         );
     }
 
-    generateVirusSpreadRate(level) {
+    generateVirusSpreadChance(level) {
         let rate = Utils.getRandomArbitrary(
-            Math.floor(base_minVirusSpreadRate + level * virusMultiplier * 2),
-            Math.floor(base_maxVirusSpreadRate + level * virusMultiplier * 2)
+            Math.floor(base_minVirusSpreadChance + level * virusMultiplier * 2),
+            Math.floor(base_maxVirusSpreadChance + level * virusMultiplier * 2)
         );
         if (rate > 99) {
             rate = 99;
