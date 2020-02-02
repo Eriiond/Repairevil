@@ -44,7 +44,7 @@ export class PlanetObject {
             strokeThickness: 4,
         });
         this.populationText.setDepth(0.2);
-        this.populationText.setOrigin(0.5, 0.5);
+        this.populationText.setOrigin(0.5, 0);
 
         this.growthRateText = scene.add.text(x - 30, y - 5, "", {
             fontFamily: '"Roboto Condensed"',
