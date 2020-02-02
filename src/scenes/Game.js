@@ -21,7 +21,7 @@ export default class extends Phaser.Scene {
     constructor() {
         super({ key: "GameScene" });
 
-        this.level = 2;
+        this.level = 1;
 
         this.selectedObject = null;
         this.planetObjects = Array();
@@ -51,6 +51,7 @@ export default class extends Phaser.Scene {
         this.load.image("galaxy", "src/assets/galaxy.jpg");
         this.load.image("virus", "src/assets/virus.png");
         this.load.image("cure", "src/assets/cure.png");
+        this.load.html("startscreen", "src/assets/StartScreen.html");
     }
 
     create() {
@@ -84,7 +85,26 @@ export default class extends Phaser.Scene {
             40
         );
 
-        this.startLevel(this.level);
+        let startScreenElement = this.add
+            .dom(0, 0)
+            .createFromCache("startscreen")
+            .setOrigin(0, 0);
+
+        let startButton = startScreenElement.getChildByID("startBtn");
+        startButton.onclick = event => {
+            let containerElement = startScreenElement.getChildByID(
+                "containerID"
+            );
+            containerElement.style.display = "none";
+            this.tweens.add({
+                targets: startScreenElement,
+                duration: 10000,
+                alpha: 0,
+            });
+            let inputElement = startScreenElement.getChildByID("seedInput");
+            this.seed = inputElement.value;
+            this.startLevel(this.level);
+        };
     }
 
     destroy() {
@@ -96,7 +116,7 @@ export default class extends Phaser.Scene {
 
     startLevel(level) {
         let universe = new Universe();
-        universe.generate(level);
+        universe.generate(this.seed, level);
         let player = new Player();
         this.gameState = new GameState(universe, player, level);
 
@@ -276,18 +296,21 @@ export default class extends Phaser.Scene {
     }
 
     update() {
-        if (this.gameState.gamePhase == GamePhaseIngame) {
+        if (this.gameState && this.gameState.gamePhase == GamePhaseIngame) {
             GameLogic.update(this.gameState, this.eventEmitter);
         }
+
         this.planetObjects.forEach(p => p.draw(p === this.selectedObject));
         updateInfoArea(this.selectedObject, this.gameState);
 
-        this.strengthMeter.update(
-            this,
-            GameLogic.getPlayerPopulation(this.gameState),
-            GameLogic.getVirusPopulation(this.gameState),
-            GameLogic.getDefaultPopulation(this.gameState)
-        );
+        if (this.gameState) {
+            this.strengthMeter.update(
+                this,
+                GameLogic.getPlayerPopulation(this.gameState),
+                GameLogic.getVirusPopulation(this.gameState),
+                GameLogic.getDefaultPopulation(this.gameState)
+            );
+        }
 
         // let keyDownA = false
         // this.input.keyboard.on("keydown-A", () => {

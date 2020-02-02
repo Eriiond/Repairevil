@@ -22,8 +22,8 @@ export class Universe {
         this.spaceConnections = [];
     }
 
-    generate(level) {
-        seedrandom("Repair" + level, { global: true });
+    generate(seed, level) {
+        seedrandom(seed + level, { global: true });
         let maxX = 1200;
         let maxY = 900;
         let cellX = (maxX / 100) * 2; // 24
