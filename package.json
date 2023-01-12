@@ -28,7 +28,7 @@
     },
     "dependencies": {
         "phaser": "3.21.0",
-        "phaser3-rex-plugins": "^1.1.7",
+        "phaser3-rex-plugins": "^1.1.79",
         "seedrandom": "^3.0.5",
         "webfontloader": "^1.6.28"
     },
